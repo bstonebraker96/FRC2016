@@ -5,14 +5,18 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
 
 public class Robot extends IterativeRobot {
-    
-	public TeleopDrive drive;
+
+	TeleopDrive teleopDrive;
 	
     public void robotInit() {
-        
-    	drive = new TeleopDrive();
+    	
+    	teleopDrive = new TeleopDrive();
     	
     }
     
@@ -27,10 +31,14 @@ public class Robot extends IterativeRobot {
     
     public void teleopInit(){
     	
+    	teleopDrive.driveInit();
+    	
     }
     
     public void teleopPeriodic() {
-    	drive.driveBase();
+    	
+    	teleopDrive.driveBase();
+    	
     }
     
     
