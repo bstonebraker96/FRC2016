@@ -12,12 +12,20 @@ public class PortReference {
 		return 2;
 	}
 	
+	public int getAltJoystick(){
+		return 7;
+	}
+	
 	public int getLeftMotor(){
 		return 1;
 	}
 	
 	public int getRightMotor(){
 		return 2;	
+	}
+	
+	public int getFeedMotor(){
+		return 3;
 	}
 	
 	public int getLeftEncoder1(){

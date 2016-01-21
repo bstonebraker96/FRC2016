@@ -13,10 +13,12 @@ import edu.wpi.first.wpilibj.Talon;
 public class Robot extends IterativeRobot {
 
 	TeleopDrive teleopDrive;
+	BallFeed ballFeed;
 	
     public void robotInit() {
     	
     	teleopDrive = new TeleopDrive();
+    	ballFeed = new BallFeed();
     	
     }
     
@@ -33,11 +35,15 @@ public class Robot extends IterativeRobot {
     	
     	teleopDrive.driveInit();
     	
+    	ballFeed.ballFeedInit();
+    	
     }
     
     public void teleopPeriodic() {
     	
     	teleopDrive.driveBase();
+    	
+    	ballFeed.ballFeed();
     	
     }
     
