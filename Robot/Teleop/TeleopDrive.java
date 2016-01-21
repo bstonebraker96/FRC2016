@@ -26,14 +26,16 @@ public class TeleopDrive {
 	
 	public void driveInit(){
 		
-		leftStick = new Joystick(1);
-		rightStick = new Joystick(2);
+		PortReference ref = new PortReference();
 		
-		leftMotor = new Talon(1);
-		rightMotor = new Talon(2);
+		leftStick = new Joystick(ref.getLeftJoystick());
+		rightStick = new Joystick(ref.getRightJoystick());
 		
-		leftEncoder = new Encoder(1,2,false,EncodingType.k1X);
-		rightEncoder = new Encoder(3,4,false,EncodingType.k1X);
+		leftMotor = new Talon(ref.getLeftMotor());
+		rightMotor = new Talon(ref.getRightMotor());
+		
+		leftEncoder = new Encoder(ref.getLeftEncoder1(),ref.getLeftEncoder2(),false,EncodingType.k1X);
+		rightEncoder = new Encoder(ref.getRightEncoder1(),ref.getRightEncoder2(),false,EncodingType.k1X);
 		
 		leftEncoder.setSamplesToAverage(5);
 		rightEncoder.setSamplesToAverage(5);
@@ -50,28 +52,34 @@ public class TeleopDrive {
 		leftMotor.set(leftStick.getY());
 		rightMotor.set(leftStick.getY());
 		
-		leftRate = leftEncoder.get() / (nanotime - nanotimeOld);
-		rightRate = rightEncoder.get() / (nanotime - nanotimeOld);
+		//Check speed calculation process
+		leftRate = leftEncoder.get() / (nanotime - nanotimeOld); //rate in counts per nanosecond
+		rightRate = rightEncoder.get() / (nanotime - nanotimeOld); //rate in counts per nanosecond
 		
+		leftRate *= Math.pow(10, 9) * 60;
+		rightRate *= Math.pow(10, 9) * 60;
+		leftRate /= 2048;
+		rightRate /= 2048;
 		if(leftRate != rightRate && Math.abs(leftStick.getY()- rightStick.getY()) < .01){
 			
 			if(leftRate < rightRate){
 				
-				//Fix max rate (2400)
-				rightMotor.set(leftRate / 2400);
+				
+				rightMotor.set(leftRate / 67702.5);
 				
 			}
 			
 			if(rightRate < leftRate){
 				
-				//Fix max rate (2400)
-				leftMotor.set(leftRate / 2400);
+				leftMotor.set(leftRate / 67702.5);
 				
 			}
 			
 		}
 		
 		nanotimeOld = nanotime;
+		leftEncoder.reset();
+		rightEncoder.reset();
 		
 	}
 	
