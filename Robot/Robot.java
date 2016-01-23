@@ -14,21 +14,42 @@ public class Robot extends IterativeRobot {
 
 	TeleopDrive teleopDrive;
 	BallFeed ballFeed;
+	AutoDrive autoDrive = new AutoDrive();
+	CrossDefenseStraight mode1 = new CrossDefenseStraight();
+	
+	private boolean autoDriveComplete;
+	
+	int mode;
 	
     public void robotInit() {
     	
     	teleopDrive = new TeleopDrive();
     	ballFeed = new BallFeed();
+    	autoDrive = new AutoDrive();
     	
     }
     
     public void autonomousInit() {
     	
+    	autoDrive.autoDriveInit();
+    	
+    	mode = autoDrive.getMode();
+    	
+    	switch (mode){
+    		case 1: mode1.init();
+    				break;
+    	}
     }
 
    
     public void autonomousPeriodic() {
     	
+    	switch(mode){
+    		case 1: autoDriveComplete = mode1.crossDefenseStraight();
+    				break;
+    	}
+    	
+    	//start shooter system
     }
     
     public void teleopInit(){
