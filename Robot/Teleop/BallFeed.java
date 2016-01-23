@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 public class BallFeed {
 
 	Joystick altStick;
-	JoystickButton wheelStart;
-	JoystickButton wheelStop;
+	JoystickButton wheelControl;
+	JoystickButton wheelControlSlow;
 	
 	Victor ballFeedWheel;
 	
@@ -19,25 +19,36 @@ public class BallFeed {
 		altStick = new Joystick(ref.getAltJoystick());
 		ballFeedWheel = new Victor(ref.getFeedMotor());
 		
-		wheelStart = new JoystickButton(altStick, 1);
-		wheelStop = new JoystickButton(altStick, 2);
+		wheelControl = new JoystickButton(altStick, 1);
+		wheelControlSlow = new JoystickButton(altStick, 2);
 	}
 	
 	
 	public void ballFeed(){
 		
-		if(wheelStart.get()){
+		if(wheelControl.get()){
 			
-			ballFeedWheel.set(1);
+			ballFeedWheel.set(.75);
 		
 		}
 		
-		if(wheelStop.get()){
+		if(!wheelControl.get()){
+			
+			ballFeedWheel.set(0);
+			
+		}
+		
+		if(wheelControlSlow.get()){
+			
+			ballFeedWheel.set(.1);
+			
+		}
+		
+		if(!wheelControlSlow.get()){
 			
 			ballFeedWheel.set(0);
 			
 		}
 		
 	}
-	
 }
