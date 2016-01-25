@@ -24,9 +24,14 @@ public class TeleopDrive {
 	long nanotime;
 	long nanotimeOld;
 	
+	double leftFactor = 1;
+	double rightFactor = 1;
+	
+	PortReference ref;
+	
 	public void driveInit(){
 		
-		PortReference ref = new PortReference();
+		ref = new PortReference();
 		
 		leftStick = new Joystick(ref.getLeftJoystick());
 		rightStick = new Joystick(ref.getRightJoystick());
@@ -49,29 +54,31 @@ public class TeleopDrive {
 		
 		nanotime = System.nanoTime();
 		
-		leftMotor.set(leftStick.getY());
-		rightMotor.set(leftStick.getY());
+		leftMotor.set(leftFactor * leftStick.getY());
+		rightMotor.set(rightFactor * rightStick.getY());
 		
-		//Check speed calculation process
 		leftRate = leftEncoder.get() / (nanotime - nanotimeOld); //rate in counts per nanosecond
 		rightRate = rightEncoder.get() / (nanotime - nanotimeOld); //rate in counts per nanosecond
 		
 		leftRate *= Math.pow(10, 9) * 60;
 		rightRate *= Math.pow(10, 9) * 60;
-		leftRate /= 2048;
-		rightRate /= 2048;
+		
+		leftRate /= ref.getCountsPerRevolution();
+		rightRate /= ref.getCountsPerRevolution();
+		
 		if(leftRate != rightRate && Math.abs(leftStick.getY()- rightStick.getY()) < .01){
 			
 			if(leftRate < rightRate){
 				
-				
+				rightFactor = leftRate / 67702.5;
 				rightMotor.set(leftRate / 67702.5);
 				
 			}
 			
 			if(rightRate < leftRate){
 				
-				leftMotor.set(leftRate / 67702.5);
+				leftFactor = rightRate / 67702.5;
+				leftMotor.set(rightRate / 67702.5);
 				
 			}
 			

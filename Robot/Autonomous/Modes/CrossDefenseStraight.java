@@ -14,8 +14,6 @@ public class CrossDefenseStraight {
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
 	
-	private Gyro gyro;
-	
 	private double leftDistance;
 	private double rightDistance;
 	
@@ -25,15 +23,13 @@ public class CrossDefenseStraight {
 	private PortReference ref;
 	private AutoDrive ad;
 	
-	private boolean onDefense;
+	private String defenseStatus;
 	
 	public void init(){
 		nanotimeOld = System.nanoTime();
 		
 		ref = new PortReference();
 		ad = new AutoDrive();
-		
-		gyro = new AnalogGyro(1);
 		
 		leftEncoder = new Encoder(ref.getLeftEncoder1(),ref.getLeftEncoder2(),false,EncodingType.k1X);
 		rightEncoder = new Encoder(ref.getRightEncoder1(),ref.getRightEncoder2(),false,EncodingType.k1X);
@@ -56,25 +52,31 @@ public class CrossDefenseStraight {
 		
 		nanotimeOld = nanotime;
 		
-		if(ad.onDefense()){
+		if(ad.onDefense() == 1){
 			
-			onDefense = true;
+			defenseStatus = "Entered";
 			
 		}
 		
 		
-		if(!ad.onDefense() && onDefense == true){
+		
+		if(ad.onDefense() == 2 && defenseStatus == "Entered"){
+			
+			defenseStatus = "Crossed";
+			
+			
+		}
+		
+		if(ad.onDefense() == 0 && defenseStatus == "Crossed"){
 			
 			leftMotor.set(0);
 			rightMotor.set(0);
-			
 			leftEncoder.reset();
 			rightEncoder.reset();
 			
-			gyro.reset();
+			ad.getGyro().reset();
 			
 			return true;
-			
 		}
 		
 		else{

@@ -51,25 +51,29 @@ public class AutoDrive {
 		return 0;
 	}
 	
-	public boolean onDefense(){
+	public int onDefense(){
 		
 		//check this angle
-		if(gyro.getAngle() > 5){
+		if(gyro.getAngle() > 5){ // Entering defense
 			
-			return true;
+			return 1;
 			
 		}
 		
-		if(Math.abs(gyro.getAngle()) <= .01){
+		if(Math.abs(gyro.getAngle()) <= .01 && Math.abs(gyro.getAngle()) >= -.01){ //On defense or on ground
 			
-			return false;
+			return 0;
+			
+		}
+		
+		if(Math.abs(gyro.getAngle()) < -5){ // Leaving defense
+			
+			return 2;
 			
 		}
 		
 		else{
-			
-			return false;
-			
+			return 0;
 		}
 	}
 	
@@ -77,5 +81,11 @@ public class AutoDrive {
 		
 		//code here
 		return 0;
+	}
+	
+	public Gyro getGyro(){
+		
+		return gyro;
+		
 	}
 }

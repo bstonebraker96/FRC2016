@@ -44,4 +44,8 @@ public class PortReference {
 		return 6;
 	}
 	
+	public int getCountsPerRevolution(){
+		 return 2048;
+	}
+	
 }
