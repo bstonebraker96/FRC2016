@@ -1,6 +1,5 @@
 package org.usfirst.frc.team5968.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 
 public class PortReference {
 	

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
+@SuppressWarnings("unused")
 public class TeleopDrive{
 	
 	public Joystick leftStick;
@@ -67,7 +68,7 @@ public class TeleopDrive{
 		
 		bLeft = new JoystickButton(leftStick, 1);
 		bRight = new JoystickButton(rightStick, 1);
-	}
+	}//end of method
 	
 	
 	public void driveBase(){
@@ -88,38 +89,36 @@ public class TeleopDrive{
 		leftRate /= ref.getCountsPerRevolution();
 		rightRate /= ref.getCountsPerRevolution();
 		
-		if(leftRate != rightRate && Math.abs(leftStick.getY()- rightStick.getY()) < .01){
-			
-			if(leftRate < rightRate){
-				
+		if(leftRate != rightRate && Math.abs(leftStick.getY()- rightStick.getY()) < .01)
+		{	
+			if(leftRate < rightRate)
+			{
 				rightFactor = leftRate / 67702.5;
 				rightMotor.set(leftRate / 67702.5);
-				
 			}
 			
-			if(rightRate < leftRate){
-				
+			if(rightRate < leftRate)
+			{
 				leftFactor = rightRate / 67702.5;
 				leftMotor.set(rightRate / 67702.5);
-				
-			}
-			
+			}	
 		}
 		
-		if(bLeft.get() || bRight.get() && turning == false){
+		if(bLeft.get() || bRight.get() && turning == false)
+		{
 			
 			turning = true;
 			
 			leftEncoderTurn = leftEncoderOld;
 			rightEncoderTurn = rightEncoderOld;
 			
-			if(turn()){
-				
-				turning = false;
-				
+			if(turn())
+			{
+				turning = false;	
 			}
 			
-			else{
+			else
+			{
 				turning = false;
 			}
 			
@@ -139,14 +138,22 @@ public class TeleopDrive{
 		leftDistance = (leftEncoder.get() - leftEncoderTurn) * ref.getCountsPerRevolution() * 7.65 * Math.PI;
 		rightDistance = (rightEncoder.get() - rightEncoderTurn) * ref.getCountsPerRevolution() * 7.65 * Math.PI;
 		
-		while(leftDistance < 11.2 && rightDistance < 11.2) {
-			if(leftDistance == 11.2 || rightDistance == 11.2){
+		while(leftDistance < 11.2 && rightDistance < 11.2) 
+		{
+			if(leftDistance == 11.2 || rightDistance == 11.2)
+			{
 				leftMotor.set(0);
 				rightMotor.set(0);
 			
 				return true;
+				
+			}
+			else
+			{
+				return false;
 			}
 		}
+		return false;
 		
 	}
 	

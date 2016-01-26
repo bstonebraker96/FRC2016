@@ -21,34 +21,30 @@ public class BallFeed {
 		
 		wheelControl = new JoystickButton(altStick, 1);
 		wheelControlSlow = new JoystickButton(altStick, 2);
-	}
+	}//end of method
 	
 	
 	public void ballFeed(){
 		
-		if(wheelControl.get()){
-			
+		if(wheelControl.get())
+		{			
 			ballFeedWheel.set(.75);
-		
 		}
 		
-		if(!wheelControl.get()){
-			
+		if(!wheelControl.get())
+		{
 			ballFeedWheel.set(0);
-			
 		}
 		
-		if(wheelControlSlow.get()){
-			
-			ballFeedWheel.set(.1);
-			
+		if(wheelControlSlow.get())
+		{	
+			ballFeedWheel.set(.1);	
 		}
 		
-		if(!wheelControlSlow.get()){
-			
-			ballFeedWheel.set(0);
-			
+		if(!wheelControlSlow.get())
+		{	
+			ballFeedWheel.set(0);	
 		}
 		
-	}
-}
+	}//end of method
+}//end of class

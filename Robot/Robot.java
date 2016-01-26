@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 
+@SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
 
 	TeleopDrive teleopDrive;
@@ -35,7 +36,8 @@ public class Robot extends IterativeRobot {
     	
     	mode = autoDrive.getMode();
     	
-    	switch (mode){
+    	switch (mode)
+    	{
     		case 1: mode1.init();
     				break;
     	}
@@ -44,9 +46,10 @@ public class Robot extends IterativeRobot {
    
     public void autonomousPeriodic() {
     	
-    	switch(mode){
+    	switch(mode)
+    	{
     		case 1: autoDriveComplete = mode1.crossDefenseStraight();
-    				break;
+    		break;
     	}
     	
     	//start shooter system

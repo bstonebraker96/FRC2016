@@ -21,7 +21,8 @@ public class AutoDrive {
 	
 	private PortReference ref;
 	
-	public void autoDriveInit(){
+	public void autoDriveInit()
+	{
 		ref = new PortReference();
 		
 		leftMotor = new Talon(ref.getLeftMotor());
@@ -35,85 +36,88 @@ public class AutoDrive {
 		gyro.calibrate();
 	}
 	
-	public double fixDirection(double nanotime, double nanotimeOld){
+	public double fixDirection(double nanotime, double nanotimeOld)
+	{
 		
 		leftRate = (leftEncoder.get() * ref.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
 		rightRate = (rightEncoder.get() * ref.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
 			
-			if(leftRate < rightRate){
-				
+			if(leftRate < rightRate)
+			{
 				rightMotor.set(leftRate / 67702.5);
-				
 			}
 			
-			if(rightRate < leftRate){
-				
-				leftMotor.set(rightRate / 67702.5);
-				
+			if(rightRate < leftRate)
+			{				
+				leftMotor.set(rightRate / 67702.5);				
 			}
 			
 		return 0;
 	}
 	
-	public int onDefense(){
+	public int onDefense()
+	{
 		
 		//check this angle
-		if(gyro.getAngle() > 5){ // Entering defense
-			
+		if(gyro.getAngle() > 5)// Entering defense
+		{ 
+			System.out.println("OW!");
+			System.out.println("Gyro Angle = " + gyro.getAngle());
 			return 1;
-			
 		}
 		
-		if(Math.abs(gyro.getAngle()) <= .01 && Math.abs(gyro.getAngle()) >= -.01){ //On defense or on ground
-			
+		if(Math.abs(gyro.getAngle()) <= .01 && Math.abs(gyro.getAngle()) >= -.01)
+		//On defense or on ground
+		{ 			
+			return 0;			
+		}
+		
+		if(Math.abs(gyro.getAngle()) < -5)// Leaving defense
+		{ 			
+			System.out.println("Owie!");
+			System.out.println("Gyro Angle = " + gyro.getAngle());
+			return 2;			
+		}
+		
+		else
+		{
 			return 0;
-			
 		}
-		
-		if(Math.abs(gyro.getAngle()) < -5){ // Leaving defense
-			
-			return 2;
-			
-		}
-		
-		else{
-			return 0;
-		}
-	}
+	}//end of method
 	
-	public int getMode(){
-		
+	public int getMode()
+	{		
 		//code here
 		return 0;
 	}
 	
-	public Gyro getGyro(){
-		
-		return gyro;
-		
+	public Gyro getGyro()
+	{	
+		System.out.println("Gyro: " + gyro);
+		return gyro;		
 	}
 	
-	public Encoder getRightEncoder(){
-		
-		return rightEncoder;
-		
+	public Encoder getRightEncoder()
+	{	
+		System.out.println("Right Encoder: " + rightEncoder);
+		return rightEncoder;		
 	}
 	
-	public Encoder getLeftEncoder(){
-		
-		return leftEncoder;
-		
+	public Encoder getLeftEncoder()
+	{		
+		System.out.println("Left Encoder: " + leftEncoder);
+		return leftEncoder;		
 	}
 	
-	public Talon getLeftMotor(){
-		
-		return leftMotor;
-		
+	public Talon getLeftMotor()
+	{
+		System.out.println("Left Motor: " + leftMotor);
+		return leftMotor;	
 	}
 	
-	public Talon getRightMotor(){
-		
-		return rightMotor;
-		
+	public Talon getRightMotor()
+	{	
+		System.out.println("Right Motor: " + rightMotor);
+		return rightMotor;		
 	}
-}
+}//end of class

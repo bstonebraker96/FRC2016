@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
+@SuppressWarnings("unused")
 public class CrossDefenseStraight {
 	
 	private double leftDistance;
@@ -42,27 +43,27 @@ public class CrossDefenseStraight {
 		leftDistance = ad.getLeftEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
 		rightDistance = ad.getRightEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
 		
-		if(leftDistance != rightDistance) ad.fixDirection(nanotime, nanotimeOld);
+		if(leftDistance != rightDistance)
+		{
+			ad.fixDirection(nanotime, nanotimeOld);
+		}
 		
 		nanotimeOld = nanotime;
 		
-		if(ad.onDefense() == 1){
-			
-			defenseStatus = "Entered";
-			
+		if(ad.onDefense() == 1)
+		{
+			defenseStatus = "Entered";	
 		}
 		
 		
 		
-		if(ad.onDefense() == 2 && defenseStatus == "Entered"){
-			
+		if(ad.onDefense() == 2 && defenseStatus == "Entered")
+		{	
 			defenseStatus = "Crossed";
-			
-			
 		}
 		
-		if(ad.onDefense() == 0 && defenseStatus == "Crossed"){
-			
+		if(ad.onDefense() == 0 && defenseStatus == "Crossed")
+		{	
 			ad.getLeftMotor().set(0);
 			ad.getRightMotor().set(0);
 			ad.getLeftEncoder().reset();
@@ -73,7 +74,8 @@ public class CrossDefenseStraight {
 			return true;
 		}
 		
-		if(timeAccumulative >= 6 * Math.pow(10, 9) && !defenseStatus.equals("Crossed")){
+		if(timeAccumulative >= 6 * Math.pow(10, 9) && !defenseStatus.equals("Crossed"))
+		{
 			
 			ad.getLeftMotor().set(0);
 			ad.getRightMotor().set(0);
@@ -81,8 +83,8 @@ public class CrossDefenseStraight {
 			return false;
 		}
 		
-		else{
-			
+		else
+		{	
 			return false;
 		}
 	}
