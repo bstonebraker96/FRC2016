@@ -3,6 +3,7 @@ package org.usfirst.frc.team5968.robot;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class AutoDrive {
@@ -26,12 +27,15 @@ public class AutoDrive {
 		leftMotor = new Talon(ref.getLeftMotor());
 		rightMotor = new Talon(ref.getRightMotor());
 	
+		leftEncoder = new Encoder(ref.getLeftEncoder1(),ref.getLeftEncoder2(),false,EncodingType.k1X);
+		rightEncoder = new Encoder(ref.getRightEncoder1(),ref.getRightEncoder2(),false,EncodingType.k1X);
+		
 		//fix analog input
 		gyro = new AnalogGyro(1);
 		gyro.calibrate();
 	}
 	
-	public double fixDirection(Encoder l, Encoder r, double nanotime, double nanotimeOld){
+	public double fixDirection(double nanotime, double nanotimeOld){
 		
 		leftRate = (leftEncoder.get() * ref.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
 		rightRate = (rightEncoder.get() * ref.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
@@ -86,6 +90,30 @@ public class AutoDrive {
 	public Gyro getGyro(){
 		
 		return gyro;
+		
+	}
+	
+	public Encoder getRightEncoder(){
+		
+		return rightEncoder;
+		
+	}
+	
+	public Encoder getLeftEncoder(){
+		
+		return leftEncoder;
+		
+	}
+	
+	public Talon getLeftMotor(){
+		
+		return leftMotor;
+		
+	}
+	
+	public Talon getRightMotor(){
+		
+		return rightMotor;
 		
 	}
 }

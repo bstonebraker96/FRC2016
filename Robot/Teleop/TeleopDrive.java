@@ -1,11 +1,14 @@
 package org.usfirst.frc.team5968.robot;
 
+import java.awt.event.ActionListener;
+
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-public class TeleopDrive {
+public class TeleopDrive{
 	
 	public Joystick leftStick;
 	public Joystick rightStick;
@@ -18,14 +21,25 @@ public class TeleopDrive {
 	
 	double leftRate;
 	double rightRate;
+	double leftDistance = 0;
+	double rightDistance = 0;
 	double leftReductionFactor;
 	double rightReductionFactor;
 	
 	long nanotime;
 	long nanotimeOld;
+	int leftEncoderOld;
+	int rightEncoderOld;
+	int leftEncoderTurn;
+	int rightEncoderTurn;
 	
 	double leftFactor = 1;
 	double rightFactor = 1;
+	
+	boolean turning;
+	
+	JoystickButton bLeft;
+	JoystickButton bRight;
 	
 	PortReference ref;
 	
@@ -47,6 +61,12 @@ public class TeleopDrive {
 		
 		nanotime = System.nanoTime();
 		nanotimeOld = nanotime;
+		
+		rightEncoderOld = rightEncoder.get();
+		leftEncoderOld = leftEncoder.get();
+		
+		bLeft = new JoystickButton(leftStick, 1);
+		bRight = new JoystickButton(rightStick, 1);
 	}
 	
 	
@@ -54,11 +74,13 @@ public class TeleopDrive {
 		
 		nanotime = System.nanoTime();
 		
+		
 		leftMotor.set(leftFactor * leftStick.getY());
 		rightMotor.set(rightFactor * rightStick.getY());
 		
-		leftRate = leftEncoder.get() / (nanotime - nanotimeOld); //rate in counts per nanosecond
-		rightRate = rightEncoder.get() / (nanotime - nanotimeOld); //rate in counts per nanosecond
+		leftRate = (leftEncoder.get() - leftEncoderOld) / (nanotime - nanotimeOld); //rate in counts per nanosecond
+		rightRate = (rightEncoder.get() - rightEncoderOld) / (nanotime - nanotimeOld); //rate in counts per nanosecond
+		
 		
 		leftRate *= Math.pow(10, 9) * 60;
 		rightRate *= Math.pow(10, 9) * 60;
@@ -84,9 +106,47 @@ public class TeleopDrive {
 			
 		}
 		
+		if(bLeft.get() || bRight.get() && turning == false){
+			
+			turning = true;
+			
+			leftEncoderTurn = leftEncoderOld;
+			rightEncoderTurn = rightEncoderOld;
+			
+			if(turn()){
+				
+				turning = false;
+				
+			}
+			
+			else{
+				turning = false;
+			}
+			
+		}
+		
 		nanotimeOld = nanotime;
-		leftEncoder.reset();
-		rightEncoder.reset();
+		leftEncoderOld = leftEncoder.get();
+		rightEncoderOld = rightEncoder.get();
+		
+	}
+	
+	private boolean turn(){
+		
+		leftMotor.set(-0.5);
+		rightMotor.set(0.5);
+		
+		leftDistance = (leftEncoder.get() - leftEncoderTurn) * ref.getCountsPerRevolution() * 7.65 * Math.PI;
+		rightDistance = (rightEncoder.get() - rightEncoderTurn) * ref.getCountsPerRevolution() * 7.65 * Math.PI;
+		
+		while(leftDistance < 11.2 && rightDistance < 11.2) {
+			if(leftDistance == 11.2 || rightDistance == 11.2){
+				leftMotor.set(0);
+				rightMotor.set(0);
+			
+				return true;
+			}
+		}
 		
 	}
 	

@@ -7,12 +7,6 @@ import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class CrossDefenseStraight {
-
-	private Talon leftMotor;
-	private Talon rightMotor;
-	
-	private Encoder leftEncoder;
-	private Encoder rightEncoder;
 	
 	private double leftDistance;
 	private double rightDistance;
@@ -20,35 +14,35 @@ public class CrossDefenseStraight {
 	private long nanotime;
 	private long nanotimeOld;
 	
+	private long timeAccumulative;
+	
 	private PortReference ref;
 	private AutoDrive ad;
 	
 	private String defenseStatus;
 	
 	public void init(){
+		
 		nanotimeOld = System.nanoTime();
 		
 		ref = new PortReference();
 		ad = new AutoDrive();
 		
-		leftEncoder = new Encoder(ref.getLeftEncoder1(),ref.getLeftEncoder2(),false,EncodingType.k1X);
-		rightEncoder = new Encoder(ref.getRightEncoder1(),ref.getRightEncoder2(),false,EncodingType.k1X);
 		
-		leftMotor = new Talon(ref.getLeftMotor());
-		rightMotor = new Talon(ref.getRightMotor());
-		
-		leftMotor.set(0.25);
-		rightMotor.set(0.25);
+		ad.getLeftMotor().set(0.25);
+		ad.getRightMotor().set(0.25);
 		
 	}
 	
 	public boolean crossDefenseStraight(){
 		nanotime = System.nanoTime();
+		timeAccumulative = System.nanoTime();
 		
-		leftDistance = leftEncoder.get() * ref.getCountsPerRevolution() * 4 * Math.PI;
-		rightDistance = rightEncoder.get() * ref.getCountsPerRevolution() * 4 * Math.PI;
 		
-		if(leftDistance != rightDistance) ad.fixDirection(leftEncoder, rightEncoder, nanotime, nanotimeOld);
+		leftDistance = ad.getLeftEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
+		rightDistance = ad.getRightEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
+		
+		if(leftDistance != rightDistance) ad.fixDirection(nanotime, nanotimeOld);
 		
 		nanotimeOld = nanotime;
 		
@@ -69,17 +63,26 @@ public class CrossDefenseStraight {
 		
 		if(ad.onDefense() == 0 && defenseStatus == "Crossed"){
 			
-			leftMotor.set(0);
-			rightMotor.set(0);
-			leftEncoder.reset();
-			rightEncoder.reset();
+			ad.getLeftMotor().set(0);
+			ad.getRightMotor().set(0);
+			ad.getLeftEncoder().reset();
+			ad.getRightEncoder().reset();
 			
 			ad.getGyro().reset();
 			
 			return true;
 		}
 		
+		if(timeAccumulative >= 6 * Math.pow(10, 9) && !defenseStatus.equals("Crossed")){
+			
+			ad.getLeftMotor().set(0);
+			ad.getRightMotor().set(0);
+			
+			return false;
+		}
+		
 		else{
+			
 			return false;
 		}
 	}
