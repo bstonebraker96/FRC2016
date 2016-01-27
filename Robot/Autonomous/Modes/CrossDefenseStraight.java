@@ -31,7 +31,7 @@ public class CrossDefenseStraight {
 		
 		
 		ad.getLeftMotor().set(0.25);
-		ad.getRightMotor().set(0.25);
+		ad.getRightMotor().set(-0.25);
 		
 	}
 	
@@ -45,7 +45,7 @@ public class CrossDefenseStraight {
 		
 		if(leftDistance != rightDistance)
 		{
-			ad.fixDirection(nanotime, nanotimeOld);
+			ad.fixDirection(nanotime, nanotimeOld, false);
 		}
 		
 		nanotimeOld = nanotime;

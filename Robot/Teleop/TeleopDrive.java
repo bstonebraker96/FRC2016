@@ -78,7 +78,7 @@ public class TeleopDrive{
 		
 		
 		leftMotor.set(leftFactor * leftStick.getY());
-		rightMotor.set(rightFactor * rightStick.getY());
+		rightMotor.set(rightFactor * -1 * rightStick.getY());
 		
 		leftRate = ((((leftEncoder.get() - leftEncoderOld) / (nanotime - nanotimeOld)) / ref.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
 		rightRate = ((((rightEncoder.get() - rightEncoderOld) / (nanotime - nanotimeOld)) / ref.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm

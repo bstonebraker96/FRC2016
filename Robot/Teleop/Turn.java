@@ -10,6 +10,9 @@ public class Turn {
 	private PortReference ref;
 	private AutoDrive ad;
 	
+	private JoystickButton leftStop;
+	private JoystickButton rightStop;
+	
 	private double c;
 	
 	public void turn(int leftEncoderStart, int rightEncoderStart, double turnAngle, JoystickButton leftStop, JoystickButton rightStop) {
@@ -17,6 +20,9 @@ public class Turn {
 		td = new TeleopDrive();
 		ref = new PortReference();
 		ad = new AutoDrive();
+		
+		long nanotime = System.nanoTime();
+		long nanotimeOld = nanotime;
 		
 		double leftDistance;
 		double rightDistance;
@@ -32,11 +38,14 @@ public class Turn {
 			c = 22.4 * Math.PI * (turnAngle / 360);
 			
 			while(leftDistance != c || rightDistance != c){
+				nanotime = System.nanoTime();
 				
 				ad.getLeftMotor().set(.5);
 				ad.getRightMotor().set(.5);
 				
+				ad.fixDirection(nanotime, nanotimeOld);
 				
+				nanotimeOld = nanotime;
 			}
 			
 			ad.getLeftMotor().set(0);
@@ -53,9 +62,12 @@ public class Turn {
 			c = 22.4 * Math.PI * (turnAngle / 360);
 			
 			while(leftDistance != c || rightDistance != c){
+				nanotime = System.nanoTime();
 				
 				td.getLeftMotor().set(.5);
 				td.getRightMotor().set(.5);
+				
+				ad.fixDirection(nanotime, nanotimeOld, true);
 				
 				if(leftStop.get() || rightStop.get())
 				{
@@ -65,6 +77,8 @@ public class Turn {
 					break;
 					
 				}
+				
+				nanotimeOld = nanotime;
 				
 			}
 			

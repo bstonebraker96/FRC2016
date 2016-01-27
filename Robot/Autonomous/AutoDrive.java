@@ -36,22 +36,37 @@ public class AutoDrive {
 		gyro.calibrate();
 	}
 	
-	public double fixDirection(double nanotime, double nanotimeOld)
+	public double fixDirection(double nanotime, double nanotimeOld, boolean turning)
 	{
 		
 		leftRate = (leftEncoder.get() * ref.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
 		rightRate = (rightEncoder.get() * ref.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
 			
-			if(leftRate < rightRate)
+			if(turning)
 			{
-				rightMotor.set(leftRate / 67702.5);
+				if(leftRate < rightRate)
+				{
+					rightMotor.set(leftRate / 67702.5);
+				}
+			
+				if(rightRate < leftRate)
+				{				
+					leftMotor.set(rightRate / 67702.5);				
+				}
 			}
 			
-			if(rightRate < leftRate)
-			{				
-				leftMotor.set(rightRate / 67702.5);				
-			}
+			if(!turning)
+			{
+				if(leftRate < rightRate)
+				{
+					rightMotor.set(-1 * leftRate / 67702.5);
+				}
 			
+				if(rightRate < leftRate)
+				{				
+					leftMotor.set(rightRate / 67702.5);				
+				}
+			}
 		return 0;
 	}
 	
