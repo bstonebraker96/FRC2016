@@ -3,6 +3,8 @@
 Primary Driver Sticks
 
 	* Y Axis: Drive
+	* Button 1 (Both sticks): Turn 180 degrees
+	* Button 2 (Both sticks): Emergency stop turn
 
 Alternate Stick
 
