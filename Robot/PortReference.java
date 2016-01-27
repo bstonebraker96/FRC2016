@@ -43,6 +43,18 @@ public class PortReference {
 		return 6;
 	}
 	
+	public int getCompressor(){
+		return 8;
+	}
+	
+	public int getLeftShootMotor(){
+		return 9;
+	}
+	
+	public int getRightShootMotor(){
+		return 10;
+	}
+	
 	public int getCountsPerRevolution(){
 		 return 2048;
 	}
