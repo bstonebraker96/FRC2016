@@ -43,7 +43,7 @@ public class Turn {
 				ad.getLeftMotor().set(.5);
 				ad.getRightMotor().set(.5);
 				
-				ad.fixDirection(nanotime, nanotimeOld);
+				ad.fixDirection(nanotime, nanotimeOld, true);
 				
 				nanotimeOld = nanotime;
 			}
