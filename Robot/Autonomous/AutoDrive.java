@@ -31,6 +31,12 @@ public class AutoDrive {
 		leftEncoder = new Encoder(ref.getLeftEncoder1(),ref.getLeftEncoder2(),false,EncodingType.k1X);
 		rightEncoder = new Encoder(ref.getRightEncoder1(),ref.getRightEncoder2(),false,EncodingType.k1X);
 		
+		leftEncoder.setSamplesToAverage(5);
+		rightEncoder.setSamplesToAverage(5);
+		
+		leftEncoder.reset();
+		rightEncoder.reset();
+		
 		//fix analog input
 		gyro = new AnalogGyro(1);
 		gyro.calibrate();

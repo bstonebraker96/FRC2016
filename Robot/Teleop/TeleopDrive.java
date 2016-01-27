@@ -59,6 +59,9 @@ public class TeleopDrive{
 		leftEncoder.setSamplesToAverage(5);
 		rightEncoder.setSamplesToAverage(5);
 		
+		leftEncoder.reset();
+		rightEncoder.reset();
+		
 		nanotime = System.nanoTime();
 		nanotimeOld = nanotime;
 		

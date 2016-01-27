@@ -1,12 +1,6 @@
 package org.usfirst.frc.team5968.robot;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-@SuppressWarnings("unused")
 public class CrossDefenseStraight {
 	
 	private double leftDistance;
@@ -55,8 +49,6 @@ public class CrossDefenseStraight {
 			defenseStatus = "Entered";	
 		}
 		
-		
-		
 		if(ad.onDefense() == 2 && defenseStatus == "Entered")
 		{	
 			defenseStatus = "Crossed";
@@ -64,14 +56,24 @@ public class CrossDefenseStraight {
 		
 		if(ad.onDefense() == 0 && defenseStatus == "Crossed")
 		{	
-			ad.getLeftMotor().set(0);
-			ad.getRightMotor().set(0);
-			ad.getLeftEncoder().reset();
-			ad.getRightEncoder().reset();
 			
-			ad.getGyro().reset();
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				System.out.println("InterruptedException");
+			}
 			
-			return true;
+			if(ad.onDefense() == 2)
+			{
+				ad.getLeftMotor().set(0);
+				ad.getRightMotor().set(0);
+				ad.getLeftEncoder().reset();
+				ad.getRightEncoder().reset();
+			
+				ad.getGyro().reset();
+			
+				return true;
+			}
 		}
 		
 		if(timeAccumulative >= 6 * Math.pow(10, 9) && !defenseStatus.equals("Crossed"))
