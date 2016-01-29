@@ -41,7 +41,7 @@ public class BallShoot
 		leftDriveMotor = new Talon(ref.getLeftMotor());
 		rightDriveMotor = new Talon(ref.getRightMotor());
 		
-		ballPusher = new Compressor(ref.getCompressor());
+		ballPusher = new Compressor(ref.getBallCompressor());
 		
 	}
 	
