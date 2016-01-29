@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 
-@SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
 
 	TeleopDrive teleopDrive;
 	BallFeed ballFeed;
 	AutoDrive autoDrive = new AutoDrive();
+	InitializeRobot robot;
 	CrossDefenseStraight mode1 = new CrossDefenseStraight();
 	
 	private boolean autoDriveComplete;
@@ -27,6 +27,7 @@ public class Robot extends IterativeRobot {
     	teleopDrive = new TeleopDrive();
     	ballFeed = new BallFeed();
     	autoDrive = new AutoDrive();
+    	robot = new InitializeRobot();
     	
     }
     
