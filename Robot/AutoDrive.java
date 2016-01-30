@@ -33,11 +33,8 @@ public class AutoDrive {
 		
 	}
 	
-	public double fixDirection(double nanotime, double nanotimeOld, boolean turning)
+	public double fixDirection(double leftRate, double rightRate, boolean turning)
 	{
-		
-		leftRate = (leftEncoder.get() * robotComponents.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
-		rightRate = (rightEncoder.get() * robotComponents.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
 			
 			if(turning)
 			{
