@@ -43,6 +43,8 @@ public class InitializeRobot {
 		
 		leftEncoder = new Encoder(3,4,false,EncodingType.k1X);
 		rightEncoder = new Encoder(5,6,false,EncodingType.k1X);
+		leftEncoder.setSamplesToAverage(5);
+		rightEncoder.setSamplesToAverage(5);
 		
 		leftJoystick = new Joystick(1);
 		rightJoystick = new Joystick(2);

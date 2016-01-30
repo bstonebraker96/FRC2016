@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5968.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Talon;
 
 public class CrossDefenseStraight {
 	
@@ -11,21 +13,32 @@ public class CrossDefenseStraight {
 	
 	private long timeAccumulative;
 	
-	private PortReference ref;
-	private AutoDrive ad;
+	private Talon leftMotor;
+	private Talon rightMotor;
+	
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
 	
 	private String defenseStatus;
 	
+	private InitializeRobot robotComponents;
+	private AutoDrive ad;
+	
 	public void init(){
+		robotComponents = new InitializeRobot();
+		ad = new AutoDrive();
 		
 		nanotimeOld = System.nanoTime();
 		
-		ref = new PortReference();
-		ad = new AutoDrive();
 		
+		leftMotor = robotComponents.getLeftMotor();
+		rightMotor = robotComponents.getRightMotor();
 		
-		ad.getLeftMotor().set(0.25);
-		ad.getRightMotor().set(-0.25);
+		leftEncoder = robotComponents.getLeftEncoder();
+		rightEncoder = robotComponents.getRightEncoder();
+		
+		leftMotor.set(0.25);
+		rightMotor.set(-0.25);
 		
 	}
 	
@@ -34,8 +47,8 @@ public class CrossDefenseStraight {
 		timeAccumulative = System.nanoTime();
 		
 		
-		leftDistance = ad.getLeftEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
-		rightDistance = ad.getRightEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
+		leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+		rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
 		
 		if(leftDistance != rightDistance)
 		{
@@ -65,12 +78,12 @@ public class CrossDefenseStraight {
 			
 			if(ad.onDefense() == 2)
 			{
-				ad.getLeftMotor().set(0);
-				ad.getRightMotor().set(0);
-				ad.getLeftEncoder().reset();
-				ad.getRightEncoder().reset();
+				leftMotor.set(0);
+				rightMotor.set(0);
+				leftEncoder.reset();
+				rightEncoder.reset();
 			
-				ad.getGyro().reset();
+				robotComponents.getGyro().reset();
 			
 				return true;
 			}
@@ -79,8 +92,8 @@ public class CrossDefenseStraight {
 		if(timeAccumulative >= 6 * Math.pow(10, 9) && !defenseStatus.equals("Crossed"))
 		{
 			
-			ad.getLeftMotor().set(0);
-			ad.getRightMotor().set(0);
+			leftMotor.set(0);
+			rightMotor.set(0);
 			
 			return false;
 		}

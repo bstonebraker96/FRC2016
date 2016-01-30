@@ -1,26 +1,25 @@
 package org.usfirst.frc.team5968.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class BallFeed {
 
-	Joystick altStick;
-	JoystickButton wheelControl;
-	JoystickButton wheelControlSlow;
+	private JoystickButton wheelControl;
+	private JoystickButton wheelControlSlow;
 	
-	Victor ballFeedWheel;
+	private Victor feedMotor;
 	
+	
+	private InitializeRobot robotComponents;
 	public void ballFeedInit(){
 		
-		PortReference ref = new PortReference();
+		robotComponents = new InitializeRobot();
+		wheelControl = new JoystickButton(robotComponents.getAltJoystick(), 1);
+		wheelControlSlow = new JoystickButton(robotComponents.getAltJoystick(), 2);
 		
-		altStick = new Joystick(ref.getAltJoystick());
-		ballFeedWheel = new Victor(ref.getFeedMotor());
+		feedMotor = robotComponents.getFeedMotor();
 		
-		wheelControl = new JoystickButton(altStick, 1);
-		wheelControlSlow = new JoystickButton(altStick, 2);
 	}//end of method
 	
 	
@@ -28,23 +27,24 @@ public class BallFeed {
 		
 		if(wheelControl.get())
 		{			
-			ballFeedWheel.set(.75);
+			feedMotor.set(.75);
 		}
 		
 		if(!wheelControl.get())
 		{
-			ballFeedWheel.set(0);
+			feedMotor.set(0);
 		}
 		
 		if(wheelControlSlow.get())
 		{	
-			ballFeedWheel.set(.1);	
+			feedMotor.set(.1);	
 		}
 		
 		if(!wheelControlSlow.get())
 		{	
-			ballFeedWheel.set(0);	
+			feedMotor.set(0);	
 		}
 		
 	}//end of method
+
 }//end of class

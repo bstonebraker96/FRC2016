@@ -1,47 +1,45 @@
 package org.usfirst.frc.team5968.robot;
 
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class BallShoot 
 {
 	
-	Joystick stick;
-	JoystickButton isComputer;
+	private JoystickButton isComputer;
 	
-	Victor leftShootMotor;
-	Victor rightShootMotor;
+	private InitializeRobot robotComponents;
 	
-	Talon leftDriveMotor;
-	Talon rightDriveMotor;
+	private Compressor ballPusher;
 	
-	Encoder leftEncoder;
-	Encoder rightEncoder;
+	private Talon leftDriveMotor;
+	private Talon rightDriveMotor;
 	
-	PortReference ref;
+	private Victor leftShootMotor;
+	private Victor rightShootMotor;
 	
-	Compressor ballPusher;
+	private Joystick altStick;
 	
 	public void ballShootInit() 
 	{
+		robotComponents = new InitializeRobot();
 		
-		ref = new PortReference();
+		ballPusher = robotComponents.getBallPusher();
 		
-		stick = new Joystick(ref.getAltJoystick());
-		isComputer = new JoystickButton(stick, 4);
+		leftDriveMotor = robotComponents.getLeftMotor();
+		rightDriveMotor = robotComponents.getRightMotor();
 		
-		leftShootMotor = new Victor(ref.getLeftShootMotor());
-		rightShootMotor = new Victor(ref.getRightMotor());
+		leftShootMotor = robotComponents.getLeftShootMotor();
+		rightShootMotor = robotComponents.getRightShootMotor();
 		
-		leftDriveMotor = new Talon(ref.getLeftMotor());
-		rightDriveMotor = new Talon(ref.getRightMotor());
+		altStick = robotComponents.getAltJoystick();
 		
-		ballPusher = new Compressor(ref.getBallCompressor());
+		
+		isComputer = new JoystickButton(altStick, 4);
+		
 		
 	}
 	
@@ -61,18 +59,18 @@ public class BallShoot
 	public void ballShootHuman() 
 	{
 		
-		if (stick.getX() == 0) 
+		if (altStick.getX() == 0) 
 		{
-			leftDriveMotor.set(stick.getY() );
-			rightDriveMotor.set((stick.getY()) * -1);
+			leftDriveMotor.set(altStick.getY());
+			rightDriveMotor.set((altStick.getY()) * -1);
 		} 
-		else if (stick.getY() == 0) 
+		else if (altStick.getY() == 0) 
 		{
-			leftDriveMotor.set(stick.getX());
-			rightDriveMotor.set(stick.getX());
+			leftDriveMotor.set(altStick.getX());
+			rightDriveMotor.set(altStick.getX());
 		}
 		
-		if (stick.getTrigger() && ballPusher.enabled()) 
+		if (altStick.getTrigger() && ballPusher.enabled()) 
 		{
 			leftShootMotor.set(-1);
 			rightShootMotor.set(1);
@@ -80,7 +78,7 @@ public class BallShoot
 			ballPusher.setClosedLoopControl(true);
 			ballPusher.setClosedLoopControl(false);
 		} 
-		else if (stick.getTrigger())
+		else if (altStick.getTrigger())
 		{
 			System.out.println("Compressor (ballPusher) not enabled.");
 		} 

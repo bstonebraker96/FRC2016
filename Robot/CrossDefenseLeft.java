@@ -8,23 +8,34 @@ public class CrossDefenseLeft {
 	private double leftDistance;
 	private double rightDistance;
 	
+	private Talon leftMotor;
+	private Talon rightMotor;
+	
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
+	
 	private long nanotime;
 	private long nanotimeOld;
 	private long timeAccumulative;
 	
-	private PortReference ref;
+	private InitializeRobot robotComponents;
 	private AutoDrive ad;
 	
 	public void init(){
 		
-		nanotimeOld = System.nanoTime();
-		
-		ref = new PortReference();
+		robotComponents = new InitializeRobot();
 		ad = new AutoDrive();
 		
+		nanotimeOld = System.nanoTime();
 		
-		ad.getLeftMotor().set(0.25);
-		ad.getRightMotor().set(0.25);
+		leftMotor = robotComponents.getLeftMotor();
+		rightMotor = robotComponents.getRightMotor();
+		
+		leftEncoder = robotComponents.getLeftEncoder();
+		rightEncoder = robotComponents.getRightEncoder();
+		
+		leftMotor.set(0.25);
+		rightMotor.set(0.25);
 		
 	}
 	
@@ -33,8 +44,8 @@ public class CrossDefenseLeft {
 		nanotime = System.nanoTime();
 		timeAccumulative = System.nanoTime();
 		
-		leftDistance = ad.getLeftEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
-		rightDistance = ad.getRightEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
+		leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+		rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
 		
 		if(leftDistance != rightDistance) ad.fixDirection(nanotime, nanotimeOld, false);
 		

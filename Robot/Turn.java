@@ -1,25 +1,33 @@
 package org.usfirst.frc.team5968.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 
 
 public class Turn {
 
-	private TeleopDrive td;
-	private PortReference ref;
+	private InitializeRobot robotComponents;
+	private IterativeRobot robot;
 	private AutoDrive ad;
 
 	private JoystickButton leftStop;
 	private JoystickButton rightStop;
 	
+	private Talon leftMotor;
+	private Talon rightMotor;
+	
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
+	
 	private double c;
 	
 	public void turn(int leftEncoderStart, int rightEncoderStart, double turnAngle, JoystickButton leftStop, JoystickButton rightStop) {
 		
-		td = new TeleopDrive();
-		ref = new PortReference();
+		robotComponents = new InitializeRobot();
+		robot = new IterativeRobot();
 		ad = new AutoDrive();
 		
 		long nanotime = System.nanoTime();
@@ -28,53 +36,57 @@ public class Turn {
 		double leftDistance;
 		double rightDistance;
 		
-		IterativeRobot robot = new IterativeRobot();
+		leftMotor = robotComponents.getLeftMotor();
+		rightMotor = robotComponents.getRightMotor();
+		
+		leftEncoder = robotComponents.getLeftEncoder();
+		rightEncoder = robotComponents.getRightEncoder();
 		
 		if(robot.isAutonomous())
 		{
 			
-			leftDistance = ad.getLeftEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
-			rightDistance = ad.getRightEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
+			leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+			rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
 			
 			c = 22.4 * Math.PI * (turnAngle / 360);
 			
 			while(leftDistance != c || rightDistance != c){
 				nanotime = System.nanoTime();
 				
-				ad.getLeftMotor().set(.5);
-				ad.getRightMotor().set(.5);
+				leftMotor.set(.5);
+				rightMotor.set(.5);
 				
 				ad.fixDirection(nanotime, nanotimeOld, true);
 				
 				nanotimeOld = nanotime;
 			}
 			
-			ad.getLeftMotor().set(0);
-			ad.getRightMotor().set(0);
+			leftMotor.set(0);
+			rightMotor.set(0);
 			
 		}
 		
 		else if(!robot.isAutonomous())
 		{
 			
-			leftDistance = td.getLeftEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
-			rightDistance = td.getRightEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
+			leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+			rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
 			
 			c = 22.4 * Math.PI * (turnAngle / 360);
 			
 			while(leftDistance != c || rightDistance != c){
 				nanotime = System.nanoTime();
 				
-				td.getLeftMotor().set(.5);
-				td.getRightMotor().set(.5);
+				leftMotor.set(.5);
+				rightMotor.set(.5);
 				
 				ad.fixDirection(nanotime, nanotimeOld, true);
 				
 				if(leftStop.get() || rightStop.get())
 				{
 					
-					td.getLeftMotor().set(0);
-					td.getRightMotor().set(0);
+					leftMotor.set(0);
+					rightMotor.set(0);
 					break;
 					
 				}
@@ -83,8 +95,8 @@ public class Turn {
 				
 			}
 			
-			td.getLeftMotor().set(0);
-			td.getRightMotor().set(0);
+			leftMotor.set(0);
+			rightMotor.set(0);
 			
 		}
  
