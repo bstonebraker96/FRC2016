@@ -12,9 +12,6 @@ public class Turn {
 	private InitializeRobot robotComponents;
 	private IterativeRobot robot;
 	private AutoDrive ad;
-
-	private JoystickButton leftStop;
-	private JoystickButton rightStop;
 	
 	private Talon leftMotor;
 	private Talon rightMotor;
@@ -24,7 +21,7 @@ public class Turn {
 	
 	private double c;
 	
-	public void turn(int leftEncoderStart, int rightEncoderStart, double turnAngle, JoystickButton leftStop, JoystickButton rightStop) {
+	public boolean turn(int leftEncoderStart, int rightEncoderStart, double turnAngle, JoystickButton leftStop, JoystickButton rightStop) {
 		
 		robotComponents = new InitializeRobot();
 		robot = new IterativeRobot();
@@ -35,6 +32,8 @@ public class Turn {
 		
 		double leftDistance;
 		double rightDistance;
+		double leftRate;
+		double rightRate;
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
@@ -42,35 +41,18 @@ public class Turn {
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
 		
-		if(robot.isAutonomous())
-		{
-			
-			leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
-			rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
-			
-			c = 22.4 * Math.PI * (turnAngle / 360);
-			
-			while(leftDistance != c || rightDistance != c){
-				nanotime = System.nanoTime();
-				
-				leftMotor.set(.5);
-				rightMotor.set(.5);
-				
-				ad.fixDirection(nanotime, nanotimeOld, true);
-				
-				nanotimeOld = nanotime;
-			}
-			
-			leftMotor.set(0);
-			rightMotor.set(0);
-			
-		}
+		int leftEncoderOld = leftEncoder.get();
+		int rightEncoderOld = rightEncoder.get();
 		
-		else if(!robot.isAutonomous())
+		if(!robot.isAutonomous())
 		{
 			
 			leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
 			rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+			
+			leftRate = ((leftEncoder.get() - leftEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+			rightRate = ((rightEncoder.get() - rightEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		
 			
 			c = 22.4 * Math.PI * (turnAngle / 360);
 			
@@ -80,26 +62,98 @@ public class Turn {
 				leftMotor.set(.5);
 				rightMotor.set(.5);
 				
-				ad.fixDirection(nanotime, nanotimeOld, true);
+				ad.fixDirection(leftRate, rightRate, true);
 				
 				if(leftStop.get() || rightStop.get())
 				{
 					
 					leftMotor.set(0);
 					rightMotor.set(0);
-					break;
+					return false;
 					
 				}
 				
 				nanotimeOld = nanotime;
+				leftEncoderOld = leftEncoder.get();
+				rightEncoderOld = rightEncoder.get();
 				
 			}
 			
 			leftMotor.set(0);
 			rightMotor.set(0);
-			
+			return true;
 		}
- 
+		return false;
+	}
+	public boolean turn(int leftEncoderStart, int rightEncoderStart, double turnAngle, String direction) {
+		
+		robotComponents = new InitializeRobot();
+		robot = new IterativeRobot();
+		ad = new AutoDrive();
+		
+		long nanotime = System.nanoTime();
+		long nanotimeOld = nanotime;
+		long nanotimeStart = System.nanoTime();
+		
+		double leftDistance;
+		double rightDistance;
+		double leftRate;
+		double rightRate;
+		
+		leftMotor = robotComponents.getLeftMotor();
+		rightMotor = robotComponents.getRightMotor();
+		
+		leftEncoder = robotComponents.getLeftEncoder();
+		rightEncoder = robotComponents.getRightEncoder();
+		
+		int leftEncoderOld = leftEncoder.get();
+		int rightEncoderOld = rightEncoder.get();
+		
+		if(robot.isAutonomous())
+		{
+			
+			leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+			rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+			
+			leftRate = ((leftEncoder.get() - leftEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+			rightRate = ((rightEncoder.get() - rightEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		
+			
+			c = 22.4 * Math.PI * (turnAngle / 360);
+			
+			while(leftDistance != c || rightDistance != c){
+				nanotime = System.nanoTime();
+				
+				if(direction.equals("counterclockwise"))
+				{
+					leftMotor.set(.5);
+					rightMotor.set(.5);
+				}
+				else if(direction.equals("clockwise"))
+				{
+					leftMotor.set(-.5);
+					rightMotor.set(-.5);
+				}
+				ad.fixDirection(leftRate, rightRate, true);
+				
+				if(nanotime - nanotimeStart >= 5 * Math.pow(10,9))
+				{
+					leftMotor.set(0);
+					rightMotor.set(0);
+					return false;
+				}
+				
+				nanotimeOld = nanotime;
+				leftEncoderOld = leftEncoder.get();
+				rightEncoderOld = rightEncoder.get();
+				
+			}
+			
+			leftMotor.set(0);
+			rightMotor.set(0);
+			return true;
+		}
+		return false;
 	}
 	
 }

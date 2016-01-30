@@ -101,7 +101,13 @@ public class TeleopDrive{
 		{
 			
 			turning = true;
-			turn.turn(leftEncoderOld, rightEncoderOld, 180, turnStopLeft, turnStopRight);
+			if(turn.turn(leftEncoderOld, rightEncoderOld, 180, turnStopLeft, turnStopRight))
+			{
+				System.out.println("Turn successful!");
+			}
+			else{
+				System.out.println("[Error] Turn aborted");
+			}
 			
 		}
 		

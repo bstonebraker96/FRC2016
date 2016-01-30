@@ -17,6 +17,9 @@ public class Robot extends IterativeRobot {
 	AutoDrive autoDrive = new AutoDrive();
 	InitializeRobot robot;
 	CrossDefenseStraight mode1 = new CrossDefenseStraight();
+	CrossDefenseLeft mode2 = new CrossDefenseLeft();
+	
+	private boolean autoStarted = false;
 	
 	private boolean autoDriveComplete;
 	
@@ -41,18 +44,27 @@ public class Robot extends IterativeRobot {
     	{
     		case 1: mode1.init();
     				break;
+    		case 2: mode2.init();
+    				break;
     	}
     }
 
    
     public void autonomousPeriodic() {
     	
-    	switch(mode)
-    	{
-    		case 1: autoDriveComplete = mode1.crossDefenseStraight();
-    		break;
+    	if(autoStarted){
+    		switch(mode)
+    		{
+    			case 1: 
+    				mode1.crossDefenseStraight();
+    				autoStarted = true;
+    				break;
+    			case 2:
+    				mode2.crossDefenseLeft();
+    				autoStarted = true;
+    				break;
+    		}
     	}
-    	
     	//start shooter system
     }
     
