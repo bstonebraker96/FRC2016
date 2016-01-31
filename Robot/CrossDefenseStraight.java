@@ -97,7 +97,8 @@ public class CrossDefenseStraight {
 			
 				leftMotor.set(0);
 				rightMotor.set(0);
-			
+				leftEncoder.reset();
+				rightEncoder.reset();
 				return false;
 			}
 		
