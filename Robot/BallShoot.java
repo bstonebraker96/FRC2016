@@ -17,6 +17,8 @@ public class BallShoot
 	
 	private Talon leftDriveMotor;
 	private Talon rightDriveMotor;
+	private Talon leftDriveMotor2;
+	private Talon rightDriveMotor2;
 	
 	private Victor leftShootMotor;
 	private Victor rightShootMotor;
@@ -31,6 +33,8 @@ public class BallShoot
 		
 		leftDriveMotor = robotComponents.getLeftMotor();
 		rightDriveMotor = robotComponents.getRightMotor();
+		leftDriveMotor2 = robotComponents.getLeftMotor2();
+		rightDriveMotor2 = robotComponents.getRightMotor2();
 		
 		leftShootMotor = robotComponents.getLeftShootMotor();
 		rightShootMotor = robotComponents.getRightShootMotor();
@@ -63,11 +67,15 @@ public class BallShoot
 		{
 			leftDriveMotor.set(altStick.getY());
 			rightDriveMotor.set((altStick.getY()) * -1);
+			leftDriveMotor2.set(altStick.getY());
+			rightDriveMotor2.set((altStick.getY()) * -1);
 		} 
 		else if (altStick.getY() == 0) 
 		{
 			leftDriveMotor.set(altStick.getX());
 			rightDriveMotor.set(altStick.getX());
+			leftDriveMotor2.set(altStick.getX());
+			rightDriveMotor2.set(altStick.getX());
 		}
 		
 		if (altStick.getTrigger() && ballPusher.enabled()) 
