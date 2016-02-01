@@ -1,52 +1,40 @@
 package org.usfirst.frc.team5968.robot;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class AutoDrive {
 	
-	private Talon leftMotor;
-	private Talon rightMotor;
-	
-	private Encoder leftEncoder;
-	private Encoder rightEncoder;
+	private InitializeRobot robotComponents;
 	
 	private double leftRate;
 	private double rightRate;
 	
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
+	
+	private Talon leftMotor;
+	private Talon rightMotor;
+	
 	private Gyro gyro;
 	
-	private PortReference ref;
-	
-	public void autoDriveInit()
-	{
-		ref = new PortReference();
+	public void autoDriveInit(){
 		
-		leftMotor = new Talon(ref.getLeftMotor());
-		rightMotor = new Talon(ref.getRightMotor());
-	
-		leftEncoder = new Encoder(ref.getLeftEncoder1(),ref.getLeftEncoder2(),false,EncodingType.k1X);
-		rightEncoder = new Encoder(ref.getRightEncoder1(),ref.getRightEncoder2(),false,EncodingType.k1X);
+		robotComponents = new InitializeRobot();
 		
-		leftEncoder.setSamplesToAverage(5);
-		rightEncoder.setSamplesToAverage(5);
+		leftEncoder = robotComponents.getLeftEncoder();
+		rightEncoder = robotComponents.getRightEncoder();
 		
-		leftEncoder.reset();
-		rightEncoder.reset();
+		leftMotor = robotComponents.getLeftMotor();
+		rightMotor = robotComponents.getRightMotor();
 		
-		//fix analog input
-		gyro = new AnalogGyro(1);
-		gyro.calibrate();
+		gyro = robotComponents.getGyro();
+		
 	}
 	
-	public double fixDirection(double nanotime, double nanotimeOld, boolean turning)
+	public double fixDirection(double leftRate, double rightRate, boolean turning)
 	{
-		
-		leftRate = (leftEncoder.get() * ref.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
-		rightRate = (rightEncoder.get() * ref.getCountsPerRevolution()) / ((nanotime - nanotimeOld) * 60 * Math.pow(10, 9));
 			
 			if(turning)
 			{
@@ -57,7 +45,7 @@ public class AutoDrive {
 			
 				if(rightRate < leftRate)
 				{				
-					leftMotor.set(rightRate / 67702.5);				
+					rightMotor.set(rightRate / 67702.5);				
 				}
 			}
 			
@@ -87,13 +75,13 @@ public class AutoDrive {
 			return 1;
 		}
 		
-		if(Math.abs(gyro.getAngle()) <= .01 && Math.abs(gyro.getAngle()) >= -.01)
+		if(Math.abs(gyro.getAngle()) <= .01)
 		//On defense or on ground
 		{ 			
 			return 0;			
 		}
 		
-		if(Math.abs(gyro.getAngle()) < -5)// Leaving defense
+		if(gyro.getAngle() < 5)// Leaving defense
 		{ 			
 			System.out.println("Owie!");
 			System.out.println("Gyro Angle = " + gyro.getAngle());
@@ -110,35 +98,5 @@ public class AutoDrive {
 	{		
 		//code here
 		return 0;
-	}
-	
-	public Gyro getGyro()
-	{	
-		System.out.println("Gyro: " + gyro);
-		return gyro;		
-	}
-	
-	public Encoder getRightEncoder()
-	{	
-		System.out.println("Right Encoder: " + rightEncoder);
-		return rightEncoder;		
-	}
-	
-	public Encoder getLeftEncoder()
-	{		
-		System.out.println("Left Encoder: " + leftEncoder);
-		return leftEncoder;		
-	}
-	
-	public Talon getLeftMotor()
-	{
-		System.out.println("Left Motor: " + leftMotor);
-		return leftMotor;	
-	}
-	
-	public Talon getRightMotor()
-	{	
-		System.out.println("Right Motor: " + rightMotor);
-		return rightMotor;		
 	}
 }//end of class

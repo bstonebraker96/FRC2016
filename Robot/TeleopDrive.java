@@ -1,6 +1,5 @@
 package org.usfirst.frc.team5968.robot;
 
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
@@ -39,25 +38,22 @@ public class TeleopDrive{
 	private JoystickButton turnStopLeft;
 	private JoystickButton turnStopRight;
 	
-	PortReference ref;
-	Turn turn;
+	private InitializeRobot robotComponents;
+	private Turn turn;
 	
 	public void driveInit(){
 		
-		ref = new PortReference();
+		robotComponents = new InitializeRobot();
 		turn = new Turn();
 		
-		leftStick = new Joystick(ref.getLeftJoystick());
-		rightStick = new Joystick(ref.getRightJoystick());
+		leftStick = robotComponents.getLeftJoystick();
+		rightStick = robotComponents.getRightJoystick();
 		
-		leftMotor = new Talon(ref.getLeftMotor());
-		rightMotor = new Talon(ref.getRightMotor());
+		leftMotor = robotComponents.getLeftMotor();
+		rightMotor = robotComponents.getRightMotor();
 		
-		leftEncoder = new Encoder(ref.getLeftEncoder1(),ref.getLeftEncoder2(),false,EncodingType.k1X);
-		rightEncoder = new Encoder(ref.getRightEncoder1(),ref.getRightEncoder2(),false,EncodingType.k1X);
-		
-		leftEncoder.setSamplesToAverage(5);
-		rightEncoder.setSamplesToAverage(5);
+		leftEncoder = robotComponents.getLeftEncoder();
+		rightEncoder = robotComponents.getRightEncoder();
 		
 		leftEncoder.reset();
 		rightEncoder.reset();
@@ -83,8 +79,8 @@ public class TeleopDrive{
 		leftMotor.set(leftFactor * leftStick.getY());
 		rightMotor.set(rightFactor * -1 * rightStick.getY());
 		
-		leftRate = ((((leftEncoder.get() - leftEncoderOld) / (nanotime - nanotimeOld)) / ref.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
-		rightRate = ((((rightEncoder.get() - rightEncoderOld) / (nanotime - nanotimeOld)) / ref.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
+		leftRate = ((((leftEncoder.get() - leftEncoderOld) / (nanotime - nanotimeOld)) / robotComponents.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
+		rightRate = ((((rightEncoder.get() - rightEncoderOld) / (nanotime - nanotimeOld)) / robotComponents.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
 		
 		if(leftRate != rightRate && Math.abs(leftStick.getY()- rightStick.getY()) < .01)
 		{	
@@ -105,7 +101,13 @@ public class TeleopDrive{
 		{
 			
 			turning = true;
-			turn.turn(leftEncoderOld, rightEncoderOld, 180, turnStopLeft, turnStopRight);
+			if(turn.turn(leftEncoderOld, rightEncoderOld, 180, turnStopLeft, turnStopRight))
+			{
+				System.out.println("Turn successful!");
+			}
+			else{
+				System.out.println("[Error] Turn aborted");
+			}
 			
 		}
 		
@@ -113,30 +115,6 @@ public class TeleopDrive{
 		turning = false;
 		leftEncoderOld = leftEncoder.get();
 		rightEncoderOld = rightEncoder.get();
-		
-	}
-	
-	public Encoder getLeftEncoder(){
-		
-		return rightEncoder;
-		
-	}
-	
-	public Encoder getRightEncoder(){
-		
-		return leftEncoder;
-		
-	}
-	
-	public Talon getLeftMotor(){
-		
-		return leftMotor;
-		
-	}
-	
-	public Talon getRightMotor(){
-		
-		return rightMotor;
 		
 	}
 }

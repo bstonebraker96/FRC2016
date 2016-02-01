@@ -1,93 +1,112 @@
 package org.usfirst.frc.team5968.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Talon;
 
 public class CrossDefenseStraight {
 	
 	private double leftDistance;
 	private double rightDistance;
+	private double leftRate;
+	private double rightRate;
 	
-	private long nanotime;
 	private long nanotimeOld;
+	private long timeStart;
 	
-	private long timeAccumulative;
+	private Talon leftMotor;
+	private Talon rightMotor;
 	
-	private PortReference ref;
-	private AutoDrive ad;
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
+	private double leftEncoderOld;
+	private double rightEncoderOld;
 	
 	private String defenseStatus;
 	
+	private InitializeRobot robotComponents;
+	private AutoDrive ad;
+	
 	public void init(){
-		
-		nanotimeOld = System.nanoTime();
-		
-		ref = new PortReference();
+		robotComponents = new InitializeRobot();
 		ad = new AutoDrive();
 		
+		leftMotor = robotComponents.getLeftMotor();
+		rightMotor = robotComponents.getRightMotor();
 		
-		ad.getLeftMotor().set(0.25);
-		ad.getRightMotor().set(-0.25);
+		leftEncoder = robotComponents.getLeftEncoder();
+		rightEncoder = robotComponents.getRightEncoder();
+		
+		nanotimeOld = System.nanoTime();
+		timeStart = System.nanoTime();
+		leftEncoderOld = leftEncoder.get();
+		rightEncoderOld = rightEncoder.get();
+		
+		leftMotor.set(0.25);
+		rightMotor.set(-0.25);
 		
 	}
 	
 	public boolean crossDefenseStraight(){
-		nanotime = System.nanoTime();
-		timeAccumulative = System.nanoTime();
-		
-		
-		leftDistance = ad.getLeftEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
-		rightDistance = ad.getRightEncoder().get() * ref.getCountsPerRevolution() * 7.65 * Math.PI;
-		
-		if(leftDistance != rightDistance)
+		while(true)
 		{
-			ad.fixDirection(nanotime, nanotimeOld, false);
-		}
-		
-		nanotimeOld = nanotime;
-		
-		if(ad.onDefense() == 1)
-		{
-			defenseStatus = "Entered";	
-		}
-		
-		if(ad.onDefense() == 2 && defenseStatus == "Entered")
-		{	
-			defenseStatus = "Crossed";
-		}
-		
-		if(ad.onDefense() == 0 && defenseStatus == "Crossed")
-		{	
+					
+			leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+			rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
 			
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				System.out.println("InterruptedException");
-			}
+			leftRate = ((leftEncoder.get() - leftEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+			rightRate = ((rightEncoder.get() - rightEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		
+		
+			if(leftRate != rightRate) ad.fixDirection(leftRate, rightRate, false);
 			
-			if(ad.onDefense() == 2)
+			if(ad.onDefense() == 1)
 			{
-				ad.getLeftMotor().set(0);
-				ad.getRightMotor().set(0);
-				ad.getLeftEncoder().reset();
-				ad.getRightEncoder().reset();
-			
-				ad.getGyro().reset();
-			
-				return true;
+				defenseStatus = "Entered";	
 			}
-		}
 		
-		if(timeAccumulative >= 6 * Math.pow(10, 9) && !defenseStatus.equals("Crossed"))
-		{
-			
-			ad.getLeftMotor().set(0);
-			ad.getRightMotor().set(0);
-			
-			return false;
-		}
+			if(ad.onDefense() == 2 && defenseStatus == "Entered")
+			{	
+				defenseStatus = "Crossed";
+			}
 		
-		else
-		{	
-			return false;
+			if(ad.onDefense() == 0 && defenseStatus == "Crossed")
+			{	
+			
+				try {
+					Thread.sleep(250);
+				} 
+				catch (InterruptedException e) {
+					System.out.println("InterruptedException");
+				}
+			
+				if(ad.onDefense() == 0)
+				{
+					leftMotor.set(0);
+					rightMotor.set(0);
+					leftEncoder.reset();
+					rightEncoder.reset();
+			
+					robotComponents.getGyro().reset();
+			
+					return true;
+				}
+			}
+		
+			if((System.nanoTime() - timeStart)>= (6 * Math.pow(10, 9)) && !defenseStatus.equals("Crossed"))
+			{
+			
+				leftMotor.set(0);
+				rightMotor.set(0);
+				leftEncoder.reset();
+				rightEncoder.reset();
+				return false;
+			}
+		
+		
+			nanotimeOld = System.nanoTime();
+			leftEncoderOld = leftEncoder.get();
+			rightEncoderOld = rightEncoder.get();
+		
 		}
 	}
 }
