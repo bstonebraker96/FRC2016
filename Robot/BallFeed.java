@@ -12,6 +12,7 @@ public class BallFeed {
 	
 	
 	private InitializeRobot robotComponents;
+	
 	public void ballFeedInit(){
 		
 		robotComponents = new InitializeRobot();

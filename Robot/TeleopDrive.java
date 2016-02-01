@@ -7,31 +7,30 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class TeleopDrive{
 	
-	public Joystick leftStick;
-	public Joystick rightStick;
+	private Joystick leftStick;
+	private Joystick rightStick;
 	
-	public Talon leftMotor;
-	public Talon rightMotor;
+	private Talon leftMotor;
+	private Talon rightMotor;
+	private Talon leftMotor2;
+	private Talon rightMotor2;
 	
-	Encoder leftEncoder;
-	Encoder rightEncoder;
 	
-	double leftRate;
-	double rightRate;
-	double leftDistance = 0;
-	double rightDistance = 0;
-	double leftReductionFactor;
-	double rightReductionFactor;
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
 	
-	long nanotime;
-	long nanotimeOld;
-	int leftEncoderOld;
-	int rightEncoderOld;
+	private double leftRate;
+	private double rightRate;
 	
-	double leftFactor = 1;
-	double rightFactor = 1;
+	private long nanotime;
+	private long nanotimeOld;
+	private int leftEncoderOld;
+	private int rightEncoderOld;
 	
-	boolean turning;
+	private double leftFactor = 1;
+	private double rightFactor = 1;
+	
+	private boolean turning;
 	
 	private JoystickButton bLeft;
 	private JoystickButton bRight;
@@ -51,6 +50,8 @@ public class TeleopDrive{
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
+		leftMotor2 = robotComponents.getLeftMotor2();
+		rightMotor2 = robotComponents.getRightMotor2();
 		
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
@@ -78,6 +79,8 @@ public class TeleopDrive{
 		
 		leftMotor.set(leftFactor * leftStick.getY());
 		rightMotor.set(rightFactor * -1 * rightStick.getY());
+		leftMotor2.set(leftFactor * leftStick.getY());
+		rightMotor2.set(rightFactor * -1 * rightStick.getY());
 		
 		leftRate = ((((leftEncoder.get() - leftEncoderOld) / (nanotime - nanotimeOld)) / robotComponents.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
 		rightRate = ((((rightEncoder.get() - rightEncoderOld) / (nanotime - nanotimeOld)) / robotComponents.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
@@ -88,12 +91,14 @@ public class TeleopDrive{
 			{
 				rightFactor = leftRate / 67702.5;
 				rightMotor.set(leftRate / 67702.5);
+				rightMotor2.set(leftRate / 67702.5);
 			}
 			
 			if(rightRate < leftRate)
 			{
 				leftFactor = rightRate / 67702.5;
 				leftMotor.set(rightRate / 67702.5);
+				leftMotor2.set(rightRate / 67702.5);
 			}	
 		}
 		

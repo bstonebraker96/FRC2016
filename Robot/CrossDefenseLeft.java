@@ -12,6 +12,8 @@ public class CrossDefenseLeft {
 	
 	private Talon leftMotor;
 	private Talon rightMotor;
+	private Talon leftMotor2;
+	private Talon rightMotor2;
 	
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
@@ -41,6 +43,8 @@ public class CrossDefenseLeft {
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
+		leftMotor2 = robotComponents.getLeftMotor2();
+		rightMotor2 = robotComponents.getRightMotor2();
 		
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
@@ -53,7 +57,8 @@ public class CrossDefenseLeft {
 		
 		leftMotor.set(0.25);
 		rightMotor.set(-0.25);
-		
+		leftMotor2.set(0.25);
+		rightMotor2.set(-0.25);
 		
 	}
 	
@@ -98,7 +103,8 @@ public class CrossDefenseLeft {
 			{
 				leftMotor.set(.25);
 				rightMotor.set(-.25);
-				
+				leftMotor2.set(.25);
+				rightMotor2.set(-.25);
 				
 				if(ad.onDefense() == 1)
 				{
@@ -124,6 +130,9 @@ public class CrossDefenseLeft {
 					{
 						leftMotor.set(0);
 						rightMotor.set(0);
+						leftMotor2.set(0);
+						rightMotor2.set(0);
+						
 						leftEncoder.reset();
 						rightEncoder.reset();
 				
@@ -138,6 +147,8 @@ public class CrossDefenseLeft {
 				
 					leftMotor.set(0);
 					rightMotor.set(0);
+					leftMotor2.set(0);
+					rightMotor2.set(0);
 				
 					return false;
 				}

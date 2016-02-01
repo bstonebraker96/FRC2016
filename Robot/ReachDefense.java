@@ -10,6 +10,8 @@ public class ReachDefense {
 	
 	private Talon leftMotor;
 	private Talon rightMotor;
+	private Talon leftMotor2;
+	private Talon rightMotor2;
 	
 	private long nanotimeOld;
 	private long nanotimeStart;
@@ -32,6 +34,8 @@ public class ReachDefense {
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
+		leftMotor2 = robotComponents.getLeftMotor2();
+		rightMotor2 = robotComponents.getRightMotor2();
 		
 		nanotimeOld = System.nanoTime();
 		nanotimeStart = System.nanoTime();
@@ -40,6 +44,8 @@ public class ReachDefense {
 		
 		leftMotor.set(0.25);
 		rightMotor.set(-0.25);
+		leftMotor2.set(0.25);
+		rightMotor2.set(-0.25);
 	}
 	public boolean reachDefense(){
 		while(true){
@@ -57,6 +63,9 @@ public class ReachDefense {
 				
 				leftMotor.set(0);
 				rightMotor.set(0);
+				leftMotor2.set(0);
+				rightMotor2.set(0);
+				
 				leftEncoder.reset();
 				rightEncoder.reset();
 				
@@ -67,6 +76,9 @@ public class ReachDefense {
 				
 				leftMotor.set(0);
 				rightMotor.set(0);
+				leftMotor2.set(0);
+				rightMotor2.set(0);
+				
 				leftEncoder.reset();
 				rightEncoder.reset();
 				

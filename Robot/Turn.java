@@ -15,6 +15,8 @@ public class Turn {
 	
 	private Talon leftMotor;
 	private Talon rightMotor;
+	private Talon leftMotor2;
+	private Talon rightMotor2;
 	
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
@@ -37,6 +39,9 @@ public class Turn {
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
+		leftMotor2 = robotComponents.getLeftMotor2();
+		rightMotor2 = robotComponents.getRightMotor2();
+		
 		
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
@@ -61,6 +66,8 @@ public class Turn {
 				
 				leftMotor.set(.5);
 				rightMotor.set(.5);
+				leftMotor2.set(.5);
+				rightMotor2.set(.5);
 				
 				ad.fixDirection(leftRate, rightRate, true);
 				
@@ -69,6 +76,8 @@ public class Turn {
 					
 					leftMotor.set(0);
 					rightMotor.set(0);
+					leftMotor2.set(0);
+					rightMotor2.set(0);
 					return false;
 					
 				}
@@ -81,6 +90,8 @@ public class Turn {
 			
 			leftMotor.set(0);
 			rightMotor.set(0);
+			leftMotor2.set(0);
+			rightMotor2.set(0);
 			return true;
 		}
 		return false;
@@ -102,6 +113,8 @@ public class Turn {
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
+		leftMotor2 = robotComponents.getLeftMotor2();
+		rightMotor2 = robotComponents.getRightMotor2();
 		
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
@@ -128,11 +141,15 @@ public class Turn {
 				{
 					leftMotor.set(.5);
 					rightMotor.set(.5);
+					leftMotor2.set(.5);
+					rightMotor2.set(.5);
 				}
 				else if(direction.equals("clockwise"))
 				{
 					leftMotor.set(-.5);
 					rightMotor.set(-.5);
+					leftMotor2.set(-.5);
+					rightMotor2.set(-.5);
 				}
 				ad.fixDirection(leftRate, rightRate, true);
 				
@@ -140,6 +157,8 @@ public class Turn {
 				{
 					leftMotor.set(0);
 					rightMotor.set(0);
+					leftMotor2.set(0);
+					rightMotor2.set(0);
 					return false;
 				}
 				
@@ -151,6 +170,8 @@ public class Turn {
 			
 			leftMotor.set(0);
 			rightMotor.set(0);
+			leftMotor2.set(0);
+			rightMotor2.set(0);
 			return true;
 		}
 		return false;

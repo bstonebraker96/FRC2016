@@ -14,6 +14,8 @@ public class InitializeRobot {
 	
 	private Talon leftMotor;
 	private Talon rightMotor;
+	private Talon leftMotor2;
+	private Talon rightMotor2;
 	
 	private Victor feedMotor;
 	private Victor leftShootMotor;
@@ -28,29 +30,33 @@ public class InitializeRobot {
 	
 	private Compressor ballPusher;
 	
-	private Gyro gyro = new AnalogGyro(1);
+	private Gyro gyro;
 	
 	private int countsPerRevolution;
 	
 	InitializeRobot(){
 		
-		leftMotor = new Talon(1);
-		rightMotor = new Talon(2);
+		leftMotor = new Talon(1); //PWM 1
+		rightMotor = new Talon(2); //PWM 2
+		leftMotor2 = new Talon(4); // PWM
+		rightMotor2 = new Talon(5); // PWM
 		
-		feedMotor = new Victor(3);
-		leftShootMotor = new Victor(9);
-		rightShootMotor = new Victor(10);
+		feedMotor = new Victor(3); //PWM 3
+		leftShootMotor = new Victor(9); // PWM 9
+		rightShootMotor = new Victor(10); // PWM 10
 		
-		leftEncoder = new Encoder(3,4,false,EncodingType.k1X);
-		rightEncoder = new Encoder(5,6,false,EncodingType.k1X);
+		leftEncoder = new Encoder(3,4,false,EncodingType.k1X); //Digital IN 3 4
+		rightEncoder = new Encoder(5,6,false,EncodingType.k1X); //Digital IN 5 6
 		leftEncoder.setSamplesToAverage(5);
 		rightEncoder.setSamplesToAverage(5);
 		
-		leftJoystick = new Joystick(1);
-		rightJoystick = new Joystick(2);
-		altJoystick = new Joystick(7);
+		leftJoystick = new Joystick(1); //Digital IN 1
+		rightJoystick = new Joystick(2); //Digital IN 2
+		altJoystick = new Joystick(7); // Digital IN 7
 		
-		ballPusher = new Compressor(8);
+		ballPusher = new Compressor(8); //PWM 8
+		
+		gyro = new AnalogGyro(1); //Analog 1
 		
 		countsPerRevolution = 2048;
 		
@@ -62,6 +68,12 @@ public class InitializeRobot {
 	}
 	public Talon getRightMotor(){
 		return rightMotor;
+	}
+	public Talon getLeftMotor2(){
+		return leftMotor2;
+	}
+	public Talon getRightMotor2(){
+		return rightMotor2;
 	}
 	public Victor getFeedMotor(){
 		return feedMotor;
