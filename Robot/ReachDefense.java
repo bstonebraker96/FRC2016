@@ -58,7 +58,7 @@ public class ReachDefense {
 		
 			if(leftRate != rightRate) ad.fixDirection(leftRate, rightRate, false);
 			
-			if(leftDistance == 60 || rightDistance == 60) //TODO Check this number
+			if(leftDistance == 86 || rightDistance == 86)
 			{
 				
 				leftMotor.set(0);
