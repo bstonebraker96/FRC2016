@@ -7,18 +7,12 @@ public class Robot extends IterativeRobot {
 
 	TeleopDrive teleopDrive;
 	BallFeed ballFeed;
-	AutoDrive autoDrive = new AutoDrive();
+	AutoDriveBase ad;
 	InitializeRobot robot;
 	
-	CrossDefenseStraight mode1 = new CrossDefenseStraight();
-	CrossDefenseLeft mode2 = new CrossDefenseLeft();
-	CrossDefenseRight mode3 = new CrossDefenseRight();
-	ReachDefense mode4 = new ReachDefense();
-	DoNothing mode5 = new DoNothing();
+	Drive autoDrive;
 	
-	private boolean autoStarted = false;
-	
-	private boolean autoDriveComplete;
+	private boolean defenseCrossed = false;
 	
 	int mode;
 	
@@ -26,65 +20,44 @@ public class Robot extends IterativeRobot {
     	
     	teleopDrive = new TeleopDrive();
     	ballFeed = new BallFeed();
-    	autoDrive = new AutoDrive();
+    	ad = new AutoDriveBase();
     	robot = new InitializeRobot();
+    	autoDrive = new Drive();
     	
     }
     
     public void autonomousInit() {
     	
-    	autoDrive.autoDriveInit();
+    	ad.autoDriveInit();
     	
-    	mode = autoDrive.getMode();
+    	mode = ad.getMode();
     	
-    	switch (mode)
-    	{
-    		case 1: mode1.init();
-    				break;
-    		case 2: mode2.init();
-    				break;
-    		case 3: mode3.init();
-    				break;
-    		case 4: mode4.init();
-    				break;
-    	}
     }
 
    
     public void autonomousPeriodic() {
     	
-    	if(!autoStarted){
-    		switch(mode)
+    	if(mode == 0)
+    	{
+    		
+    	}
+    	
+    	if(mode >= 1 && !defenseCrossed)
+    	{
+    		
+    		if(autoDrive.autoDrive())
     		{
-    			case 1: 
-    				autoDriveComplete = mode1.crossDefenseStraight();
-    				autoStarted = true;
-    				break;
-    			case 2:
-    				autoDriveComplete = mode2.crossDefenseLeft();
-    				autoStarted = true;
-    				break;
-    			case 3:
-    				autoDriveComplete = mode3.crossDefenseRight();
-    				autoStarted = true;
-    				break;
-    			case 4:
-    				autoDriveComplete = mode4.reachDefense();
-    				autoStarted = true;
-    			case 5: 
-    				autoDriveComplete = mode5.doNothing();
-    				autoStarted = true;
+    			defenseCrossed = true;
     		}
+    		
+    		
     	}
     	
-    	if(autoDriveComplete == true)
+    	if(mode == 2 && defenseCrossed)
     	{
-    		//start shooter system
-    	}
-    	
-    	else if(autoDriveComplete == false)
-    	{
-    		System.out.println("[Error] Auto Error!");
+    		
+    		//start ballshoot
+    		
     	}
     	
     }

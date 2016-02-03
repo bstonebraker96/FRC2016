@@ -3,42 +3,43 @@ package org.usfirst.frc.team5968.robot;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 
-public class ReachDefense {
+public class Drive {
 	
-	private Encoder leftEncoder;
-	private Encoder rightEncoder;
+	private double leftRate;
+	private double rightRate;
+	
+	private long nanotimeOld;
+	private long timeStart;
 	
 	private Talon leftMotor;
 	private Talon rightMotor;
 	private Talon leftMotor2;
 	private Talon rightMotor2;
 	
-	private long nanotimeOld;
-	private long nanotimeStart;
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
+	private double leftEncoderOld;
+	private double rightEncoderOld;
 	
-	private int leftEncoderOld;
-	private int rightEncoderOld;
+	private String defenseStatus;
 	
-	private double leftRate;
-	private double rightRate;
-	private double leftDistance;
-	private double rightDistance;
-	
-	InitializeRobot robotComponents = new InitializeRobot();
-	AutoDrive ad = new AutoDrive();
+	private InitializeRobot robotComponents;
+	private AutoDriveBase ad;
 	
 	public void init(){
-		
-		leftEncoder = robotComponents.getLeftEncoder();
-		rightEncoder = robotComponents.getRightEncoder();
+		robotComponents = new InitializeRobot();
+		ad = new AutoDriveBase();
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
 		leftMotor2 = robotComponents.getLeftMotor2();
 		rightMotor2 = robotComponents.getRightMotor2();
 		
+		leftEncoder = robotComponents.getLeftEncoder();
+		rightEncoder = robotComponents.getRightEncoder();
+		
 		nanotimeOld = System.nanoTime();
-		nanotimeStart = System.nanoTime();
+		timeStart = System.nanoTime();
 		leftEncoderOld = leftEncoder.get();
 		rightEncoderOld = rightEncoder.get();
 		
@@ -47,33 +48,54 @@ public class ReachDefense {
 		leftMotor2.set(0.25);
 		rightMotor2.set(-0.25);
 	}
-	public boolean reachDefense(){
-		while(true){
-			
-			leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
-			rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+	
+	public boolean autoDrive(){
 			
 			leftRate = ((leftEncoder.get() - leftEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 			rightRate = ((rightEncoder.get() - rightEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		
+		
 			if(leftRate != rightRate) ad.fixDirection(leftRate, rightRate, false);
 			
-			if(leftDistance == 86 || rightDistance == 86)
+			if(ad.onDefense() == 1)
 			{
-				
-				leftMotor.set(0);
-				rightMotor.set(0);
-				leftMotor2.set(0);
-				rightMotor2.set(0);
-				
-				leftEncoder.reset();
-				rightEncoder.reset();
-				
-				return true;
+				defenseStatus = "Entered";	
 			}
+		
+			if(ad.onDefense() == 2 && defenseStatus == "Entered")
+			{	
+				defenseStatus = "Crossed";
+			}
+		
+			if(ad.onDefense() == 0 && defenseStatus == "Crossed")
+			{	
 			
-			if(System.nanoTime() - nanotimeStart >= 6 * Math.pow(10, 9)){
-				
+				try {
+					Thread.sleep(250);
+				} 
+				catch (InterruptedException e) {
+					System.out.println("InterruptedException");
+				}
+			
+				if(ad.onDefense() == 0)
+				{
+					leftMotor.set(0);
+					rightMotor.set(0);
+					leftMotor2.set(0);
+					rightMotor2.set(0);
+					
+					leftEncoder.reset();
+					rightEncoder.reset();
+			
+					robotComponents.getGyro().reset();
+			
+					return true;
+				}
+			}
+		
+			if((System.nanoTime() - timeStart)>= (6 * Math.pow(10, 9)) && !defenseStatus.equals("Crossed"))
+			{
+			
 				leftMotor.set(0);
 				rightMotor.set(0);
 				leftMotor2.set(0);
@@ -81,14 +103,14 @@ public class ReachDefense {
 				
 				leftEncoder.reset();
 				rightEncoder.reset();
-				
 				return false;
 			}
-			
+		
+		
 			nanotimeOld = System.nanoTime();
 			leftEncoderOld = leftEncoder.get();
 			rightEncoderOld = rightEncoder.get();
-		}
 		
+			return false;
 	}
 }

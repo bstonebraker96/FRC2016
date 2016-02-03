@@ -15,7 +15,6 @@ public class TeleopDrive{
 	private Talon leftMotor2;
 	private Talon rightMotor2;
 	
-	
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
 	
@@ -30,20 +29,16 @@ public class TeleopDrive{
 	private double leftFactor = 1;
 	private double rightFactor = 1;
 	
-	private boolean turning;
+	private JoystickButton reverseControls;
+	private JoystickButton resetControls;
 	
-	private JoystickButton bLeft;
-	private JoystickButton bRight;
-	private JoystickButton turnStopLeft;
-	private JoystickButton turnStopRight;
+	private boolean reversedControls = false;
 	
 	private InitializeRobot robotComponents;
-	private Turn turn;
 	
 	public void driveInit(){
 		
 		robotComponents = new InitializeRobot();
-		turn = new Turn();
 		
 		leftStick = robotComponents.getLeftJoystick();
 		rightStick = robotComponents.getRightJoystick();
@@ -65,10 +60,8 @@ public class TeleopDrive{
 		rightEncoderOld = rightEncoder.get();
 		leftEncoderOld = leftEncoder.get();
 		
-		bLeft = new JoystickButton(leftStick, 1);
-		bRight = new JoystickButton(rightStick, 1);
-		turnStopLeft = new JoystickButton(leftStick, 2);
-		turnStopRight = new JoystickButton(rightStick, 2);
+		reverseControls = new JoystickButton(leftStick, 1);
+		resetControls = new JoystickButton(rightStick, 1);
 	}//end of method
 	
 	
@@ -76,11 +69,25 @@ public class TeleopDrive{
 		
 		nanotime = System.nanoTime();
 		
+		if(!reversedControls)
+		{
+			
+			leftMotor.set(leftFactor * leftStick.getY());
+			rightMotor.set(rightFactor * -1 * rightStick.getY());
+			leftMotor2.set(leftFactor * leftStick.getY());
+			rightMotor2.set(rightFactor * -1 * rightStick.getY());
 		
-		leftMotor.set(leftFactor * leftStick.getY());
-		rightMotor.set(rightFactor * -1 * rightStick.getY());
-		leftMotor2.set(leftFactor * leftStick.getY());
-		rightMotor2.set(rightFactor * -1 * rightStick.getY());
+		}
+		
+		if(reversedControls)
+		{
+			
+			leftMotor.set(leftFactor * -1 * leftStick.getY());
+			rightMotor.set(rightFactor * rightStick.getY());
+			leftMotor2.set(leftFactor * -1 * leftStick.getY());
+			rightMotor2.set(rightFactor * rightStick.getY());
+			
+		}
 		
 		leftRate = ((((leftEncoder.get() - leftEncoderOld) / (nanotime - nanotimeOld)) / robotComponents.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
 		rightRate = ((((rightEncoder.get() - rightEncoderOld) / (nanotime - nanotimeOld)) / robotComponents.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
@@ -102,22 +109,21 @@ public class TeleopDrive{
 			}	
 		}
 		
-		if(bLeft.get() || bRight.get() && turning == false)
+		if(reverseControls.get())
 		{
 			
-			turning = true;
-			if(turn.turn(leftEncoderOld, rightEncoderOld, 180, turnStopLeft, turnStopRight))
-			{
-				System.out.println("Turn successful!");
-			}
-			else{
-				System.out.println("[Error] Turn aborted");
-			}
+			reversedControls = true;
+			
+		}
+		
+		if(resetControls.get())
+		{
+		
+			reversedControls = false;
 			
 		}
 		
 		nanotimeOld = nanotime;
-		turning = false;
 		leftEncoderOld = leftEncoder.get();
 		rightEncoderOld = rightEncoder.get();
 		

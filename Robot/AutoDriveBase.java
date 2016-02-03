@@ -1,32 +1,29 @@
 package org.usfirst.frc.team5968.robot;
 
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-public class AutoDrive {
+public class AutoDriveBase {
 	
 	private InitializeRobot robotComponents;
-	
-	private double leftRate;
-	private double rightRate;
-	
-	private Encoder leftEncoder;
-	private Encoder rightEncoder;
+	private DigitalInput dI8;
+	private DigitalInput dI9;
 	
 	private Talon leftMotor;
 	private Talon rightMotor;
 	private Talon leftMotor2;
 	private Talon rightMotor2;
 	
+	
+	
 	private Gyro gyro;
 	
 	public void autoDriveInit(){
 		
 		robotComponents = new InitializeRobot();
-		
-		leftEncoder = robotComponents.getLeftEncoder();
-		rightEncoder = robotComponents.getRightEncoder();
+		dI8 = new DigitalInput(8);
+		dI9 = new DigitalInput(9);
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
@@ -104,7 +101,21 @@ public class AutoDrive {
 	
 	public int getMode()
 	{		
-		//code here
+		if(dI8.get() && dI9.get())
+		{
+			return 0;
+		}
+		
+		if(dI8.get() && !dI9.get())
+		{
+			return 1;
+		}
+		
+		if(!dI8.get() && dI9.get())
+		{
+			return 2;
+		}
+		
 		return 0;
 	}
 }//end of class
