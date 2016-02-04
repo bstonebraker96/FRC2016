@@ -104,7 +104,7 @@ public class AutoDriveBase {
 	{		
 		if(dI8.get() && dI9.get())
 		{
-			return 0;
+			return 2;
 		}
 		
 		if(dI8.get() && !dI9.get())
@@ -112,11 +112,13 @@ public class AutoDriveBase {
 			return 1;
 		}
 		
-		if(!dI8.get() && dI9.get())
+		if(!dI8.get() && !dI9.get())
 		{
-			return 2;
+			return 0;
 		}
 		
-		return 0;
+		else{
+			return 0;
+		}
 	}
 }//end of class
