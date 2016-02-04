@@ -2,6 +2,7 @@ package org.usfirst.frc.team5968.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class AutoDriveBase {
@@ -10,10 +11,10 @@ public class AutoDriveBase {
 	private DigitalInput dI8;
 	private DigitalInput dI9;
 	
-	private Talon leftMotor;
-	private Talon rightMotor;
-	private Talon leftMotor2;
-	private Talon rightMotor2;
+	private Victor leftMotor;
+	private Victor rightMotor;
+	private Victor leftMotor2;
+	private Victor rightMotor2;
 	
 	
 	

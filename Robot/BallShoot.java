@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class BallShoot 
@@ -15,13 +16,13 @@ public class BallShoot
 	
 	private Compressor ballPusher;
 	
-	private Talon leftDriveMotor;
-	private Talon rightDriveMotor;
-	private Talon leftDriveMotor2;
-	private Talon rightDriveMotor2;
+	private Victor leftDriveMotor;
+	private Victor rightDriveMotor;
+	private Victor leftDriveMotor2;
+	private Victor rightDriveMotor2;
 	
-	private Victor leftShootMotor;
-	private Victor rightShootMotor;
+	private VictorSP leftShootMotor;
+	private VictorSP rightShootMotor;
 	
 	private Joystick altStick;
 	

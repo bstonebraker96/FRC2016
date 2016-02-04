@@ -2,6 +2,7 @@ package org.usfirst.frc.team5968.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Victor;
 
 public class Drive {
 	
@@ -11,10 +12,10 @@ public class Drive {
 	private long nanotimeOld;
 	private long timeStart;
 	
-	private Talon leftMotor;
-	private Talon rightMotor;
-	private Talon leftMotor2;
-	private Talon rightMotor2;
+	private Victor leftMotor;
+	private Victor rightMotor;
+	private Victor leftMotor2;
+	private Victor rightMotor2;
 	
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;

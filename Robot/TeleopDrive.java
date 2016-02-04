@@ -3,6 +3,7 @@ package org.usfirst.frc.team5968.robot;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class TeleopDrive{
@@ -10,10 +11,10 @@ public class TeleopDrive{
 	private Joystick leftStick;
 	private Joystick rightStick;
 	
-	private Talon leftMotor;
-	private Talon rightMotor;
-	private Talon leftMotor2;
-	private Talon rightMotor2;
+	private Victor leftMotor;
+	private Victor rightMotor;
+	private Victor leftMotor2;
+	private Victor rightMotor2;
 	
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;

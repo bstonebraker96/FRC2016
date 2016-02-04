@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5968.robot;
 
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
@@ -8,7 +9,7 @@ public class BallFeed {
 	private JoystickButton wheelControl;
 	private JoystickButton wheelControlSlow;
 	
-	private Victor feedMotor;
+	private Talon feedMotor;
 	
 	
 	private InitializeRobot robotComponents;
