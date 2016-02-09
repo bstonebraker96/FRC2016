@@ -28,7 +28,7 @@ public class BallShoot
 	
 	public void ballShootInit() 
 	{
-		robotComponents = new InitializeRobot();
+		robotComponents = InitializeRobot.GetInstance();
 		
 		ballPusher = robotComponents.getBallPusher();
 		

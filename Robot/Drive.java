@@ -28,7 +28,7 @@ public class Drive {
 	private AutoDriveBase ad;
 	
 	public void init(){
-		robotComponents = new InitializeRobot();
+		robotComponents = InitializeRobot.GetInstance();
 		ad = new AutoDriveBase();
 		
 		leftMotor = robotComponents.getLeftMotor();

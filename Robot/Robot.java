@@ -21,7 +21,7 @@ public class Robot extends IterativeRobot {
     	teleopDrive = new TeleopDrive();
     	ballFeed = new BallFeed();
     	ad = new AutoDriveBase();
-    	robot = new InitializeRobot();
+    	robot = InitializeRobot.GetInstance();
     	autoDrive = new Drive();
     	
     }

@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class InitializeRobot {
 	
+	
+	private static InitializeRobot instance = null;
+	
 	private Victor leftMotor;
 	private Victor rightMotor;
 	private Victor leftMotor2;
@@ -35,12 +38,19 @@ public class InitializeRobot {
 	
 	private int countsPerRevolution;
 	
-	InitializeRobot(){
+	public static InitializeRobot GetInstance()
+	{
+		if (instance == null)
+		{instance = new InitializeRobot();}
+		return instance;
+	}
+	
+	private InitializeRobot(){
 		
 		leftMotor = new Victor(1); //PWM 1
 		rightMotor = new Victor(2); //PWM 2
-		leftMotor2 = new Victor(4); // PWM
-		rightMotor2 = new Victor(5); // PWM
+		leftMotor2 = new Victor(4); // PWM 4
+		rightMotor2 = new Victor(5); // PWM 5
 		
 		feedMotor = new Talon(3); //PWM 3
 		leftShootMotor = new VictorSP(9); // PWM 9
@@ -51,9 +61,9 @@ public class InitializeRobot {
 		leftEncoder.setSamplesToAverage(5);
 		rightEncoder.setSamplesToAverage(5);
 		
-		leftJoystick = new Joystick(1); //Digital IN 1
-		rightJoystick = new Joystick(2); //Digital IN 2
-		altJoystick = new Joystick(7); // Digital IN 7
+		leftJoystick = new Joystick(0); //Digital IN 1
+		rightJoystick = new Joystick(1); //Digital IN 2
+		altJoystick = new Joystick(2); // Digital IN 7
 		
 		ballPusher = new Compressor(8); //PWM 8
 		

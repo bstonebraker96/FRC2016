@@ -22,7 +22,7 @@ public class AutoDriveBase {
 	
 	public void autoDriveInit(){
 		
-		robotComponents = new InitializeRobot();
+		robotComponents = InitializeRobot.GetInstance();
 		dI8 = new DigitalInput(8);
 		dI9 = new DigitalInput(9);
 		

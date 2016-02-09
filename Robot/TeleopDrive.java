@@ -39,7 +39,7 @@ public class TeleopDrive{
 	
 	public void driveInit(){
 		
-		robotComponents = new InitializeRobot();
+		robotComponents = InitializeRobot.GetInstance();
 		
 		leftStick = robotComponents.getLeftJoystick();
 		rightStick = robotComponents.getRightJoystick();

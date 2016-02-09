@@ -16,7 +16,7 @@ public class BallFeed {
 	
 	public void ballFeedInit(){
 		
-		robotComponents = new InitializeRobot();
+		robotComponents = InitializeRobot.GetInstance();
 		wheelControl = new JoystickButton(robotComponents.getAltJoystick(), 1);
 		wheelControlSlow = new JoystickButton(robotComponents.getAltJoystick(), 2);
 		
