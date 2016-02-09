@@ -1,7 +1,6 @@
 package org.usfirst.frc.team5968.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 
 public class Drive {
@@ -14,8 +13,6 @@ public class Drive {
 	
 	private Victor leftMotor;
 	private Victor rightMotor;
-	private Victor leftMotor2;
-	private Victor rightMotor2;
 	
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
@@ -33,8 +30,6 @@ public class Drive {
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
-		leftMotor2 = robotComponents.getLeftMotor2();
-		rightMotor2 = robotComponents.getRightMotor2();
 		
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
@@ -46,8 +41,6 @@ public class Drive {
 		
 		leftMotor.set(0.25);
 		rightMotor.set(-0.25);
-		leftMotor2.set(0.25);
-		rightMotor2.set(-0.25);
 	}
 	
 	public boolean autoDrive(){
@@ -82,8 +75,6 @@ public class Drive {
 				{
 					leftMotor.set(0);
 					rightMotor.set(0);
-					leftMotor2.set(0);
-					rightMotor2.set(0);
 					
 					leftEncoder.reset();
 					rightEncoder.reset();
@@ -99,8 +90,6 @@ public class Drive {
 			
 				leftMotor.set(0);
 				rightMotor.set(0);
-				leftMotor2.set(0);
-				rightMotor2.set(0);
 				
 				leftEncoder.reset();
 				rightEncoder.reset();

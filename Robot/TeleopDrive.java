@@ -2,7 +2,7 @@ package org.usfirst.frc.team5968.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
@@ -10,32 +10,27 @@ public class TeleopDrive{
 	
 	private Joystick leftStick;
 	private Joystick rightStick;
+	private Joystick altStick;
 	
 	private Victor leftMotor;
 	private Victor rightMotor;
-	private Victor leftMotor2;
-	private Victor rightMotor2;
 	
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
-	
-	private double leftRate;
-	private double rightRate;
-	
-	private long nanotime;
-	private long nanotimeOld;
-	private int leftEncoderOld;
-	private int rightEncoderOld;
 	
 	private double leftFactor = 1;
 	private double rightFactor = 1;
 	
 	private JoystickButton reverseControls;
 	private JoystickButton resetControls;
+	private JoystickButton toggleAltSteering;
 	
 	private boolean reversedControls = false;
+	private boolean altControlsEnabled = false;
 	
 	private InitializeRobot robotComponents;
+	
+	private RobotDrive drive;
 	
 	public void driveInit(){
 		
@@ -43,11 +38,10 @@ public class TeleopDrive{
 		
 		leftStick = robotComponents.getLeftJoystick();
 		rightStick = robotComponents.getRightJoystick();
+		altStick = robotComponents.getAltJoystick();
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
-		leftMotor2 = robotComponents.getLeftMotor2();
-		rightMotor2 = robotComponents.getRightMotor2();
 		
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
@@ -55,59 +49,39 @@ public class TeleopDrive{
 		leftEncoder.reset();
 		rightEncoder.reset();
 		
-		nanotime = System.nanoTime();
-		nanotimeOld = nanotime;
-		
-		rightEncoderOld = rightEncoder.get();
-		leftEncoderOld = leftEncoder.get();
-		
 		reverseControls = new JoystickButton(leftStick, 1);
 		resetControls = new JoystickButton(rightStick, 1);
+		toggleAltSteering = new JoystickButton(altStick, 5);
+		
+		drive = new RobotDrive(1,2);
 	}//end of method
 	
 	
 	public void driveBase(){
 		
-		nanotime = System.nanoTime();
-		
-		if(!reversedControls)
-		{
-			
-			leftMotor.set(leftFactor * leftStick.getY());
-			rightMotor.set(rightFactor * -1 * rightStick.getY());
-			leftMotor2.set(leftFactor * leftStick.getY());
-			rightMotor2.set(rightFactor * -1 * rightStick.getY());
-		
-		}
-		
-		if(reversedControls)
-		{
-			
-			leftMotor.set(leftFactor * -1 * leftStick.getY());
-			rightMotor.set(rightFactor * rightStick.getY());
-			leftMotor2.set(leftFactor * -1 * leftStick.getY());
-			rightMotor2.set(rightFactor * rightStick.getY());
-			
-		}
-		
-		leftRate = ((((leftEncoder.get() - leftEncoderOld) / (nanotime - nanotimeOld)) / robotComponents.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
-		rightRate = ((((rightEncoder.get() - rightEncoderOld) / (nanotime - nanotimeOld)) / robotComponents.getCountsPerRevolution()) * 60 * Math.pow(10, 9)); //rate in rpm
-		
-		if(leftRate != rightRate && Math.abs(leftStick.getY()- rightStick.getY()) < .01)
-		{	
-			if(leftRate < rightRate)
+		if(!altControlsEnabled){
+			if(!reversedControls)
 			{
-				rightFactor = leftRate / 67702.5;
-				rightMotor.set(leftRate / 67702.5);
-				rightMotor2.set(leftRate / 67702.5);
+			
+				leftMotor.set(leftFactor * leftStick.getY());
+				rightMotor.set(rightFactor * -1 * rightStick.getY());
+		
 			}
-			
-			if(rightRate < leftRate)
+		
+			if(reversedControls)
 			{
-				leftFactor = rightRate / 67702.5;
-				leftMotor.set(rightRate / 67702.5);
-				leftMotor2.set(rightRate / 67702.5);
-			}	
+			
+				leftMotor.set(leftFactor * -1 * leftStick.getY());
+				rightMotor.set(rightFactor * rightStick.getY());
+			
+			}
+		}
+		
+		if(altControlsEnabled)
+		{
+			
+			drive.arcadeDrive(altStick);
+			
 		}
 		
 		if(reverseControls.get())
@@ -124,9 +98,19 @@ public class TeleopDrive{
 			
 		}
 		
-		nanotimeOld = nanotime;
-		leftEncoderOld = leftEncoder.get();
-		rightEncoderOld = rightEncoder.get();
+		if(toggleAltSteering.get() && !altControlsEnabled)
+		{
+			
+			altControlsEnabled = true;
+			
+		}
+		
+		if(toggleAltSteering.get() && altControlsEnabled)
+		{
+			
+			altControlsEnabled = false;
+			
+		}
 		
 	}
 }

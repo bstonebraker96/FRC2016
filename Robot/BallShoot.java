@@ -2,7 +2,6 @@ package org.usfirst.frc.team5968.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -18,8 +17,6 @@ public class BallShoot
 	
 	private Victor leftDriveMotor;
 	private Victor rightDriveMotor;
-	private Victor leftDriveMotor2;
-	private Victor rightDriveMotor2;
 	
 	private VictorSP leftShootMotor;
 	private VictorSP rightShootMotor;
@@ -34,8 +31,6 @@ public class BallShoot
 		
 		leftDriveMotor = robotComponents.getLeftMotor();
 		rightDriveMotor = robotComponents.getRightMotor();
-		leftDriveMotor2 = robotComponents.getLeftMotor2();
-		rightDriveMotor2 = robotComponents.getRightMotor2();
 		
 		leftShootMotor = robotComponents.getLeftShootMotor();
 		rightShootMotor = robotComponents.getRightShootMotor();
@@ -68,15 +63,11 @@ public class BallShoot
 		{
 			leftDriveMotor.set(altStick.getY());
 			rightDriveMotor.set((altStick.getY()) * -1);
-			leftDriveMotor2.set(altStick.getY());
-			rightDriveMotor2.set((altStick.getY()) * -1);
 		} 
 		else if (altStick.getY() == 0) 
 		{
 			leftDriveMotor.set(altStick.getX());
 			rightDriveMotor.set(altStick.getX());
-			leftDriveMotor2.set(altStick.getX());
-			rightDriveMotor2.set(altStick.getX());
 		}
 		
 		if (altStick.getTrigger() && ballPusher.enabled()) 

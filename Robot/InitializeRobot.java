@@ -18,8 +18,6 @@ public class InitializeRobot {
 	
 	private Victor leftMotor;
 	private Victor rightMotor;
-	private Victor leftMotor2;
-	private Victor rightMotor2;
 	
 	private Talon feedMotor;
 	private VictorSP leftShootMotor;
@@ -49,8 +47,6 @@ public class InitializeRobot {
 		
 		leftMotor = new Victor(1); //PWM 1
 		rightMotor = new Victor(2); //PWM 2
-		leftMotor2 = new Victor(4); // PWM 4
-		rightMotor2 = new Victor(5); // PWM 5
 		
 		feedMotor = new Talon(3); //PWM 3
 		leftShootMotor = new VictorSP(9); // PWM 9
@@ -79,12 +75,6 @@ public class InitializeRobot {
 	}
 	public Victor getRightMotor(){
 		return rightMotor;
-	}
-	public Victor getLeftMotor2(){
-		return leftMotor2;
-	}
-	public Victor getRightMotor2(){
-		return rightMotor2;
 	}
 	public Talon getFeedMotor(){
 		return feedMotor;
