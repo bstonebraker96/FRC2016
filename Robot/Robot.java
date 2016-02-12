@@ -10,6 +10,7 @@ public class Robot extends IterativeRobot {
 	AutoDriveBase ad;
 	InitializeRobot robot;
 	BallShoot shoot;
+	Turn turn;
 	
 	Drive autoDrive;
 	
@@ -24,6 +25,7 @@ public class Robot extends IterativeRobot {
     	ad = new AutoDriveBase();
     	robot = InitializeRobot.GetInstance();
     	autoDrive = new Drive();
+    	turn = new Turn();
     	
     }
     
@@ -57,7 +59,27 @@ public class Robot extends IterativeRobot {
     	if(mode == 2 && defenseCrossed)
     	{
     		
-    		shoot.shootDrive();
+    		switch(ad.getDefenseToCross())
+    		{
+    			case 1:
+    				
+    				break;
+    			case 2:
+    				
+    				break;
+    			case 3:
+    				
+    				break;
+    			case 4:
+    				
+    				break;
+    			case 5:
+    				
+    				break;
+    			case 0:
+    				mode = 0;
+    				break;
+    		}
     		
     	}
     	

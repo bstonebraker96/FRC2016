@@ -7,8 +7,12 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 public class AutoDriveBase {
 	
 	private InitializeRobot robotComponents;
-	private DigitalInput dI8;
-	private DigitalInput dI9;
+
+	private DigitalInput driveSwitch;
+	private DigitalInput shootSwitch;
+	private DigitalInput defenseSwitch1;
+	private DigitalInput defenseSwitch2;
+	private DigitalInput defenseSwitch3;
 	
 	private Victor leftMotor;
 	private Victor rightMotor;
@@ -18,11 +22,15 @@ public class AutoDriveBase {
 	public void autoDriveInit(){
 		
 		robotComponents = InitializeRobot.GetInstance();
-		dI8 = new DigitalInput(8);
-		dI9 = new DigitalInput(9);
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
+		
+		driveSwitch = robotComponents.getDriveSwitch();
+		shootSwitch = robotComponents.getShootSwitch();
+		defenseSwitch1 = robotComponents.getModeSwitch1();
+		defenseSwitch2 = robotComponents.getModeSwitch2();
+		defenseSwitch3 = robotComponents.getModeSwitch3();
 		
 		gyro = robotComponents.getGyro();
 		
@@ -91,17 +99,17 @@ public class AutoDriveBase {
 	
 	public int getMode()
 	{		
-		if(dI8.get() && dI9.get())
+		if(driveSwitch.get() && shootSwitch.get())
 		{
 			return 2;
 		}
 		
-		if(dI8.get() && !dI9.get())
+		if(driveSwitch.get() && !shootSwitch.get())
 		{
 			return 1;
 		}
 		
-		if(!dI8.get() && !dI9.get())
+		if(!driveSwitch.get() && !shootSwitch.get())
 		{
 			return 0;
 		}
@@ -109,5 +117,29 @@ public class AutoDriveBase {
 		else{
 			return 0;
 		}
+	}
+	public int getDefenseToCross(){
+		
+		if(defenseSwitch1.get())
+		{
+			return 1;
+		}
+		if(defenseSwitch2.get())
+		{
+			return 2;
+		}
+		if(defenseSwitch3.get())
+		{
+			return 3;
+		}
+		if(defenseSwitch1.get() && defenseSwitch2.get() && defenseSwitch3.get())
+		{
+			return 4;
+		}
+		if(!defenseSwitch1.get() && !defenseSwitch2.get() && !defenseSwitch3.get())
+		{
+			return 5;
+		}
+		return 0;
 	}
 }//end of class

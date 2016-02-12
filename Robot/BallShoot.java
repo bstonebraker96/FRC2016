@@ -3,6 +3,7 @@ package org.usfirst.frc.team5968.robot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -13,7 +14,9 @@ public class BallShoot
 	private InitializeRobot robotComponents;
 	private AutoDriveBase drive;
 	
-	private Compressor ballPusher;
+	private Compressor compressor;
+	private Solenoid ballPusher;
+	private Solenoid shootAngle;
 	
 	private Victor leftDriveMotor;
 	private Victor rightDriveMotor;
@@ -31,7 +34,7 @@ public class BallShoot
 	private double leftDistance = 0;
 	private double rightDistance = 0;
 	
-	private long nanotimeOld = System.nanoTime();
+	private long nanotimeOld;
 	
 	private Joystick altStick;
 	
@@ -40,7 +43,9 @@ public class BallShoot
 		robotComponents = InitializeRobot.GetInstance();
 		drive = new AutoDriveBase();
 		
+		compressor = robotComponents.getCompressor();
 		ballPusher = robotComponents.getBallPusher();
+		shootAngle = robotComponents.getAngleSolenoid();
 		
 		leftDriveMotor = robotComponents.getLeftMotor();
 		rightDriveMotor = robotComponents.getRightMotor();
@@ -53,10 +58,12 @@ public class BallShoot
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
 		
-		ballPusher.setClosedLoopControl(true);
+		compressor.setClosedLoopControl(true);
 	}
 	
-	public void shootDrive(){
+	public boolean shootDrive(double distance){
+		
+		nanotimeOld = System.nanoTime();
 		
 		leftRate = ((leftEncoder.get() - leftEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		rightRate = ((rightEncoder.get() - rightEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
@@ -66,34 +73,54 @@ public class BallShoot
 		
 		drive.fixDirection(leftRate, rightRate, false);
 		
-		if(leftDistance == 144 || rightDistance == 144){
+		if(leftDistance == distance || rightDistance == distance){
 			
 			ballShootComputer(true);
 			
 			leftDriveMotor.set(0);
 			rightDriveMotor.set(0);
 			
+			leftEncoder.reset();
+			rightEncoder.reset();
+			
+			return true;
 		}
 		
+		else if(Timer.getMatchTime() >= 10)
+		{
+			leftDriveMotor.set(0);
+			rightDriveMotor.set(0);
+			return false;
+		}
 		
 		nanotimeOld = System.nanoTime();
 		leftEncoderOld = leftEncoder.get();
 		rightEncoderOld = rightEncoder.get();
+		
+		return false;
 	}
 	
 	public void ballShootHuman() 
 	{
 		
-		if (altStick.getTrigger() && ballPusher.enabled()) 
+		if (altStick.getTrigger()) 
 		{
 			leftShootMotor.set(-1);
 			rightShootMotor.set(1);
+			
+			ballPusher.set(true);
+			
+			Timer.delay(.1);
+			
+			ballPusher.set(false);
+			
+			Timer.delay(1);
+			
+			leftShootMotor.set(0);
+			rightShootMotor.set(0);
 	
 		} 
-		else if (altStick.getTrigger())
-		{
-			System.out.println("Compressor (ballPusher) not enabled.");
-		} 
+		
 		else
 		{
 			leftShootMotor.set(0);
@@ -118,8 +145,31 @@ public class BallShoot
 			
 			Timer.delay(.250);
 			
+			ballPusher.set(true);
+			
+			Timer.delay(.1);
+			
+			ballPusher.set(false);
+			
+			Timer.delay(1);
+			
+			leftShootMotor.set(0);
+			rightShootMotor.set(0);
+			
 		}
 		
+	}
+	
+	public void platformAngle()
+	{
+		if(shootAngle.get())
+		{
+			shootAngle.set(false);
+		}
+		if(!shootAngle.get())
+		{
+			shootAngle.set(true);
+		}
 	}
 	
 }

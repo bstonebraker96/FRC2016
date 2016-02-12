@@ -30,7 +30,6 @@ public class TeleopDrive{
 	
 	private boolean reversedControls = false;
 	private boolean altControlsEnabled = false;
-	private int shootAngle = 0;
 	
 	private InitializeRobot robotComponents;
 	private BallShoot shoot;
@@ -132,7 +131,7 @@ public class TeleopDrive{
 		}
 		if(toggleShootAngle.get())
 		{
-			
+			shoot.platformAngle();
 		}
 		
 	}
