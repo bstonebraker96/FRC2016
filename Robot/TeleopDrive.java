@@ -24,11 +24,16 @@ public class TeleopDrive{
 	private JoystickButton reverseControls;
 	private JoystickButton resetControls;
 	private JoystickButton toggleAltSteering;
+	private JoystickButton humanShoot;
+	private JoystickButton computerShoot;
+	private JoystickButton toggleShootAngle;
 	
 	private boolean reversedControls = false;
 	private boolean altControlsEnabled = false;
+	private int shootAngle = 0;
 	
 	private InitializeRobot robotComponents;
+	private BallShoot shoot;
 	
 	private RobotDrive drive;
 	
@@ -51,7 +56,10 @@ public class TeleopDrive{
 		
 		reverseControls = new JoystickButton(leftStick, 1);
 		resetControls = new JoystickButton(rightStick, 1);
-		toggleAltSteering = new JoystickButton(altStick, 5);
+		toggleAltSteering = new JoystickButton(altStick, 3);
+		humanShoot = new JoystickButton(altStick, 4);
+		computerShoot = new JoystickButton(altStick, 5);
+		toggleShootAngle = new JoystickButton(altStick, 6);
 		
 		drive = new RobotDrive(1,2);
 	}//end of method
@@ -63,16 +71,16 @@ public class TeleopDrive{
 			if(!reversedControls)
 			{
 			
-				leftMotor.set(leftFactor * leftStick.getY());
-				rightMotor.set(rightFactor * -1 * rightStick.getY());
+				leftMotor.set(Math.pow((leftFactor * leftStick.getY()), 3));
+				rightMotor.set(Math.pow((rightFactor * -1 * rightStick.getY()), 3));
 		
 			}
 		
 			if(reversedControls)
 			{
 			
-				leftMotor.set(leftFactor * -1 * leftStick.getY());
-				rightMotor.set(rightFactor * rightStick.getY());
+				leftMotor.set(Math.pow((leftFactor * -1 * leftStick.getY()), 3));
+				rightMotor.set(Math.pow((rightFactor * rightStick.getY()), 3));
 			
 			}
 		}
@@ -80,7 +88,7 @@ public class TeleopDrive{
 		if(altControlsEnabled)
 		{
 			
-			drive.arcadeDrive(altStick);
+			drive.arcadeDrive(altStick, true);
 			
 		}
 		
@@ -109,6 +117,21 @@ public class TeleopDrive{
 		{
 			
 			altControlsEnabled = false;
+			
+		}
+		
+		
+		if(humanShoot.get())
+		{
+			shoot.ballShootHuman();
+		}
+		
+		if(computerShoot.get())
+		{
+			shoot.ballShootComputer(true); //change this for camera or no
+		}
+		if(toggleShootAngle.get())
+		{
 			
 		}
 		

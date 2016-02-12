@@ -21,8 +21,11 @@ public class Drive {
 	
 	private String defenseStatus;
 	
+	private int flatSamples = 0;
+	
 	private InitializeRobot robotComponents;
 	private AutoDriveBase ad;
+	private BallShoot shoot;
 	
 	public void init(){
 		robotComponents = InitializeRobot.GetInstance();
@@ -53,35 +56,29 @@ public class Drive {
 			
 			if(ad.onDefense() == 1)
 			{
-				defenseStatus = "Entered";	
+				defenseStatus = "Entered";
+				flatSamples = 0;
 			}
 		
 			if(ad.onDefense() == 2 && defenseStatus == "Entered")
 			{	
 				defenseStatus = "Crossed";
+				flatSamples = 0;
 			}
 		
 			if(ad.onDefense() == 0 && defenseStatus == "Crossed")
 			{	
-			
-				try {
-					Thread.sleep(250);
-				} 
-				catch (InterruptedException e) {
-					System.out.println("InterruptedException");
-				}
-			
-				if(ad.onDefense() == 0)
+				flatSamples++;
+				if(ad.onDefense() == 0 && flatSamples == 200)
 				{
-					leftMotor.set(0);
-					rightMotor.set(0);
 					
 					leftEncoder.reset();
 					rightEncoder.reset();
 			
 					robotComponents.getGyro().reset();
-			
+					
 					return true;
+			
 				}
 			}
 		

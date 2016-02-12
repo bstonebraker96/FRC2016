@@ -65,7 +65,7 @@ public class InitializeRobot {
 		
 		gyro = new AnalogGyro(1); //Analog 1
 		
-		countsPerRevolution = 2048;
+		countsPerRevolution = 512;
 		
 		
 	}

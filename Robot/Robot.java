@@ -9,6 +9,7 @@ public class Robot extends IterativeRobot {
 	BallFeed ballFeed;
 	AutoDriveBase ad;
 	InitializeRobot robot;
+	BallShoot shoot;
 	
 	Drive autoDrive;
 	
@@ -56,7 +57,7 @@ public class Robot extends IterativeRobot {
     	if(mode == 2 && defenseCrossed)
     	{
     		
-    		//start ballshoot
+    		shoot.shootDrive();
     		
     	}
     	

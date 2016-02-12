@@ -1,17 +1,17 @@
 package org.usfirst.frc.team5968.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class BallShoot 
 {
 	
-	private JoystickButton isComputer;
-	
 	private InitializeRobot robotComponents;
+	private AutoDriveBase drive;
 	
 	private Compressor ballPusher;
 	
@@ -21,11 +21,24 @@ public class BallShoot
 	private VictorSP leftShootMotor;
 	private VictorSP rightShootMotor;
 	
+	private Encoder leftEncoder;
+	private Encoder rightEncoder;
+	
+	private double leftRate;
+	private double rightRate;
+	private double leftEncoderOld;
+	private double rightEncoderOld;
+	private double leftDistance = 0;
+	private double rightDistance = 0;
+	
+	private long nanotimeOld = System.nanoTime();
+	
 	private Joystick altStick;
 	
 	public void ballShootInit() 
 	{
 		robotComponents = InitializeRobot.GetInstance();
+		drive = new AutoDriveBase();
 		
 		ballPusher = robotComponents.getBallPusher();
 		
@@ -37,46 +50,45 @@ public class BallShoot
 		
 		altStick = robotComponents.getAltJoystick();
 		
+		leftEncoder = robotComponents.getLeftEncoder();
+		rightEncoder = robotComponents.getRightEncoder();
 		
-		isComputer = new JoystickButton(altStick, 4);
-		
-		
+		ballPusher.setClosedLoopControl(true);
 	}
 	
-	public void ballShoot() 
-	{
+	public void shootDrive(){
 		
-		if (isComputer.get()) 
-		{
-			ballShootComputer();
-		} else 
-		{
-			ballShootHuman();
+		leftRate = ((leftEncoder.get() - leftEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		rightRate = ((rightEncoder.get() - rightEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		
+		leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+		rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+		
+		drive.fixDirection(leftRate, rightRate, false);
+		
+		if(leftDistance == 144 || rightDistance == 144){
+			
+			ballShootComputer(true);
+			
+			leftDriveMotor.set(0);
+			rightDriveMotor.set(0);
+			
 		}
 		
+		
+		nanotimeOld = System.nanoTime();
+		leftEncoderOld = leftEncoder.get();
+		rightEncoderOld = rightEncoder.get();
 	}
 	
 	public void ballShootHuman() 
 	{
 		
-		if (altStick.getX() == 0) 
-		{
-			leftDriveMotor.set(altStick.getY());
-			rightDriveMotor.set((altStick.getY()) * -1);
-		} 
-		else if (altStick.getY() == 0) 
-		{
-			leftDriveMotor.set(altStick.getX());
-			rightDriveMotor.set(altStick.getX());
-		}
-		
 		if (altStick.getTrigger() && ballPusher.enabled()) 
 		{
 			leftShootMotor.set(-1);
 			rightShootMotor.set(1);
-			
-			ballPusher.setClosedLoopControl(true);
-			ballPusher.setClosedLoopControl(false);
+	
 		} 
 		else if (altStick.getTrigger())
 		{
@@ -90,8 +102,23 @@ public class BallShoot
 		
 	}
 	
-	public void ballShootComputer() 
+	public void ballShootComputer(boolean useCamera) 
 	{
+		
+		if(useCamera)
+		{
+			
+		}
+		
+		else if(!useCamera)
+		{
+			
+			leftShootMotor.set(1);
+			rightShootMotor.set(-1);
+			
+			Timer.delay(.250);
+			
+		}
 		
 	}
 	
