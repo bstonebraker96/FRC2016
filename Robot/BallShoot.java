@@ -73,9 +73,7 @@ public class BallShoot
 		
 		drive.fixDirection(leftRate, rightRate, false);
 		
-		if(leftDistance == distance || rightDistance == distance){
-			
-			ballShootComputer(true);
+		if(Math.abs(leftDistance - distance) <= .1 || Math.abs(rightDistance - distance) <= .1){
 			
 			leftDriveMotor.set(0);
 			rightDriveMotor.set(0);

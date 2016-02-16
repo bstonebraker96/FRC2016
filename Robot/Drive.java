@@ -25,7 +25,6 @@ public class Drive {
 	
 	private InitializeRobot robotComponents;
 	private AutoDriveBase ad;
-	private BallShoot shoot;
 	
 	public void init(){
 		robotComponents = InitializeRobot.GetInstance();
@@ -69,7 +68,7 @@ public class Drive {
 			if(ad.onDefense() == 0 && defenseStatus == "Crossed")
 			{	
 				flatSamples++;
-				if(ad.onDefense() == 0 && flatSamples == 200)
+				if(ad.onDefense() == 0 && flatSamples == 100)
 				{
 					
 					leftEncoder.reset();
