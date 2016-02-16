@@ -25,7 +25,6 @@ public class Drive {
 	
 	private InitializeRobot robotComponents;
 	private AutoDriveBase ad;
-	private BallShoot shoot;
 	
 	public void init(){
 		robotComponents = InitializeRobot.GetInstance();

@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -79,7 +79,7 @@ public class InitializeRobot {
 		ballPusher = new Solenoid(1); //PCM 1
 		shootAngle = new Solenoid(2); //PCM 2
 		
-		gyro = new AnalogGyro(1); //Analog 1
+		gyro = new ADXRS450_Gyro(); //SPI
 		
 		countsPerRevolution = 512;
 		
