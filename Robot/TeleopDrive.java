@@ -33,7 +33,6 @@ public class TeleopDrive{
 	
 	private InitializeRobot robotComponents;
 	private BallShoot shoot;
-	
 	private RobotDrive drive;
 	
 	public void driveInit(){
@@ -60,7 +59,7 @@ public class TeleopDrive{
 		computerShoot = new JoystickButton(altStick, 5);
 		toggleShootAngle = new JoystickButton(altStick, 6);
 		
-		drive = new RobotDrive(1,2);
+		//drive = new RobotDrive(0,1);
 	}//end of method
 	
 	
@@ -87,7 +86,8 @@ public class TeleopDrive{
 		if(altControlsEnabled)
 		{
 			
-			drive.arcadeDrive(altStick, true);
+			//leftMotor.set(stickX-stickY);
+			//rightMotor.set
 			
 		}
 		
@@ -120,7 +120,7 @@ public class TeleopDrive{
 		}
 		
 		
-		if(humanShoot.get())
+		if(altStick.getTrigger())
 		{
 			shoot.ballShootHuman();
 		}
@@ -134,5 +134,9 @@ public class TeleopDrive{
 			shoot.platformAngle();
 		}
 		
-	}
+	}//end of method
+	//public static void getSticky(){
+		//stickX = altStick.getX();
+		//stickY = altStick.getY();
+	//}
 }

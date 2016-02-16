@@ -43,10 +43,10 @@ public class BallShoot
 		robotComponents = InitializeRobot.GetInstance();
 		drive = new AutoDriveBase();
 		
-		compressor = robotComponents.getCompressor();
+		/*compressor = robotComponents.getCompressor();
 		ballPusher = robotComponents.getBallPusher();
 		shootAngle = robotComponents.getAngleSolenoid();
-		
+		*/
 		leftDriveMotor = robotComponents.getLeftMotor();
 		rightDriveMotor = robotComponents.getRightMotor();
 		
@@ -58,7 +58,7 @@ public class BallShoot
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
 		
-		compressor.setClosedLoopControl(true);
+		//compressor.setClosedLoopControl(true);
 	}
 	
 	public boolean shootDrive(double distance){
@@ -103,29 +103,19 @@ public class BallShoot
 	public void ballShootHuman() 
 	{
 		
-		if (altStick.getTrigger()) 
-		{
 			leftShootMotor.set(-1);
 			rightShootMotor.set(1);
 			
-			ballPusher.set(true);
+			//ballPusher.set(true);
 			
 			Timer.delay(.1);
 			
-			ballPusher.set(false);
+			//ballPusher.set(false);
 			
 			Timer.delay(1);
 			
 			leftShootMotor.set(0);
 			rightShootMotor.set(0);
-	
-		} 
-		
-		else
-		{
-			leftShootMotor.set(0);
-			rightShootMotor.set(0);
-		}
 		
 	}
 	
@@ -145,11 +135,11 @@ public class BallShoot
 			
 			Timer.delay(.250);
 			
-			ballPusher.set(true);
+			//ballPusher.set(true);
 			
 			Timer.delay(.1);
 			
-			ballPusher.set(false);
+			//ballPusher.set(false);
 			
 			Timer.delay(1);
 			
@@ -162,14 +152,14 @@ public class BallShoot
 	
 	public void platformAngle()
 	{
-		if(shootAngle.get())
+		/*if(shootAngle.get())
 		{
 			shootAngle.set(false);
 		}
 		if(!shootAngle.get())
 		{
 			shootAngle.set(true);
-		}
+		}*/
 	}
 	
 }

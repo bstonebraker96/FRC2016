@@ -36,9 +36,9 @@ public class InitializeRobot {
 	private Joystick rightJoystick;
 	private Joystick altJoystick;
 	
-	private Compressor compressor;
-	private Solenoid ballPusher;
-	private Solenoid shootAngle;
+	//private Compressor compressor;
+	//private Solenoid ballPusher;
+	//private Solenoid shootAngle;
 
 	private Gyro gyro;
 	
@@ -75,9 +75,9 @@ public class InitializeRobot {
 		rightJoystick = new Joystick(1); //USB 1
 		altJoystick = new Joystick(2); // USB 2
 		
-		compressor = new Compressor(0); //PCM 0
-		ballPusher = new Solenoid(1); //PCM 1
-		shootAngle = new Solenoid(2); //PCM 2
+		//compressor = new Compressor(0); //PCM 0
+		//ballPusher = new Solenoid(1); //PCM 1
+		//shootAngle = new Solenoid(2); //PCM 2
 		
 		gyro = new AnalogGyro(1); //Analog 1
 		
@@ -132,7 +132,7 @@ public class InitializeRobot {
 	public Joystick getAltJoystick(){
 		return altJoystick;
 	}
-	public Compressor getCompressor(){
+	/*public Compressor getCompressor(){
 		return compressor;
 	}
 	public Solenoid getBallPusher(){
@@ -140,7 +140,7 @@ public class InitializeRobot {
 	}
 	public Solenoid getAngleSolenoid(){
 		return shootAngle;
-	}
+	}*/
 	
 	public int getCountsPerRevolution(){
 		return countsPerRevolution;
