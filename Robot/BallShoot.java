@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.Talon;
 
 public class BallShoot 
 {
@@ -20,6 +21,8 @@ public class BallShoot
 	
 	private Victor leftDriveMotor;
 	private Victor rightDriveMotor;
+	
+	private Talon ballFeed;
 	
 	private VictorSP leftShootMotor;
 	private VictorSP rightShootMotor;
@@ -98,17 +101,18 @@ public class BallShoot
 		return false;
 	}
 	
+	//TODO set the timing of the shooting
 	public void ballShootHuman() 
 	{
 		
 			leftShootMotor.set(-1);
 			rightShootMotor.set(1);
 			
-			//ballPusher.set(true);
+			ballFeed.set(.75);
 			
 			Timer.delay(.1);
 			
-			//ballPusher.set(false);
+			ballFeed.set(0);
 			
 			Timer.delay(1);
 			
@@ -116,7 +120,7 @@ public class BallShoot
 			rightShootMotor.set(0);
 		
 	}
-	
+	//TODO also set timing of shooting.
 	public void ballShootComputer(boolean useCamera) 
 	{
 		
@@ -127,37 +131,21 @@ public class BallShoot
 		
 		else if(!useCamera)
 		{
-			
-			leftShootMotor.set(1);
-			rightShootMotor.set(-1);
-			
-			Timer.delay(.250);
-			
-			//ballPusher.set(true);
-			
-			Timer.delay(.1);
-			
-			//ballPusher.set(false);
-			
-			Timer.delay(1);
-			
-			leftShootMotor.set(0);
-			rightShootMotor.set(0);
-			
+			ballShootHuman();
 		}
 		
 	}
 	
 	public void platformAngle()
 	{
-		/*if(shootAngle.get())
+		if(shootAngle.get())
 		{
 			shootAngle.set(false);
 		}
 		if(!shootAngle.get())
 		{
 			shootAngle.set(true);
-		}*/
+		}
 	}
 	
 }

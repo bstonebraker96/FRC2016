@@ -14,7 +14,6 @@ public class TeleopDrive{
 	
 	private Victor leftMotor;
 	private Victor rightMotor;
-	
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
 	
@@ -52,14 +51,13 @@ public class TeleopDrive{
 		leftEncoder.reset();
 		rightEncoder.reset();
 		
-		reverseControls = new JoystickButton(leftStick, 1);
-		resetControls = new JoystickButton(rightStick, 1);
+		reverseControls = new JoystickButton(altStick, 1);
+		resetControls = new JoystickButton(altStick, 1);
 		toggleAltSteering = new JoystickButton(altStick, 3);
 		humanShoot = new JoystickButton(altStick, 4);
 		computerShoot = new JoystickButton(altStick, 5);
 		toggleShootAngle = new JoystickButton(altStick, 6);
 		
-		//drive = new RobotDrive(0,1);
 	}//end of method
 	
 	
@@ -86,9 +84,27 @@ public class TeleopDrive{
 		if(altControlsEnabled)
 		{
 			
-			//leftMotor.set(stickX-stickY);
-			//rightMotor.set
-			
+			if(altStick.getDirectionRadians() <= Math.PI/2)
+			{
+				leftMotor.set(0);
+				rightMotor.set(altStick.getY());
+			}
+			else if (altStick.getDirectionRadians() <= Math.PI)
+			{
+				rightMotor.set(0);
+				leftMotor.set(altStick.getY());
+			}
+			else if (altStick.getDirectionRadians() <= (3*Math.PI)/2)
+			{
+				leftMotor.set(-altStick.getY());
+				rightMotor.set(0);
+			}
+			else
+			{
+				leftMotor.set(0);
+				rightMotor.set(-altStick.getY());
+			}
+			System.out.println(leftMotor.get() + " " + rightMotor.get());
 		}
 		
 		if(reverseControls.get())
@@ -135,8 +151,5 @@ public class TeleopDrive{
 		}
 		
 	}//end of method
-	//public static void getSticky(){
-		//stickX = altStick.getX();
-		//stickY = altStick.getY();
-	//}
+	
 }

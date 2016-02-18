@@ -56,12 +56,14 @@ public class Drive {
 			if(ad.onDefense() == 1)
 			{
 				defenseStatus = "Entered";
+				System.out.println("We've entered the defense captain!");
 				flatSamples = 0;
 			}
 		
 			if(ad.onDefense() == 2 && defenseStatus == "Entered")
 			{	
 				defenseStatus = "Crossed";
+				System.out.println("We've crossed the defense captain!");
 				flatSamples = 0;
 			}
 		
@@ -73,15 +75,19 @@ public class Drive {
 					
 					leftEncoder.reset();
 					rightEncoder.reset();
+					System.out.println(defenseStatus);
+					System.out.println("Encoders resetting captain");
 			
 					robotComponents.getGyro().reset();
+					System.out.println("Gyro's reset captain");
 					
 					return true;
 			
 				}
 			}
 		
-			if((System.nanoTime() - timeStart)>= (6 * Math.pow(10, 9)) && !defenseStatus.equals("Crossed"))
+			//This is the fail-safe, but we're not sure exactly what to do later.
+			/*if((System.nanoTime() - timeStart)>= (6 * Math.pow(10, 9)) && !defenseStatus.equals("Crossed"))
 			{
 			
 				leftMotor.set(0);
@@ -90,7 +96,7 @@ public class Drive {
 				leftEncoder.reset();
 				rightEncoder.reset();
 				return false;
-			}
+			}*/
 		
 		
 			nanotimeOld = System.nanoTime();
