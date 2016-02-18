@@ -21,7 +21,6 @@ public class TeleopDrive{
 	private double rightFactor = 1;
 	
 	private JoystickButton reverseControls;
-	private JoystickButton resetControls;
 	private JoystickButton toggleAltSteering;
 	private JoystickButton humanShoot;
 	private JoystickButton computerShoot;
@@ -52,11 +51,10 @@ public class TeleopDrive{
 		rightEncoder.reset();
 		
 		reverseControls = new JoystickButton(altStick, 1);
-		resetControls = new JoystickButton(altStick, 1);
-		toggleAltSteering = new JoystickButton(altStick, 3);
-		humanShoot = new JoystickButton(altStick, 4);
-		computerShoot = new JoystickButton(altStick, 5);
-		toggleShootAngle = new JoystickButton(altStick, 6);
+		toggleAltSteering = new JoystickButton(altStick, 2);
+		humanShoot = new JoystickButton(altStick, 3);
+		computerShoot = new JoystickButton(altStick, 4);
+		toggleShootAngle = new JoystickButton(altStick, 5);
 		
 	}//end of method
 	
@@ -107,14 +105,14 @@ public class TeleopDrive{
 			System.out.println(leftMotor.get() + " " + rightMotor.get());
 		}
 		
-		if(reverseControls.get())
+		if(reverseControls.get() && !reversedControls)
 		{
 			
 			reversedControls = true;
 			
 		}
 		
-		if(resetControls.get())
+		if(reverseControls.get() && reversedControls)
 		{
 		
 			reversedControls = false;
