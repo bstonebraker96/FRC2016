@@ -123,7 +123,7 @@ public class BallShoot extends uART
 		
 		if(useCamera)
 		{
-			piWriter("fire mah boudler");
+			piWriter("fire mah boulder");
 			if (!angleChecker())
 			{
 				System.out.print("She won't make it captain! Try again!");
