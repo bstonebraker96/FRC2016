@@ -9,16 +9,15 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.Talon;
 
-public class BallShoot 
+public class BallShoot extends uART
 {
 	
 	private InitializeRobot robotComponents;
 	private AutoDriveBase drive;
-	
 	private Compressor compressor;
-	private Solenoid ballPusher;
 	private Solenoid shootAngle;
-	
+
+	private Drive scooter;
 	private Victor leftDriveMotor;
 	private Victor rightDriveMotor;
 	
@@ -26,7 +25,8 @@ public class BallShoot
 	
 	private VictorSP leftShootMotor;
 	private VictorSP rightShootMotor;
-	
+	//THESE DOUBLES ALL NEED VALUES BEFORE TESTING COMPUTER SHOOTING!!!(except adjDist)
+	public double angle_MAX, angle_MIN, distance_MIN, distance_MAX, adjDist;
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
 	
@@ -39,29 +39,26 @@ public class BallShoot
 	
 	private long nanotimeOld;
 	
-	private Joystick altStick;
 	
 	public void ballShootInit() 
 	{
 		robotComponents = InitializeRobot.GetInstance();
 		drive = new AutoDriveBase();
 		
-		/*compressor = robotComponents.getCompressor();
-		ballPusher = robotComponents.getBallPusher();
+		compressor = robotComponents.getCompressor();
 		shootAngle = robotComponents.getAngleSolenoid();
-		*/
+		
 		leftDriveMotor = robotComponents.getLeftMotor();
 		rightDriveMotor = robotComponents.getRightMotor();
 		
 		leftShootMotor = robotComponents.getLeftShootMotor();
 		rightShootMotor = robotComponents.getRightShootMotor();
 		
-		altStick = robotComponents.getAltJoystick();
 		
 		leftEncoder = robotComponents.getLeftEncoder();
 		rightEncoder = robotComponents.getRightEncoder();
 		
-		//compressor.setClosedLoopControl(true);
+		compressor.setClosedLoopControl(true);
 	}
 	
 	public boolean shootDrive(double distance){
@@ -108,7 +105,7 @@ public class BallShoot
 			leftShootMotor.set(-1);
 			rightShootMotor.set(1);
 			
-			ballFeed.set(.75);
+			ballFeed.set(.5);
 			
 			Timer.delay(.1);
 			
@@ -126,10 +123,21 @@ public class BallShoot
 		
 		if(useCamera)
 		{
+			piWriter("fire mah boudler");
+			if (!angleChecker())
+			{
+				System.out.print("She won't make it captain! Try again!");
+			}
+			else
+			{
+				distanceChecker();
+				ballShootHuman();
+			}
 			
+				
 		}
 		
-		else if(!useCamera)
+		else
 		{
 			ballShootHuman();
 		}
@@ -146,6 +154,43 @@ public class BallShoot
 		{
 			shootAngle.set(true);
 		}
-	}
+	}//end of platformAngle
 	
+	public boolean angleChecker()
+	{
+		if ((angle < angle_MAX) && (angle > angle_MIN))
+		{
+			System.out.println("Nice angle");
+			return true;
+		}
+		else
+		{
+			//scooter.scootAngle();
+			System.out.println("Angle function not available yet");
+			return true;
+		}
+		
+	}
+	public void distanceChecker()
+	{
+		if ((distance > distance_MIN) && (distance < distance_MAX))
+		{
+			return; 
+		}
+		else
+		{
+			if (distance < distance_MIN)
+			{
+				adjDist = Math.abs(distance - distance_MIN);
+				scooter.scootUp(adjDist);
+				return;		
+			}
+			else
+			{
+				adjDist = Math.abs(distance_MAX - distance);
+				scooter.scootBack(adjDist);
+				return;
+			}
+		}
+	}//end of Distance Checker
 }

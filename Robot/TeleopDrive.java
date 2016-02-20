@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class TeleopDrive{
-	
+	public boolean compConnect;
 	private Joystick leftStick;
 	private Joystick rightStick;
 	private Joystick altStick;
@@ -22,8 +22,7 @@ public class TeleopDrive{
 	
 	private JoystickButton reverseControls;
 	private JoystickButton toggleAltSteering;
-	private JoystickButton humanShoot;
-	private JoystickButton computerShoot;
+	private JoystickButton manualShoot;
 	private JoystickButton toggleShootAngle;
 	
 	private boolean reversedControls = false;
@@ -31,7 +30,7 @@ public class TeleopDrive{
 	
 	private InitializeRobot robotComponents;
 	private BallShoot shoot;
-	private RobotDrive drive;
+	private uART compCon;
 	
 	public void driveInit(){
 		
@@ -52,8 +51,7 @@ public class TeleopDrive{
 		
 		reverseControls = new JoystickButton(altStick, 1);
 		toggleAltSteering = new JoystickButton(altStick, 2);
-		humanShoot = new JoystickButton(altStick, 3);
-		computerShoot = new JoystickButton(altStick, 4);
+		manualShoot = new JoystickButton(altStick, 4);
 		toggleShootAngle = new JoystickButton(altStick, 5);
 		
 	}//end of method
@@ -136,12 +134,12 @@ public class TeleopDrive{
 		
 		if(altStick.getTrigger())
 		{
-			shoot.ballShootHuman();
+			shoot.ballShootComputer(compCon.piWriter("fire mah lazer")); //change this for camera or no
 		}
 		
-		if(computerShoot.get())
+		if(manualShoot.get())
 		{
-			shoot.ballShootComputer(true); //change this for camera or no
+			shoot.ballShootHuman();
 		}
 		if(toggleShootAngle.get())
 		{

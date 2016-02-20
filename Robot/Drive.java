@@ -3,7 +3,7 @@ package org.usfirst.frc.team5968.robot;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Victor;
 
-public class Drive {
+public class Drive extends BallShoot {
 	
 	private double leftRate;
 	private double rightRate;
@@ -25,6 +25,8 @@ public class Drive {
 	
 	private InitializeRobot robotComponents;
 	private AutoDriveBase ad;
+	
+	private double rotationsNeeded, diameter;
 	
 	public void init(){
 		robotComponents = InitializeRobot.GetInstance();
@@ -86,7 +88,8 @@ public class Drive {
 				}
 			}
 		
-			//This is the fail-safe, but we're not sure exactly what to do later.
+			//This is the fail-safe, but we're not sure exactly what to do right now so it's
+			//getting pushed for something later.
 			/*if((System.nanoTime() - timeStart)>= (6 * Math.pow(10, 9)) && !defenseStatus.equals("Crossed"))
 			{
 			
@@ -104,5 +107,53 @@ public class Drive {
 			rightEncoderOld = rightEncoder.get();
 		
 			return false;
+	}//end of method
+	
+	public void scootUp(double dist)
+	{
+		rotationsNeeded = dist/(diameter * Math.PI);
+		rotationsNeeded = (int)Math.ceil(rotationsNeeded) * 512;
+		while (true)
+		{
+			if (leftEncoder.get() != rotationsNeeded + leftEncoder.get())
+			{
+				leftMotor.set(.1);
+				rightMotor.set(.1);
+			}
+			else
+			{
+				leftMotor.set(0);
+				rightMotor.set(0);
+				return;
+			}
+		}
+	}//end of scootUp
+	
+	public void scootBack(double dist)
+	{
+		rotationsNeeded = dist/(diameter * Math.PI);
+		rotationsNeeded = (int)Math.ceil(rotationsNeeded) * 512;
+		while (true)
+		{
+			if (leftEncoder.get() != leftEncoder.get() - rotationsNeeded)
+			{
+				leftMotor.set(-.1);
+				rightMotor.set(-.1);
+			}
+			else
+			{
+				leftMotor.set(0);
+				rightMotor.set(0);
+				return;
+			}
+		}
 	}
+	/*public void scootAngle(double angle)
+	{
+		if (angle < angle_MIN)
+		{
+			
+		}
+	}*/
+	
 }

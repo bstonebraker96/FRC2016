@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class InitializeRobot {
 	
@@ -36,6 +37,7 @@ public class InitializeRobot {
 	private Joystick rightJoystick;
 	private Joystick altJoystick;
 	
+	private SerialPort port;
 	private Compressor compressor;
 	private Solenoid ballPusher;
 	private Solenoid shootAngle;
@@ -59,6 +61,8 @@ public class InitializeRobot {
 		feedMotor = new Talon(2); //PWM 2
 		leftShootMotor = new VictorSP(3); // PWM 3
 		rightShootMotor = new VictorSP(4); // PWM 4
+		
+		port.reset();
 		
 		leftEncoder = new Encoder(0,1,false,EncodingType.k1X); //Digital IN 0 1
 		rightEncoder = new Encoder(2,3,false,EncodingType.k1X); //Digital IN 2 3

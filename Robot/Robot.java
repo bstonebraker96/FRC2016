@@ -13,7 +13,7 @@ public class Robot extends IterativeRobot {
 	Turn turn;
 	
 	Drive autoDrive;
-	
+	uART pi;
 	private boolean defenseCrossed = false;
 	private boolean shootDriveComplete = false;
 	private boolean shootTurnComplete = false;
@@ -75,7 +75,7 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootDriveComplete && shootTurnComplete)
     				{
-    					shoot.ballShootComputer(true);
+    					shoot.ballShootComputer(pi.piWriter("check em"));
     				}
     				break;
     			case 2:
@@ -89,7 +89,7 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootDriveComplete && shootTurnComplete)
     				{
-    					shoot.ballShootComputer(true);
+    					shoot.ballShootComputer(pi.piWriter("check em"));
     				}
     				break;
     			case 3:
@@ -107,7 +107,7 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootTurnComplete && shootDriveComplete && shootTurn2Complete)
     				{
-    					shoot.ballShootComputer(true);
+    					shoot.ballShootComputer(pi.piWriter("check em"));
     				}
     				break;
     			case 4:
@@ -125,7 +125,7 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootTurnComplete && shootDriveComplete && shootTurn2Complete)
     				{
-    					shoot.ballShootComputer(true);
+    					shoot.ballShootComputer(pi.piWriter("check em"));
     				}
     				break;
     			case 5:
@@ -153,6 +153,8 @@ public class Robot extends IterativeRobot {
     	teleopDrive.driveBase();
     	
     	ballFeed.ballFeed();
+    	
+    	pi.piWriter("check em");
     	
     }
     
