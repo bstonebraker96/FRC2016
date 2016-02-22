@@ -12,13 +12,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SerialPort;
 
 public class InitializeRobot {
-	
-	
+
 	private static InitializeRobot instance = null;
 	
+	//TODO: Change all to SpeedController type.
 	private Victor leftMotor;
 	private Victor rightMotor;
 	private Talon feedMotor;
@@ -39,7 +38,6 @@ public class InitializeRobot {
 	
 	private SerialPort port;
 	private Compressor compressor;
-	private Solenoid ballPusher;
 	private Solenoid shootAngle;
 
 	private Gyro gyro;

@@ -9,14 +9,24 @@ public class BallFeed {
 	private JoystickButton wheelControl;
 	private JoystickButton wheelControlSlow;
 	
+	/*
+	Nobody else needs to own the feed motor, just add a central location (a static final int would be good) for the
+	port number being used.
+
+	Change to SpeedController type.
+	*/
 	private Talon feedMotor;
-	
 	
 	private InitializeRobot robotComponents;
 	
-	public void ballFeedInit(){
-		
+	public BallFeed() {
 		robotComponents = InitializeRobot.GetInstance();
+
+		/*
+		Move all UI stuff to a HumanInterface class that keeps track of button presses for you.
+		Consider using getRawButton over JoystickButton as it is less verbose in the long run.
+		Consider creating a list of static final ints that correspond to the button configuration (in the HumanInterface class.)
+		*/
 		wheelControl = new JoystickButton(robotComponents.getAltJoystick(), 1);
 		wheelControlSlow = new JoystickButton(robotComponents.getAltJoystick(), 2);
 		
@@ -25,25 +35,18 @@ public class BallFeed {
 	}//end of method
 	
 	
-	public void ballFeed(){
-		
+	public void ballFeed() {
+
 		if(wheelControl.get())
-		{			
+		{		
 			feedMotor.set(.75);
 		}
-		
-		if(!wheelControl.get())
+		else if (wheelControlSlow.get())
 		{
-			feedMotor.set(0);
-		}
-		
-		if(wheelControlSlow.get())
-		{	
 			feedMotor.set(.1);	
 		}
-		
-		if(!wheelControlSlow.get())
-		{	
+		else
+		{
 			feedMotor.set(0);	
 		}
 		

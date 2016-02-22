@@ -3,55 +3,56 @@ package org.usfirst.frc.team5968.robot;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
-public class uART {
-	
+//TODO: Consider using query-response pattern. Methods below send query, and then another metho checks for respones.
+//TODO: Need to fix lifecycle of responses that causes unecessary long waits or not long enough waits for responses.
+public class Uart {
 	private SerialPort port;
-	private String stringRec;
-	private String dis, ang;
-	public double angle, distance;
+	public double angle;
+	public double distance;
 	
-	
-	public boolean piWriter(String piMode)
+	public Uart() {
+		//TODO: Initialize the port
+	}
+
+	public boolean checkEm()
 	{
-		if (piMode.equalsIgnoreCase("check em"))
-		{
-			port.writeString("TopKek");
-		}
-		else if (piMode.equalsIgnoreCase("fire mah boulder"))
-		{
-			port.writeString("fire");
-		}
-		
+		port.writeString("TopKek");
 		port.flush();
 		Timer.delay(.25);
-		stringRec = port.readString();
-		if (piMode.equalsIgnoreCase("check em"))
+
+		String stringRec = port.readString();
+		if (stringRec.equalsIgnoreCase("topLel"))
 		{
-			if (stringRec.equalsIgnoreCase("topLel"))
-			{
-				System.out.println("We've got 'er captain!");
-				return true;
-			}
-		
-			else
-			{
-				System.out.println("We've lost 'er captain!");
-				return false;
-			}
+			System.out.println("We've got 'er captain!");
+			return true;
 		}
-		else if (piMode.equalsIgnoreCase("fire mah boulder"))
+		else
 		{
-			dis = stringRec.substring(0, 4);
-			ang = stringRec.substring(4);
-			dis = dis.substring(0, 2) + "." + dis.substring(2);
-			ang = ang.substring(0, 2) + "." + ang.substring(2);
-			angle = Double.parseDouble(ang);
-			distance = Double.parseDouble(dis);
+			System.out.println("We've lost 'er captain!");
+			return false;
 		}
-		return true;
-	}//end of piWriter method
+	}//end of pingPi method
 	
-	
+	public void updateTargetLocation()
+	{
+		port.writeString("fire");
+		port.flush();
+		Timer.delay(.25); //TODO: Investigate if necessary
+
+		String stringRec = port.readString();
+		//TODO: Sanatize input
+
+		//TODO: Consider using Scanner class instead
+
+		String distanceString = stringRec.substring(0, 4);
+		String angleString = stringRec.substring(4);
+
+		distanceString = distanceString.substring(0, 2) + "." + distanceString.substring(2);
+		angleString = angleString.substring(0, 2) + "." + angleString.substring(2);
+
+		angle = Double.parseDouble(angleString);
+		distance = Double.parseDouble(distanceString);
+	}//end of updateTargetLocation method
 	
 
 }

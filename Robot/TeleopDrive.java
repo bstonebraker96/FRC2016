@@ -14,8 +14,6 @@ public class TeleopDrive{
 	
 	private Victor leftMotor;
 	private Victor rightMotor;
-	private Encoder leftEncoder;
-	private Encoder rightEncoder;
 	
 	private double leftFactor = 1;
 	private double rightFactor = 1;
@@ -42,12 +40,6 @@ public class TeleopDrive{
 		
 		leftMotor = robotComponents.getLeftMotor();
 		rightMotor = robotComponents.getRightMotor();
-		
-		leftEncoder = robotComponents.getLeftEncoder();
-		rightEncoder = robotComponents.getRightEncoder();
-		
-		leftEncoder.reset();
-		rightEncoder.reset();
 		
 		reverseControls = new JoystickButton(altStick, 1);
 		toggleAltSteering = new JoystickButton(altStick, 2);

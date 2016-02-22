@@ -19,7 +19,7 @@ public class AutoDriveBase {
 	
 	private Gyro gyro;
 	
-	public void autoDriveInit(){
+	public AutoDriveBase(){
 		
 		robotComponents = InitializeRobot.GetInstance();
 		
@@ -38,44 +38,43 @@ public class AutoDriveBase {
 	
 	public double fixDirection(double leftRate, double rightRate, boolean turning)
 	{
-			
-			if(turning)
+		if(turning)
+		{
+			if(leftRate < rightRate)
 			{
-				if(leftRate < rightRate)
-				{
-					rightMotor.set(leftRate / 67702.5);
-				}
-			
-				if(rightRate < leftRate)
-				{				
-					leftMotor.set(rightRate / 67702.5);
-				}
+				rightMotor.set(leftRate / 67702.5); //TODO: Really magic constants
 			}
-			
-			if(!turning)
+			else
+			{				
+				leftMotor.set(rightRate / 67702.5);
+			}
+		}
+		else
+		{
+			if(leftRate < rightRate)
 			{
-				if(leftRate < rightRate)
-				{
-					rightMotor.set(-1 * leftRate / 67702.5);
-				}
-			
-				if(rightRate < leftRate)
-				{				
-					leftMotor.set(rightRate / 67702.5);				
-				}
+				rightMotor.set(-1 * leftRate / 67702.5);
 			}
-		return 0;
+			else
+			{				
+				leftMotor.set(rightRate / 67702.5);				
+			}
+		}
+
+		return 0; //TODO: What?
 	}
 	
+	//TODO: All methods need descriptions of their return values
 	public int onDefense()
 	{
 		
+		//TODO: Put magic numbers in constants
 		//check this angle
 		if(gyro.getAngle() > 5)// Entering defense
 		{ 
 			System.out.println("OW!");
 			System.out.println("Gyro Angle = " + gyro.getAngle());
-			return 1;
+			return 1; //TODO: Replace state values with constants (enums are ideal.)
 		}
 		
 		if(Math.abs(gyro.getAngle()) <= .01)
@@ -118,6 +117,8 @@ public class AutoDriveBase {
 			return 0;
 		}
 	}
+	
+	//TODO: Switches should be sampled once at one location. Ideally, sampled when automod init happens.
 	public int getDefenseToCross(){
 		
 		if(defenseSwitch1.get())

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.Talon;
 
-public class BallShoot extends uART
+public class BallShoot extends Uart
 {
 	
 	private InitializeRobot robotComponents;
@@ -17,28 +17,26 @@ public class BallShoot extends uART
 	private Compressor compressor;
 	private Solenoid shootAngle;
 
-	private Drive scooter;
 	private Victor leftDriveMotor;
 	private Victor rightDriveMotor;
 	
-	private Talon ballFeed;
-	
 	private VictorSP leftShootMotor;
 	private VictorSP rightShootMotor;
+
 	//THESE DOUBLES ALL NEED VALUES BEFORE TESTING COMPUTER SHOOTING!!!(except adjDist)
-	public double angle_MAX, angle_MIN, distance_MIN, distance_MAX, adjDist;
+	public static final double angle_MAX;
+	public static final double angle_MIN;
+	public static final double distance_MIN;
+	public static final double distance_MAX;
+	public double adjDist;
+
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
 	
-	private double leftRate;
-	private double rightRate;
 	private double leftEncoderOld;
 	private double rightEncoderOld;
-	private double leftDistance = 0;
-	private double rightDistance = 0;
 	
 	private long nanotimeOld;
-	
 	
 	public void ballShootInit() 
 	{
@@ -65,11 +63,12 @@ public class BallShoot extends uART
 		
 		nanotimeOld = System.nanoTime();
 		
-		leftRate = ((leftEncoder.get() - leftEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
-		rightRate = ((rightEncoder.get() - rightEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		double leftRate = ((leftEncoder.get() - leftEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		double rightRate = ((rightEncoder.get() - rightEncoderOld) * robotComponents.getCountsPerRevolution()) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		
-		leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
-		rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+		//TODO: Define 7.65 somewhere as a constant
+		double leftDistance = leftEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
+		double rightDistance = rightEncoder.get() * robotComponents.getCountsPerRevolution() * 7.65 * Math.PI;
 		
 		drive.fixDirection(leftRate, rightRate, false);
 		
@@ -101,20 +100,28 @@ public class BallShoot extends uART
 	//TODO set the timing of the shooting
 	public void ballShootHuman() 
 	{
+		//TODO: Change this into a state machine.
+
+		// State 0: IDLE
+
+		// State 1: Spinning
+		leftShootMotor.set(-1);
+		rightShootMotor.set(1);
 		
-			leftShootMotor.set(-1);
-			rightShootMotor.set(1);
-			
-			ballFeed.set(.5);
-			
-			Timer.delay(.1);
-			
-			ballFeed.set(0);
-			
-			Timer.delay(1);
-			
-			leftShootMotor.set(0);
-			rightShootMotor.set(0);
+		ballFeed.set(.5);
+		
+		// Wait...	
+		Timer.delay(.1);
+		
+		// State 2: Stop feeding
+		ballFeed.set(0);
+		
+		// Wait...	
+		Timer.delay(1);
+		
+		// State 3: Stop shooting
+		leftShootMotor.set(0);
+		rightShootMotor.set(0);
 		
 	}
 	//TODO also set timing of shooting.

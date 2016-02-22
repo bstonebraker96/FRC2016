@@ -26,9 +26,11 @@ public class Drive extends BallShoot {
 	private InitializeRobot robotComponents;
 	private AutoDriveBase ad;
 	
-	private double rotationsNeeded, diameter;
+	//TODO: Ben - Need actual numbers
+	private double rotationsNeeded;
+	private double diameter;
 	
-	public void init(){
+	public Drive(){
 		robotComponents = InitializeRobot.GetInstance();
 		ad = new AutoDriveBase();
 		
@@ -57,7 +59,7 @@ public class Drive extends BallShoot {
 			
 			if(ad.onDefense() == 1)
 			{
-				defenseStatus = "Entered";
+				defenseStatus = "Entered"; //TODO: Don't use strings for state variables.
 				System.out.println("We've entered the defense captain!");
 				flatSamples = 0;
 			}
