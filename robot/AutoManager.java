@@ -1,63 +1,179 @@
 package org.usfirst.frc.team5968.robot;
 
 
+import org.usfirst.frc.team5968.robot.Drive.CrossingStates;
+
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 public class AutoManager {
-	private ADXRS450_Gyro gyro;
-	private DigitalInput driveSwitch;
-	private String defenseStatus;
-	private int flatSamples = 0;
-	private double leftEncoderOld;
-	private double rightEncoderOld;
-	private double leftRate;
-	private double rightRate;
-	public Drive drive;
+	private Drive drive;
+	private Uart pi;
+	private BallShoot shoot;
 	
-	private long nanotimeOld;
+	private DigitalInput driveSwitch;
 	private DigitalInput shootSwitch;
 	private DigitalInput defenseSwitch1;
 	private DigitalInput defenseSwitch2;
 	private DigitalInput defenseSwitch3;
+	
+	private int mode;
+	private int defenseToCross;
+	
 	public AutoManager() {
-		gyro = new ADXRS450_Gyro();
 		driveSwitch = new DigitalInput(PortMap.driveSwitch); //Digital IN 4
 		shootSwitch = new DigitalInput(PortMap.shootSwitch); //Digital IN 5
 		defenseSwitch1 = new DigitalInput(PortMap.modeSwitch1); //Digital IN 6
 		defenseSwitch2 = new DigitalInput(PortMap.modeSwitch2); //Digital IN 7
 		defenseSwitch3 = new DigitalInput(PortMap.modeSwitch3); //Digital IN 8
 		drive = new Drive();
+		pi = new Uart();
+		shoot = new BallShoot();
+		
+		mode = getMode();
+		defenseToCross = getDefenseToCross();
+		
+		
 	}
-	public int onDefense()
-	{
-		
-		//check this angle
-		if(gyro.getAngle() > 5)// Entering defense
-		{ 
-			System.out.println("OW!");
-			System.out.println("Gyro Angle = " + gyro.getAngle());
-			return 1;
-		}
-		
-		if(Math.abs(gyro.getAngle()) <= .01)
-		//On defense or on ground
-		{ 			
-			return 0;			
-		}
-		
-		if(gyro.getAngle() < 5)// Leaving defense
-		{ 			
-			System.out.println("Owie!");
-			System.out.println("Gyro Angle = " + gyro.getAngle());
-			return 2;			
-		}
-		
-		else
-		{
-			return 0;
-		}
-	}//end of method
 	
+	private enum AutonomousProgress {
+		DEFENSE_CROSSED, DRIVE_1_COMPLETE, TURN_COMPLETE, TURN_2_COMPLETE, DRIVE_2_COMPLETE
+	}
+	
+	private AutonomousProgress autoProgress;
+	
+	
+	public void autonomousMain(){
+		
+		if(mode == 0)
+    	{
+    		
+    	}
+    	
+    	if(mode >= 1 && autoProgress != AutonomousProgress.DEFENSE_CROSSED)
+    	{
+    		
+    		if(drive.driveAcrossDefense() == CrossingStates.CROSSED)
+    		{
+    			autoProgress = AutonomousProgress.DEFENSE_CROSSED;
+    		}
+    		
+    		
+    	}
+    	
+    	if(mode == 2 && autoProgress == AutonomousProgress.DEFENSE_CROSSED)
+    	{
+    		//THESE DO NOT INCLUDE THE LENGTH OF THE ROBOT!!! TODO FIX!
+    		switch(defenseToCross)
+    		{
+    			case 1:
+    				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
+    				{
+    					if(drive.driveDistance(112.5))
+    					{
+    						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_1_COMPLETE)
+    				{
+    					if(drive.turn(120, "clockwise"))
+    					{
+    						autoProgress = AutonomousProgress.TURN_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
+    				{
+    					shoot.ballShootComputer(pi.checkEm("check em"));
+    				}
+    				break;
+    			case 2:
+    				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
+    				{
+    					if(drive.driveDistance(141.5))
+    					{
+    						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
+    				{
+    					if(drive.turn(120, "clockwise"))
+    					{
+    						autoProgress = AutonomousProgress.TURN_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
+    				{
+    					shoot.ballShootComputer(pi.checkEm("check em"));
+    				}
+    				break;
+    			case 3:
+    				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
+    				{
+    					if(drive.turn(38, "clockwise"))
+    					{
+    						autoProgress = AutonomousProgress.TURN_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
+    				{
+    					if(drive.driveDistance(60.2))
+    					{
+    						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_1_COMPLETE)
+    				{
+    					if(drive.turn(38, "counterclockwise"))
+    					{
+    						autoProgress = AutonomousProgress.TURN_2_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
+    				{
+    					shoot.ballShootComputer(pi.checkEm("check em"));
+    				}
+    				break;
+    			case 4:
+    				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
+    				{
+    					if(drive.turn(15, "counterclockwise"))
+    					{
+    						autoProgress = AutonomousProgress.TURN_COMPLETE;
+    					}
+    					
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
+    				{
+    					if(drive.driveDistance(49.2))
+    					{
+    						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_1_COMPLETE)
+    				{
+    					if(drive.turn(15, "clockwise"))
+    					{
+    						autoProgress = AutonomousProgress.TURN_2_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
+    				{
+    					shoot.ballShootComputer(pi.checkEm("check em"));
+    				}
+    				break;
+    			case 5:
+    				
+    				break;
+    			case 0:
+    				mode = 0;
+    				break;
+    		}
+    		
+    	}
+		
+	}
+	
+	
+		
 	public int getMode()
 	{		
 		if(driveSwitch.get() && shootSwitch.get())
@@ -103,52 +219,5 @@ public class AutoManager {
 		}
 		return 0;
 	}
-	public boolean autoDrive(){
 		
-		leftRate = ((drive.getLeftEncoder() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
-		rightRate = ((drive.getRightEncoder() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
-	
-	
-		if(leftRate != rightRate)
-		{
-			drive.fixDirection(leftRate, rightRate, false);
-		}
-		
-		if(onDefense() == 1)
-		{
-			defenseStatus = "Entered";
-			System.out.println("We've entered the defense captain!");
-			flatSamples = 0;
-		}
-	
-		if(onDefense() == 2 && defenseStatus == "Entered")
-		{	
-			defenseStatus = "Crossed";
-			System.out.println("We've crossed the defense captain!");
-			flatSamples = 0;
-		}
-	
-		if(onDefense() == 0 && defenseStatus == "Crossed")
-		{	
-			flatSamples++;
-			if(onDefense() == 0 && flatSamples == 100)
-			{
-				
-				drive.encoderReset();
-				System.out.println(defenseStatus);
-				System.out.println("Encoders resetting captain");
-		
-				gyro.reset();
-				System.out.println("Gyro's reset captain");
-				
-				return true;
-		
-			}
-		}
-		nanotimeOld = System.nanoTime();
-		leftEncoderOld = drive.getLeftEncoder();
-		rightEncoderOld = drive.getRightEncoder();
-	
-		return false;
-}//end of method
 }

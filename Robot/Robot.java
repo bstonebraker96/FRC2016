@@ -5,154 +5,44 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 
 public class Robot extends IterativeRobot {
 
-	TeleopDrive teleopDrive;
-	BallFeed ballFeed;
-	AutoDriveBase ad;
-	PortMap robot;
-	BallShoot shoot;
-	Turn turn;
-	
-	Drive autoDrive;
-	Uart pi;
-	private boolean defenseCrossed = false;
-	private boolean shootDriveComplete = false;
-	private boolean shootTurnComplete = false;
-	private boolean shootTurn2Complete = false;
+	private PortMap robot;
+	private BallShoot shoot;
+	private Drive drive;
+	private Uart pi;
+	private AutoManager auto;
+	private HumanInterface humanInterface;
 	
 	int mode;
 	
     public void robotInit() {
     	
-    	teleopDrive = new TeleopDrive();
-    	ballFeed = new BallFeed();
-    	ad = new AutoDriveBase();
-    	robot = PortMap.GetInstance();
-    	autoDrive = new Drive();
-    	turn = new Turn();
+    	robot = new PortMap();
+    	shoot = new BallShoot();
+    	drive = new Drive();
+    	pi = new Uart();
+    	auto = new AutoManager();
+    	humanInterface = new HumanInterface();
     	
     }
     
-    public void autonomousInit() {
-    	
-    	ad.autoDriveInit();
-    	
-    	mode = ad.getMode();
-    	
-    }
+    public void autonomousInit() {}
 
    
     public void autonomousPeriodic() {
     	
-    	if(mode == 0)
-    	{
-    		
-    	}
-    	
-    	if(mode >= 1 && !defenseCrossed)
-    	{
-    		
-    		if(autoDrive.autoDrive())
-    		{
-    			defenseCrossed = true;
-    		}
-    		
-    		
-    	}
-    	
-    	if(mode == 2 && defenseCrossed)
-    	{
-    		//THESE DO NOT INCLUDE THE LENGTH OF THE ROBOT!!! TODO FIX!
-    		switch(ad.getDefenseToCross())
-    		{
-    			case 1:
-    				if(!shootDriveComplete)
-    				{
-    					shootDriveComplete = shoot.driveDistance(112.5);
-    				}
-    				if(shootDriveComplete && !shootTurnComplete)
-    				{
-    					turn.turn(120, "clockwise");
-    				}
-    				if(shootDriveComplete && shootTurnComplete)
-    				{
-    					shoot.ballShootComputer(pi.checkEm("check em"));
-    				}
-    				break;
-    			case 2:
-    				if(!shootDriveComplete)
-    				{
-    					shootDriveComplete = shoot.driveDistance(141.5);
-    				}
-    				if(shootDriveComplete && !shootTurnComplete)
-    				{
-    					shootTurnComplete = turn.turn(120, "clockwise");
-    				}
-    				if(shootDriveComplete && shootTurnComplete)
-    				{
-    					shoot.ballShootComputer(pi.checkEm("check em"));
-    				}
-    				break;
-    			case 3:
-    				if(!shootTurnComplete)
-    				{
-    					shootTurnComplete = turn.turn(38, "clockwise");
-    				}
-    				if(shootTurnComplete && !shootDriveComplete)
-    				{
-    					shootDriveComplete = shoot.driveDistance(60.2);
-    				}
-    				if(shootTurnComplete && shootDriveComplete && !shootTurn2Complete)
-    				{
-    					shootTurn2Complete = turn.turn(38, "counterclockwise");
-    				}
-    				if(shootTurnComplete && shootDriveComplete && shootTurn2Complete)
-    				{
-    					shoot.ballShootComputer(pi.checkEm("check em"));
-    				}
-    				break;
-    			case 4:
-    				if(!shootTurnComplete)
-    				{
-    					shootTurnComplete = turn.turn(15, "counterclockwise");
-    				}
-    				if(shootTurnComplete && !shootDriveComplete)
-    				{
-    					shootDriveComplete = shoot.driveDistance(49.2);
-    				}
-    				if(shootTurnComplete && shootDriveComplete && !shootTurn2Complete)
-    				{
-    					shootTurn2Complete = turn.turn(15, "clockwise");
-    				}
-    				if(shootTurnComplete && shootDriveComplete && shootTurn2Complete)
-    				{
-    					shoot.ballShootComputer(pi.checkEm("check em"));
-    				}
-    				break;
-    			case 5:
-    				
-    				break;
-    			case 0:
-    				mode = 0;
-    				break;
-    		}
-    		
-    	}
+    	auto.autonomousMain();
     	
     }
     
     public void teleopInit(){
     	
-    	teleopDrive.driveInit();
     	
-    	ballFeed.ballFeedInit();
     	
     }
     
     public void teleopPeriodic() {
     	
-    	teleopDrive.controllerPhase();
-    	
-    	ballFeed.ballFeed();
+    	humanInterface.buttonControls();
     	
     	pi.checkEm("check em");
     	

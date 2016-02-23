@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5968.robot;
 
+import org.usfirst.frc.team5968.robot.HumanInterface.BallFeedStates;
+
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -15,19 +17,19 @@ public class BallFeed {
 	}//end of method
 	
 	
-	public void ballFeed(int wheelControl){
+	public void ballFeed(BallFeedStates state){
 		
-		if(wheelControl == 1)
+		if(state == BallFeedStates.FAST)
 		{			
-			feedMotor.set(.75);
+			feedMotor.set(1);
 		}
 		
-		if(wheelControl == 0)
+		if(state == BallFeedStates.STOPPED)
 		{
 			feedMotor.set(0);
 		}
 		
-		if(wheelControl == 2)
+		if(state == BallFeedStates.SLOW)
 		{	
 			feedMotor.set(.1);	
 		}

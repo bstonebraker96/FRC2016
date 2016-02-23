@@ -13,7 +13,7 @@ public class Pneumatics {
 		
 	}
 	
-	public void platformAngle()
+	public void togglePlatformAngle()
 	{
 		if(shootAngle.get())
 		{

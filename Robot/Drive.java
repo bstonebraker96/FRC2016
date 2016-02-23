@@ -2,6 +2,7 @@ package org.usfirst.frc.team5968.robot;
 
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,7 +14,6 @@ public class Drive {
 	private double rightRate;
 	
 	private long nanotimeOld;
-	private long nanotimeStart;
 	
 	private Victor leftMotor;
 	private Victor rightMotor;
@@ -23,14 +23,13 @@ public class Drive {
 	private double leftEncoderOld;
 	private double rightEncoderOld;
 	
-	
-	
-	
 	private boolean instanceChecker = false;
 	private double rotationsNeeded, diameter;
 	private double leftDistance;
 	private double rightDistance;
 	private double c;
+	
+	private Gyro gyro;
 	
 	public Drive(){
 		if (!instanceChecker)
@@ -44,28 +43,34 @@ public class Drive {
 		
 		
 		nanotimeOld = System.nanoTime();
-		nanotimeStart = System.nanoTime();
 		leftEncoderOld = leftEncoder.get();
 		rightEncoderOld = rightEncoder.get();
 		
-		leftMotor.set(0.25);
-		rightMotor.set(-0.25);
+		gyro = new ADXRS450_Gyro();
+		
 		instanceChecker = true;
 		}
 		
 	}
+	
+	
 	public boolean driveDistance(double driveDistance){
 		
-		nanotimeOld = System.nanoTime();
+		leftMotor.set(0.25);
+		rightMotor.set(-0.25);
 		
 		leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		
+		nanotimeOld = System.nanoTime();
+		
 		leftDistance = leftEncoder.get() * PortMap.countsPerRevolution * 7.65 * Math.PI;
 		rightDistance = rightEncoder.get() * PortMap.countsPerRevolution * 7.65 * Math.PI;
 		
-		fixDirection(leftRate, rightRate, false);
-		
+		if(leftRate != rightRate)
+		{
+			fixDirection(leftRate, rightRate, false);
+		}
 		if(Math.abs(leftDistance - driveDistance) <= .1 || Math.abs(rightDistance - driveDistance) <= .1){
 			
 			leftMotor.set(0);
@@ -90,6 +95,68 @@ public class Drive {
 		
 		return false;
 	}//end of some method
+	
+	public enum CrossingStates {
+		ENTERED, LEAVING, CROSSED, MISC_RESPONSE
+	}
+	
+	private CrossingStates crossingState = null;
+	private int flatSamples = 0;
+	
+	public CrossingStates driveAcrossDefense(){
+
+		leftMotor.set(0.25);
+		rightMotor.set(-0.25);
+		
+		leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		
+		leftEncoderOld = leftEncoder.get();
+		rightEncoderOld = rightEncoder.get();
+		nanotimeOld = System.nanoTime();
+		
+		if(leftRate != rightRate)
+		{
+			fixDirection(leftRate, rightRate, false);
+		}
+		
+		if(gyro.getAngle() > 0 && crossingState == null)
+		{
+			crossingState = CrossingStates.ENTERED;
+			flatSamples = 0;
+			return CrossingStates.ENTERED;
+			
+		}
+		
+		if(gyro.getAngle() < 0 && crossingState == CrossingStates.ENTERED || crossingState == CrossingStates.LEAVING)
+		{
+			crossingState = CrossingStates.LEAVING;
+			flatSamples = 0;
+			return CrossingStates.LEAVING;
+		}
+		
+		if(Math.abs(gyro.getAngle()) <= .01 && crossingState == CrossingStates.ENTERED)
+		{
+			flatSamples++;
+			
+			if(flatSamples >= 100)
+			{
+				return CrossingStates.CROSSED;
+			}
+			
+			else{
+				return CrossingStates.ENTERED;
+			}
+		}
+		
+		else
+		{
+			flatSamples = 0;
+			crossingState = CrossingStates.ENTERED;
+			return CrossingStates.ENTERED;
+		}
+
+	}//end of method
 	
 	
 	public void scootUp(double dist)
@@ -190,14 +257,6 @@ public class Drive {
 			}
 			fixDirection(leftRate, rightRate, true);
 				
-			if(System.nanoTime() - nanotimeStart >= 5 * Math.pow(10,9))
-			{
-				leftMotor.set(0);
-				rightMotor.set(0);
-					
-				return false;
-			}
-				
 			nanotimeOld = System.nanoTime();
 			leftEncoderOld = leftEncoder.get();
 			rightEncoderOld = rightEncoder.get();
@@ -219,14 +278,9 @@ public class Drive {
 			
 		}
 	}*/
-	public int getLeftEncoder() {
-		return leftEncoder.get();
-	}
-	public int getRightEncoder() {
-		return rightEncoder.get();
-	}
-	public void encoderReset() {
-		leftEncoder.reset();
-		rightEncoder.reset();
+	public void humanDrive(double leftSpeed, double rightSpeed)
+	{
+		leftMotor.set(leftSpeed);
+		rightMotor.set(rightSpeed);
 	}
 }
