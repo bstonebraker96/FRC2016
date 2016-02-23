@@ -8,12 +8,12 @@ public class Robot extends IterativeRobot {
 	TeleopDrive teleopDrive;
 	BallFeed ballFeed;
 	AutoDriveBase ad;
-	InitializeRobot robot;
+	PortMap robot;
 	BallShoot shoot;
 	Turn turn;
 	
 	Drive autoDrive;
-	uART pi;
+	Uart pi;
 	private boolean defenseCrossed = false;
 	private boolean shootDriveComplete = false;
 	private boolean shootTurnComplete = false;
@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot {
     	teleopDrive = new TeleopDrive();
     	ballFeed = new BallFeed();
     	ad = new AutoDriveBase();
-    	robot = InitializeRobot.GetInstance();
+    	robot = PortMap.GetInstance();
     	autoDrive = new Drive();
     	turn = new Turn();
     	
@@ -67,7 +67,7 @@ public class Robot extends IterativeRobot {
     			case 1:
     				if(!shootDriveComplete)
     				{
-    					shootDriveComplete = shoot.shootDrive(112.5);
+    					shootDriveComplete = shoot.driveDistance(112.5);
     				}
     				if(shootDriveComplete && !shootTurnComplete)
     				{
@@ -75,13 +75,13 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootDriveComplete && shootTurnComplete)
     				{
-    					shoot.ballShootComputer(pi.piWriter("check em"));
+    					shoot.ballShootComputer(pi.checkEm("check em"));
     				}
     				break;
     			case 2:
     				if(!shootDriveComplete)
     				{
-    					shootDriveComplete = shoot.shootDrive(141.5);
+    					shootDriveComplete = shoot.driveDistance(141.5);
     				}
     				if(shootDriveComplete && !shootTurnComplete)
     				{
@@ -89,7 +89,7 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootDriveComplete && shootTurnComplete)
     				{
-    					shoot.ballShootComputer(pi.piWriter("check em"));
+    					shoot.ballShootComputer(pi.checkEm("check em"));
     				}
     				break;
     			case 3:
@@ -99,7 +99,7 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootTurnComplete && !shootDriveComplete)
     				{
-    					shootDriveComplete = shoot.shootDrive(60.2);
+    					shootDriveComplete = shoot.driveDistance(60.2);
     				}
     				if(shootTurnComplete && shootDriveComplete && !shootTurn2Complete)
     				{
@@ -107,7 +107,7 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootTurnComplete && shootDriveComplete && shootTurn2Complete)
     				{
-    					shoot.ballShootComputer(pi.piWriter("check em"));
+    					shoot.ballShootComputer(pi.checkEm("check em"));
     				}
     				break;
     			case 4:
@@ -117,7 +117,7 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootTurnComplete && !shootDriveComplete)
     				{
-    					shootDriveComplete = shoot.shootDrive(49.2);
+    					shootDriveComplete = shoot.driveDistance(49.2);
     				}
     				if(shootTurnComplete && shootDriveComplete && !shootTurn2Complete)
     				{
@@ -125,7 +125,7 @@ public class Robot extends IterativeRobot {
     				}
     				if(shootTurnComplete && shootDriveComplete && shootTurn2Complete)
     				{
-    					shoot.ballShootComputer(pi.piWriter("check em"));
+    					shoot.ballShootComputer(pi.checkEm("check em"));
     				}
     				break;
     			case 5:
@@ -150,11 +150,11 @@ public class Robot extends IterativeRobot {
     
     public void teleopPeriodic() {
     	
-    	teleopDrive.driveBase();
+    	teleopDrive.controllerPhase();
     	
     	ballFeed.ballFeed();
     	
-    	pi.piWriter("check em");
+    	pi.checkEm("check em");
     	
     }
     

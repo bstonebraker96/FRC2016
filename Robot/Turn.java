@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Victor;
 
 public class Turn {
 
-	private InitializeRobot robotComponents;
+	private PortMap robotComponents;
 	private AutoDriveBase ad;
 	
 	private Victor leftMotor;
@@ -39,7 +39,7 @@ public class Turn {
 		long nanotimeOld = System.nanoTime();
 		long nanotimeStart = System.nanoTime();
 		
-		robotComponents = InitializeRobot.GetInstance();
+		robotComponents = PortMap.GetInstance();
 		ad = new AutoDriveBase();
 		
 		leftMotor = robotComponents.getLeftMotor();

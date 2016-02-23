@@ -1,5 +1,6 @@
-package org.usfirst.frc.team5968.robot;
+/**package org.usfirst.frc.team5968.robot;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -32,7 +33,7 @@ public class AutoDriveBase {
 		defenseSwitch2 = robotComponents.getModeSwitch2();
 		defenseSwitch3 = robotComponents.getModeSwitch3();
 		
-		gyro = robotComponents.getGyro();
+		
 		
 	}
 	
@@ -143,3 +144,4 @@ public class AutoDriveBase {
 		return 0;
 	}
 }//end of class
+*/

@@ -1,57 +1,69 @@
 package org.usfirst.frc.team5968.robot;
 
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.Timer;
 
-public class uART {
-	
+import java.util.Scanner;
+
+//TODO: Consider using query-response pattern. Methods below send query, and then another method checks for responses.
+//TODO: Need to fix life-cycle of responses that causes unnecessary long waits or not long enough waits for responses.
+//TODO: Remove this supress warnings box
+@SuppressWarnings("unused")
+public class Uart {
 	private SerialPort port;
-	private String stringRec;
-	private String dis, ang;
-	public double angle, distance;
+	public double angle;
+	public double distance;
 	
-	
-	public boolean piWriter(String piMode)
+	public Uart() {
+		port = new SerialPort(5600, Port.kMXP);
+	}
+
+	public boolean checkEm()
 	{
-		if (piMode.equalsIgnoreCase("check em"))
-		{
-			port.writeString("TopKek");
-		}
-		else if (piMode.equalsIgnoreCase("fire mah boulder"))
-		{
-			port.writeString("fire");
-		}
-		
+		port.writeString("TopKek");
 		port.flush();
 		Timer.delay(.25);
-		stringRec = port.readString();
-		if (piMode.equalsIgnoreCase("check em"))
+		String stringRec = port.readString();
+		if (stringRec.equalsIgnoreCase("topLel"))
 		{
-			if (stringRec.equalsIgnoreCase("topLel"))
-			{
-				System.out.println("We've got 'er captain!");
-				return true;
-			}
+			System.out.println("We've got 'er captain!");
+			return true;
+		}
+		else
+		{
+			System.out.println("We've lost 'er captain!");
+			return false;
+		}
+	}//end of checkEm method
+	
+	public void aquireTarget()
+	{
+		port.writeString("fire");
+		port.flush();
+		Timer.delay(.25); //TODO: Investigate if necessary
+
+		String stringRec = port.readString();
+		//TODO: Sanitize input
+		if (stringRec.length() != 8)
+		{
+			angle = 9.11;
+			distance = 420.0;
+		}
+		else
+		{
+			String distanceString = stringRec.substring(0, 4);
+			String angleString = stringRec.substring(4);
+
+			distanceString = distanceString.substring(0, 2) + "." + distanceString.substring(2);
+			angleString = angleString.substring(0, 2) + "." + angleString.substring(2);
+
+			angle = Double.parseDouble(angleString);
+			distance = Double.parseDouble(distanceString);
+			return;
+		}
 		
-			else
-			{
-				System.out.println("We've lost 'er captain!");
-				return false;
-			}
-		}
-		else if (piMode.equalsIgnoreCase("fire mah boulder"))
-		{
-			dis = stringRec.substring(0, 4);
-			ang = stringRec.substring(4);
-			dis = dis.substring(0, 2) + "." + dis.substring(2);
-			ang = ang.substring(0, 2) + "." + ang.substring(2);
-			angle = Double.parseDouble(ang);
-			distance = Double.parseDouble(dis);
-		}
-		return true;
-	}//end of piWriter method
-	
-	
+	}//end of aquireTarget method
 	
 
 }

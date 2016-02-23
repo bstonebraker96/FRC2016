@@ -5,47 +5,33 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class BallFeed {
-
-	private JoystickButton wheelControl;
-	private JoystickButton wheelControlSlow;
 	
 	private Talon feedMotor;
 	
-	
-	private InitializeRobot robotComponents;
-	
-	public void ballFeedInit(){
+	public BallFeed() {
 		
-		robotComponents = InitializeRobot.GetInstance();
-		wheelControl = new JoystickButton(robotComponents.getAltJoystick(), 1);
-		wheelControlSlow = new JoystickButton(robotComponents.getAltJoystick(), 2);
-		
-		feedMotor = robotComponents.getFeedMotor();
+		feedMotor = new Talon(PortMap.feedMotor);
 		
 	}//end of method
 	
 	
-	public void ballFeed(){
+	public void ballFeed(int wheelControl){
 		
-		if(wheelControl.get())
+		if(wheelControl == 1)
 		{			
 			feedMotor.set(.75);
 		}
 		
-		if(!wheelControl.get())
+		if(wheelControl == 0)
 		{
 			feedMotor.set(0);
 		}
 		
-		if(wheelControlSlow.get())
+		if(wheelControl == 2)
 		{	
 			feedMotor.set(.1);	
 		}
 		
-		if(!wheelControlSlow.get())
-		{	
-			feedMotor.set(0);	
-		}
 		
 	}//end of method
 
