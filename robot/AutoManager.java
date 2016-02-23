@@ -3,12 +3,10 @@ package org.usfirst.frc.team5968.robot;
 
 import org.usfirst.frc.team5968.robot.Drive.CrossingStates;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 public class AutoManager {
-	private Drive drive;
-	private Uart pi;
-	private BallShoot shoot;
+	public Drive drive;
+	private AutoShootManager shoot;
 	
 	private DigitalInput driveSwitch;
 	private DigitalInput shootSwitch;
@@ -19,15 +17,14 @@ public class AutoManager {
 	private int mode;
 	private int defenseToCross;
 	
-	public AutoManager() {
+	public AutoManager(AutoShootManager shoot2) {
 		driveSwitch = new DigitalInput(PortMap.driveSwitch); //Digital IN 4
 		shootSwitch = new DigitalInput(PortMap.shootSwitch); //Digital IN 5
 		defenseSwitch1 = new DigitalInput(PortMap.modeSwitch1); //Digital IN 6
 		defenseSwitch2 = new DigitalInput(PortMap.modeSwitch2); //Digital IN 7
 		defenseSwitch3 = new DigitalInput(PortMap.modeSwitch3); //Digital IN 8
 		drive = new Drive();
-		pi = new Uart();
-		shoot = new BallShoot();
+		this.shoot = shoot2;
 		
 		mode = getMode();
 		defenseToCross = getDefenseToCross();
@@ -82,7 +79,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					shoot.ballShootComputer(pi.checkEm("check em"));
+    					shoot.ballShootComputer();
     				}
     				break;
     			case 2:
@@ -102,7 +99,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					shoot.ballShootComputer(pi.checkEm("check em"));
+    					shoot.ballShootComputer();
     				}
     				break;
     			case 3:
@@ -129,7 +126,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
     				{
-    					shoot.ballShootComputer(pi.checkEm("check em"));
+    					shoot.ballShootComputer();
     				}
     				break;
     			case 4:
@@ -157,7 +154,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
     				{
-    					shoot.ballShootComputer(pi.checkEm("check em"));
+    					shoot.ballShootComputer();
     				}
     				break;
     			case 5:

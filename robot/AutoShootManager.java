@@ -1,7 +1,5 @@
 package org.usfirst.frc.team5968.robot;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class AutoShootManager {
 	public double angle_MAX, angle_MIN, distance_MIN, distance_MAX, adjDist;
 	private long nanotime, nanotimeOld;
@@ -9,10 +7,12 @@ public class AutoShootManager {
 	private double rightRate;
 	private Uart uart;
 	private AutoManager driveMan;
+	public BallShoot shooter;
 	
 	public AutoShootManager() {
 		uart = new Uart();
-		driveMan = new AutoManager();
+		driveMan = new AutoManager(null);
+		shooter = new BallShoot();
 	}
 	
 	public void ballShootComputer() 

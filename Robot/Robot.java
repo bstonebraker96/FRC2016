@@ -6,26 +6,26 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 public class Robot extends IterativeRobot {
 
 	private PortMap robot;
-	private BallShoot shoot;
 	private Drive drive;
-	private Uart pi;
 	private AutoManager auto;
+	private AutoShootManager asm;
 	private HumanInterface humanInterface;
 	
 	int mode;
 	
     public void robotInit() {
     	
+    	asm = new AutoShootManager();
     	robot = new PortMap();
-    	shoot = new BallShoot();
     	drive = new Drive();
-    	pi = new Uart();
-    	auto = new AutoManager();
-    	humanInterface = new HumanInterface();
+    	auto = new AutoManager(asm);
+    	humanInterface = new HumanInterface(asm);
     	
     }
     
-    public void autonomousInit() {}
+    public void autonomousInit() {
+    	
+    }
 
    
     public void autonomousPeriodic() {
@@ -44,13 +44,14 @@ public class Robot extends IterativeRobot {
     	
     	humanInterface.buttonControls();
     	
-    	pi.checkEm("check em");
+    	
     	
     }
     
     
     public void testPeriodic() {
-    
+    	humanInterface.joystickControls();
+    	humanInterface.buttonControls();
     }
     
 }

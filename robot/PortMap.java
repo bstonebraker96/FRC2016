@@ -21,7 +21,8 @@ public final class PortMap {
 	
 	//pneumatics
 	public static final int compressor = 0;
-	public static final int shootAngle = 1;
+	public static final int shootAngle = 0;
+	public static final int shootAngle2 = 1;
 	
 	//Joy-sticks
 	public static final int leftJoystick = 0;

@@ -10,7 +10,8 @@ public class HumanInterface {
 	private Drive drive;
 	private BallFeed feed;
 	private Pneumatics piston;
-	private BallShoot shoot;
+	private AutoShootManager asm;
+	private Pneumatics pneum;
 	
 	private boolean reverseControls;
 	private boolean manualShoot;
@@ -27,19 +28,20 @@ public class HumanInterface {
 	private boolean angleChecker;
 	private boolean ballFeedFastChecker;
 	private boolean ballFeedSlowChecker;
+	private boolean runBallShooter;
 	
-	public HumanInterface(){
+	public HumanInterface(AutoShootManager asm){
 		
 		if(!instanceChecker)
 		{
 			leftStick = new Joystick(PortMap.leftJoystick);
 			rightStick = new Joystick(PortMap.rightJoystick);
 			altStick = new Joystick(PortMap.altJoystick);
-			
+			pneum = new Pneumatics();
+			this.asm = asm;
 			drive = new Drive();
 			feed = new BallFeed();
 			piston = new Pneumatics();
-			shoot = new BallShoot();
 			//REVERSE IS 7 LEFT
 			//ALT IS 8 ALT
 			//MANUAL SHOOT IS ALT 3
@@ -54,7 +56,8 @@ public class HumanInterface {
 		angleChecker = altStick.getRawButton(5);
 		ballFeedFastChecker = altStick.getRawButton(10);
 		ballFeedSlowChecker = altStick.getRawButton(11);
-		shootBall = altStick.getRawButton(4);
+		runBallShooter = altStick.getRawButton(4);
+		shootPlatformRaised = altStick.getRawButton(5);
 		
 	}
 	
@@ -97,13 +100,13 @@ public class HumanInterface {
 				manualShoot = true;
 			}
 		}
-		if(shootBall)
+		if(runBallShooter)
 		{
-			shoot.turnOnShooter();
+			asm.shooter.turnOnShooter();
 		}
 		else 
 		{
-			shoot.turnOffShooter();
+			asm.shooter.turnOffShooter();
 		}
 		if(angleChecker)
 		{
@@ -121,6 +124,10 @@ public class HumanInterface {
 		else
 		{
 			feed.ballFeed(BallFeedStates.STOPPED);
+		}
+		if(shootPlatformRaised)
+		{
+			pneum.togglePlatformAngle();
 		}
 		
 	}//end of method
@@ -173,6 +180,7 @@ public class HumanInterface {
 				drive.humanDrive(leftStick.getY(), -1 * rightStick.getY());
 			}
 		}
-	}
+	}//end of method
+	
 
 }
