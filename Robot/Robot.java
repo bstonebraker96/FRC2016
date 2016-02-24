@@ -5,21 +5,19 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 
 public class Robot extends IterativeRobot {
 
-	private PortMap robot;
 	private Drive drive;
 	private AutoManager auto;
-	private AutoShootManager asm;
+	private AutoShootManager autoShootManager;
 	private HumanInterface humanInterface;
-	
-	int mode;
+	private BallShoot shoot;
 	
     public void robotInit() {
     	
-    	asm = new AutoShootManager();
-    	robot = new PortMap();
     	drive = new Drive();
-    	auto = new AutoManager(asm);
-    	humanInterface = new HumanInterface(asm);
+    	shoot = new BallShoot();
+    	autoShootManager = new AutoShootManager(drive, shoot);
+    	auto = new AutoManager(autoShootManager, drive);
+    	humanInterface = new HumanInterface(drive, shoot);
     	
     }
     

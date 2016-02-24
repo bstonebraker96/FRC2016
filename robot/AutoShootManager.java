@@ -1,18 +1,20 @@
 package org.usfirst.frc.team5968.robot;
 
 public class AutoShootManager {
-	public double angle_MAX, angle_MIN, distance_MIN, distance_MAX, adjDist;
-	private long nanotime, nanotimeOld;
-	private double leftRate;
-	private double rightRate;
+	private final double angle_MAX = 0;
+	private final double angle_MIN = 0;
+	private final double distance_MIN = 0;
+	private final double distance_MAX = 0;
+	private double adjDist;
 	private Uart uart;
-	private AutoManager driveMan;
-	public BallShoot shooter;
+	private Drive drive;
+	private BallShoot shoot;
 	
-	public AutoShootManager() {
+	public AutoShootManager(Drive drive, BallShoot shoot) {
+		this.drive = drive;
+		this.shoot = shoot;
+		
 		uart = new Uart();
-		driveMan = new AutoManager(null);
-		shooter = new BallShoot();
 	}
 	
 	public void ballShootComputer() 
@@ -66,12 +68,12 @@ public class AutoShootManager {
 			if (PortMap.distance < distance_MIN)
 			{
 				adjDist = Math.abs(PortMap.distance - distance_MIN);
-				driveMan.drive.scootUp(adjDist);
+				drive.scootUp(adjDist);
 				return;		
 			}
 			else
 			{
-				driveMan.drive.scootBack(adjDist);
+				drive.scootBack(adjDist);
 				return;
 			}
 		}

@@ -23,7 +23,6 @@ public class Drive {
 	private double leftEncoderOld;
 	private double rightEncoderOld;
 	
-	private boolean instanceChecker = false;
 	private double rotationsNeeded, diameter;
 	private double leftDistance;
 	private double rightDistance;
@@ -32,9 +31,7 @@ public class Drive {
 	private Gyro gyro;
 	
 	public Drive(){
-		if (!instanceChecker)
-		{
-		
+
 		leftMotor = new Victor(PortMap.leftMotor);
 		rightMotor = new Victor(PortMap.rightMotor);
 		
@@ -47,9 +44,6 @@ public class Drive {
 		rightEncoderOld = rightEncoder.get();
 		
 		gyro = new ADXRS450_Gyro();
-		
-		instanceChecker = true;
-		}
 		
 	}
 	

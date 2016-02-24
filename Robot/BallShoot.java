@@ -4,17 +4,13 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 public class BallShoot
 {
-
 	private VictorSP leftShootMotor;
 	private VictorSP rightShootMotor;
-	private boolean instanceChecker = false;
 	
 	public BallShoot() 
-	{
-		if (!instanceChecker)		
+	{		
 		leftShootMotor = new VictorSP(PortMap.leftShootMotor);
 		rightShootMotor = new VictorSP(PortMap.rightShootMotor);
-		instanceChecker = true;
 	}
 	
 	

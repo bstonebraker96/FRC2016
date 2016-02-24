@@ -10,18 +10,13 @@ public class HumanInterface {
 	private Drive drive;
 	private BallFeed feed;
 	private Pneumatics piston;
-	private AutoShootManager asm;
-	private Pneumatics pneum;
+	private BallShoot shoot;
 	
 	private boolean reverseControls;
 	private boolean manualShoot;
 	private boolean shootPlatformRaised;	
 	private boolean altControlsEnabled;
-	private boolean ballFeedFast;
-	private boolean ballFeedSlow;
-	private boolean shootBall;
 	
-	private boolean instanceChecker = false;
 	private boolean altControlChecker;
 	private boolean reverseControlChecker;
 	private boolean manualShootChecker;
@@ -30,24 +25,20 @@ public class HumanInterface {
 	private boolean ballFeedSlowChecker;
 	private boolean runBallShooter;
 	
-	public HumanInterface(AutoShootManager asm){
+	public HumanInterface(Drive drive, BallShoot shoot){
 		
-		if(!instanceChecker)
-		{
-			leftStick = new Joystick(PortMap.leftJoystick);
-			rightStick = new Joystick(PortMap.rightJoystick);
-			altStick = new Joystick(PortMap.altJoystick);
-			pneum = new Pneumatics();
-			this.asm = asm;
-			drive = new Drive();
-			feed = new BallFeed();
-			piston = new Pneumatics();
-			//REVERSE IS 7 LEFT
-			//ALT IS 8 ALT
-			//MANUAL SHOOT IS ALT 3
-			//PNEUMATICS IS ALT 5
-			instanceChecker = true;
-		}
+		this.drive = drive;
+		this.shoot = shoot;
+			
+		leftStick = new Joystick(PortMap.leftJoystick);
+		rightStick = new Joystick(PortMap.rightJoystick);
+		altStick = new Joystick(PortMap.altJoystick);
+		feed = new BallFeed();
+		piston = new Pneumatics();
+		//REVERSE IS 7 LEFT
+		//ALT IS 8 ALT
+		//MANUAL SHOOT IS ALT 3
+		//PNEUMATICS IS ALT 5
 	}
 	public void getAllButtons() {
 		altControlChecker = altStick.getRawButton(8);
@@ -102,11 +93,11 @@ public class HumanInterface {
 		}
 		if(runBallShooter)
 		{
-			asm.shooter.turnOnShooter();
+			shoot.turnOnShooter();
 		}
 		else 
 		{
-			asm.shooter.turnOffShooter();
+			shoot.turnOffShooter();
 		}
 		if(angleChecker)
 		{
@@ -127,7 +118,7 @@ public class HumanInterface {
 		}
 		if(shootPlatformRaised)
 		{
-			pneum.togglePlatformAngle();
+			piston.togglePlatformAngle();
 		}
 		
 	}//end of method

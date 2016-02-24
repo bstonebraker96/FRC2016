@@ -17,18 +17,19 @@ public class AutoManager {
 	private int mode;
 	private int defenseToCross;
 	
-	public AutoManager(AutoShootManager shoot2) {
-		driveSwitch = new DigitalInput(PortMap.driveSwitch); //Digital IN 4
-		shootSwitch = new DigitalInput(PortMap.shootSwitch); //Digital IN 5
-		defenseSwitch1 = new DigitalInput(PortMap.modeSwitch1); //Digital IN 6
-		defenseSwitch2 = new DigitalInput(PortMap.modeSwitch2); //Digital IN 7
-		defenseSwitch3 = new DigitalInput(PortMap.modeSwitch3); //Digital IN 8
-		drive = new Drive();
-		this.shoot = shoot2;
+	public AutoManager(AutoShootManager shoot, Drive drive) {
+			
+			this.drive = drive;
+			this.shoot = shoot;
+			
+			driveSwitch = new DigitalInput(PortMap.driveSwitch); //Digital IN 4
+			shootSwitch = new DigitalInput(PortMap.shootSwitch); //Digital IN 5
+			defenseSwitch1 = new DigitalInput(PortMap.modeSwitch1); //Digital IN 6
+			defenseSwitch2 = new DigitalInput(PortMap.modeSwitch2); //Digital IN 7
+			defenseSwitch3 = new DigitalInput(PortMap.modeSwitch3); //Digital IN 8
 		
-		mode = getMode();
-		defenseToCross = getDefenseToCross();
-		
+			mode = getMode();
+			defenseToCross = getDefenseToCross();
 		
 	}
 	
