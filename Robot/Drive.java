@@ -23,7 +23,8 @@ public class Drive {
 	private double leftEncoderOld;
 	private double rightEncoderOld;
 	
-	private double rotationsNeeded, diameter;
+	private double rotationsNeeded;
+	private static final double diameter = 7.65;
 	private double leftDistance;
 	private double rightDistance;
 	private double c;
@@ -56,10 +57,12 @@ public class Drive {
 		leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		
-		nanotimeOld = System.nanoTime();
+		leftDistance = leftEncoder.get() * PortMap.countsPerRevolution * diameter * Math.PI;
+		rightDistance = rightEncoder.get() * PortMap.countsPerRevolution * diameter * Math.PI;
 		
-		leftDistance = leftEncoder.get() * PortMap.countsPerRevolution * 7.65 * Math.PI;
-		rightDistance = rightEncoder.get() * PortMap.countsPerRevolution * 7.65 * Math.PI;
+		nanotimeOld = System.nanoTime();
+		leftEncoderOld = leftEncoder.get();
+		rightEncoderOld = rightEncoder.get();
 		
 		if(leftRate != rightRate)
 		{
@@ -82,10 +85,6 @@ public class Drive {
 			rightMotor.set(0);
 			return false;
 		}
-		
-		nanotimeOld = System.nanoTime();
-		leftEncoderOld = leftEncoder.get();
-		rightEncoderOld = rightEncoder.get();
 		
 		return false;
 	}//end of some method

@@ -41,6 +41,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	
     	humanInterface.buttonControls();
+    	humanInterface.joystickControls();
     	
     	
     	

@@ -47,7 +47,7 @@ public class AutoManager {
     		
     	}
     	
-    	if(mode >= 1 && autoProgress != AutonomousProgress.DEFENSE_CROSSED)
+    	if(mode >= 1 && autoProgress == null)
     	{
     		
     		if(drive.driveAcrossDefense() == CrossingStates.CROSSED)

@@ -57,7 +57,9 @@ public class HumanInterface {
 	}
 	
 	public void buttonControls(){
+		
 		getAllButtons();
+		
 		if(altControlChecker)
 		{
 			if(altControlsEnabled)
@@ -91,6 +93,7 @@ public class HumanInterface {
 				manualShoot = true;
 			}
 		}
+		
 		if(runBallShooter)
 		{
 			shoot.turnOnShooter();
@@ -99,6 +102,7 @@ public class HumanInterface {
 		{
 			shoot.turnOffShooter();
 		}
+		
 		if(angleChecker)
 		{
 			piston.togglePlatformAngle();
@@ -126,23 +130,6 @@ public class HumanInterface {
 	public void joystickControls() {
 		if(altControlsEnabled)
 		{
-			
-			/*if(altStick.getDirectionRadians() <= Math.PI/2)
-			{
-				drive.humanDrive(0, altStick.getY());	
-			}
-			else if (altStick.getDirectionRadians() <= Math.PI)
-			{
-				drive.humanDrive(altStick.getY(), 0);
-			}
-			else if (altStick.getDirectionRadians() <= (3*Math.PI)/2)
-			{
-				drive.humanDrive(-1 * altStick.getY(), 0);
-			}
-			else
-			{
-				drive.humanDrive(0, -1 * altStick.getY());
-			}*/
 			
 			if(altStick.getX() > 0)
 			{
