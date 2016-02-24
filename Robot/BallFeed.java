@@ -21,17 +21,15 @@ public class BallFeed {
 		
 		if(state == BallFeedStates.FAST)
 		{			
-			feedMotor.set(1);
+			feedMotor.set(-1);
 		}
-		
-		if(state == BallFeedStates.STOPPED)
+		else if(state == BallFeedStates.SLOW)
+		{	
+			feedMotor.set(-0.4);	
+		}
+		else
 		{
 			feedMotor.set(0);
-		}
-		
-		if(state == BallFeedStates.SLOW)
-		{	
-			feedMotor.set(.1);	
 		}
 		
 		

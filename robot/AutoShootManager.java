@@ -6,7 +6,7 @@ public class AutoShootManager {
 	private final double distance_MIN = 0;
 	private final double distance_MAX = 0;
 	private double adjDist;
-	private Uart uart;
+	//private Uart uart;
 	private Drive drive;
 	private BallShoot shoot;
 	
@@ -14,10 +14,10 @@ public class AutoShootManager {
 		this.drive = drive;
 		this.shoot = shoot;
 		
-		uart = new Uart();
+		//uart = new Uart();
 	}
 	
-	public void ballShootComputer() 
+	/*public void ballShootComputer() 
 	{
 		
 		if(uart.checkEm())
@@ -77,7 +77,7 @@ public class AutoShootManager {
 				return;
 			}
 		}
-	}//end of Distance Checker
+	}//end of Distance Checker*/
 	
 
 }

@@ -20,7 +20,6 @@ public final class PortMap {
 	public static final int modeSwitch3 = 8;
 	
 	//pneumatics
-	public static final int compressor = 0;
 	public static final int shootAngle = 0;
 	public static final int shootAngle2 = 1;
 	

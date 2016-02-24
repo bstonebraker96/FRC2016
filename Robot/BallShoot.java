@@ -8,7 +8,7 @@ public class BallShoot
 	private VictorSP rightShootMotor;
 	
 	public BallShoot() 
-	{		
+	{
 		leftShootMotor = new VictorSP(PortMap.leftShootMotor);
 		rightShootMotor = new VictorSP(PortMap.rightShootMotor);
 	}
@@ -17,8 +17,8 @@ public class BallShoot
 	//TODO set the timing of the shooting
 	public void turnOnShooter() {
 	
-		leftShootMotor.set(-1);
-		rightShootMotor.set(1);
+		leftShootMotor.set(1.0);
+		rightShootMotor.set(-1.0);
 	}
 	public void turnOffShooter() {
 		leftShootMotor.set(0);

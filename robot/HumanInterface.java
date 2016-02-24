@@ -12,18 +12,18 @@ public class HumanInterface {
 	private Pneumatics piston;
 	private BallShoot shoot;
 	
-	private boolean reverseControls;
-	private boolean manualShoot;
-	private boolean shootPlatformRaised;	
-	private boolean altControlsEnabled;
+	//private boolean reverseControls;
+	//private boolean manualShoot;
+	//private boolean shootPlatformRaised;	
+	//private boolean altControlsEnabled;
 	
-	private boolean altControlChecker;
-	private boolean reverseControlChecker;
-	private boolean manualShootChecker;
-	private boolean angleChecker;
-	private boolean ballFeedFastChecker;
-	private boolean ballFeedSlowChecker;
-	private boolean runBallShooter;
+	//private boolean altControlChecker;
+	//private boolean reverseControlChecker;
+	//private boolean manualShootChecker;
+	//private boolean angleChecker;
+	//private boolean ballFeedFastChecker;
+	//private boolean ballFeedSlowChecker;
+	//private boolean runBallShooter;
 	
 	public HumanInterface(Drive drive, BallShoot shoot){
 		
@@ -41,16 +41,30 @@ public class HumanInterface {
 		//PNEUMATICS IS ALT 5
 	}
 	public void getAllButtons() {
-		altControlChecker = altStick.getRawButton(8);
-		reverseControlChecker = leftStick.getRawButton(7);
-		manualShootChecker = altStick.getRawButton(3);
-		angleChecker = altStick.getRawButton(5);
-		ballFeedFastChecker = altStick.getRawButton(10);
-		ballFeedSlowChecker = altStick.getRawButton(11);
-		runBallShooter = altStick.getRawButton(4);
-		shootPlatformRaised = altStick.getRawButton(5);
+		//altControlChecker = false;//altStick.getRawButton(8);
+		//reverseControlChecker = false;//leftStick.getRawButton(7);
+		//shootPlatformRaised = ;
 		
 	}
+	
+	private boolean IsBallShooterButtonPressed()
+	{ return altStick.getRawButton(4); }
+	
+	private boolean DoManualShoot()
+	{ return altStick.getRawButton(3); }
+	
+	private BallFeedStates GetBallFeedState()
+	{
+		if (altStick.getRawButton(10))
+		{ return BallFeedStates.FAST; }
+		else if (altStick.getRawButton(11))
+		{ return BallFeedStates.SLOW; }
+		else
+		{ return BallFeedStates.STOPPED; }
+	}
+	
+	private boolean GetPlatformRaised()
+	{ return altStick.getRawButton(2); }
 	
 	public enum BallFeedStates {
 		FAST, SLOW, STOPPED
@@ -60,41 +74,7 @@ public class HumanInterface {
 		
 		getAllButtons();
 		
-		if(altControlChecker)
-		{
-			if(altControlsEnabled)
-			{
-				altControlsEnabled = false;
-			}
-			else
-			{
-				altControlsEnabled = true;
-			}
-		}
-		if(reverseControlChecker)
-		{
-			if(reverseControls)
-			{
-				reverseControls =  false;
-			}
-			else
-			{
-				reverseControls = true;
-			}
-		}
-		if(manualShootChecker)
-		{
-			if(manualShoot)
-			{
-				manualShoot = false;
-			}
-			else
-			{
-				manualShoot = true;
-			}
-		}
-		
-		if(runBallShooter)
+		if(IsBallShooterButtonPressed())
 		{
 			shoot.turnOnShooter();
 		}
@@ -103,32 +83,17 @@ public class HumanInterface {
 			shoot.turnOffShooter();
 		}
 		
-		if(angleChecker)
+		if(GetPlatformRaised())
 		{
 			piston.togglePlatformAngle();
 		}
 		
-		if(ballFeedFastChecker)
-		{
-			feed.ballFeed(BallFeedStates.FAST);	
-		}
-		else if (ballFeedSlowChecker)
-		{
-			feed.ballFeed(BallFeedStates.SLOW);
-		}
-		else
-		{
-			feed.ballFeed(BallFeedStates.STOPPED);
-		}
-		if(shootPlatformRaised)
-		{
-			piston.togglePlatformAngle();
-		}
+		feed.ballFeed(GetBallFeedState());
 		
 	}//end of method
 	
 	public void joystickControls() {
-		if(altControlsEnabled)
+		/*if(altControlsEnabled)
 		{
 			
 			if(altStick.getX() > 0)
@@ -146,17 +111,16 @@ public class HumanInterface {
 				drive.humanDrive(altStick.getY(), altStick.getY());
 			}
 		}
-		
-		if(!altControlsEnabled)
+		else*/
 		{
-			if(reverseControls)
+			//if(reverseControls)
 			{
-				drive.humanDrive(-1 * leftStick.getY(), rightStick.getY());
+				drive.humanDrive(-1.0 * leftStick.getY(), rightStick.getY());
 			}
-			if(!reverseControls)
-			{
-				drive.humanDrive(leftStick.getY(), -1 * rightStick.getY());
-			}
+			//else
+			//{
+			//	drive.humanDrive(leftStick.getY(), -1.0 * rightStick.getY());
+			//}
 		}
 	}//end of method
 	

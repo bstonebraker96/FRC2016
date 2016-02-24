@@ -80,7 +80,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					shoot.ballShootComputer();
+    					//shoot.ballShootComputer();
     				}
     				break;
     			case 2:
@@ -100,7 +100,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					shoot.ballShootComputer();
+    					//shoot.ballShootComputer();
     				}
     				break;
     			case 3:
@@ -127,7 +127,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
     				{
-    					shoot.ballShootComputer();
+    					//shoot.ballShootComputer();
     				}
     				break;
     			case 4:
@@ -155,7 +155,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
     				{
-    					shoot.ballShootComputer();
+    					//shoot.ballShootComputer();
     				}
     				break;
     			case 5:
