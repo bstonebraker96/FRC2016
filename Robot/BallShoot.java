@@ -1,11 +1,12 @@
 package org.usfirst.frc.team5968.robot;
 
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class BallShoot
 {
-	private VictorSP leftShootMotor;
-	private VictorSP rightShootMotor;
+	private SpeedController leftShootMotor;
+	private SpeedController rightShootMotor;
 	
 	public BallShoot() 
 	{

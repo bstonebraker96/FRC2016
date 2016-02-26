@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 
@@ -15,8 +16,8 @@ public class Drive {
 	
 	private long nanotimeOld;
 	
-	private Victor leftMotor;
-	private Victor rightMotor;
+	private SpeedController leftMotor;
+	private SpeedController rightMotor;
 	
 	private Encoder leftEncoder;
 	private Encoder rightEncoder;
@@ -273,7 +274,33 @@ public class Drive {
 	}*/
 	public void humanDrive(double leftSpeed, double rightSpeed)
 	{
-		leftMotor.set(leftSpeed);
-		rightMotor.set(rightSpeed);
+		if(Math.abs(leftSpeed) <= .03)
+		{
+			leftMotor.set(0);
+		}
+		
+		if(Math.abs(rightSpeed) <= .03)
+		{
+			rightMotor.set(0);
+		}
+		
+		else
+		{
+			leftMotor.set(leftSpeed);
+			rightMotor.set(rightSpeed);
+		}
+		
 	}
+	
+	public int getRightEncoder() {
+		return rightEncoder.get();
+	}
+	public int getLeftEncoder() {
+		return leftEncoder.get();
+	}
+	public double getGyro() {
+		return gyro.getAngle();
+	}
+	
+	
 }

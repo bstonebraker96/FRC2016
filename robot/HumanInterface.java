@@ -12,69 +12,112 @@ public class HumanInterface {
 	private Pneumatics piston;
 	private BallShoot shoot;
 	
-	//private boolean reverseControls;
-	//private boolean manualShoot;
-	//private boolean shootPlatformRaised;	
-	//private boolean altControlsEnabled;
+	private boolean controlsReversed = false;
+	private boolean altControlsEnabled = false;
+	private boolean manualShootEnabled = false;
 	
-	//private boolean altControlChecker;
-	//private boolean reverseControlChecker;
-	//private boolean manualShootChecker;
-	//private boolean angleChecker;
-	//private boolean ballFeedFastChecker;
-	//private boolean ballFeedSlowChecker;
-	//private boolean runBallShooter;
+	private boolean oldPistonButtonValue = false;
+	private boolean oldReverseButtonValue = false;
+	private boolean oldAltControlButtonValue = false;
+	private boolean oldManualShootButtonValue = false;
 	
 	public HumanInterface(Drive drive, BallShoot shoot){
 		
 		this.drive = drive;
 		this.shoot = shoot;
-			
+		
 		leftStick = new Joystick(PortMap.leftJoystick);
 		rightStick = new Joystick(PortMap.rightJoystick);
 		altStick = new Joystick(PortMap.altJoystick);
 		feed = new BallFeed();
 		piston = new Pneumatics();
-		//REVERSE IS 7 LEFT
-		//ALT IS 8 ALT
-		//MANUAL SHOOT IS ALT 3
-		//PNEUMATICS IS ALT 5
 	}
-	public void getAllButtons() {
-		//altControlChecker = false;//altStick.getRawButton(8);
-		//reverseControlChecker = false;//leftStick.getRawButton(7);
-		//shootPlatformRaised = ;
-		
-	}
-	
-	private boolean IsBallShooterButtonPressed()
-	{ return altStick.getRawButton(4); }
-	
-	private boolean DoManualShoot()
-	{ return altStick.getRawButton(3); }
-	
-	private BallFeedStates GetBallFeedState()
-	{
-		if (altStick.getRawButton(10))
-		{ return BallFeedStates.FAST; }
-		else if (altStick.getRawButton(11))
-		{ return BallFeedStates.SLOW; }
-		else
-		{ return BallFeedStates.STOPPED; }
-	}
-	
-	private boolean GetPlatformRaised()
-	{ return altStick.getRawButton(2); }
 	
 	public enum BallFeedStates {
 		FAST, SLOW, STOPPED
 	}
 	
+	public enum Buttons {
+		REVERSE_CONTROLS, ALTERNATE_CONTROLS, TOGGLE_MANUAL_SHOOT, TOGGLE_SHOOT_PLATFORM, SHOOT, FEED_SLOW, FEED_FAST
+	}
+	
+	public boolean getButtonValue(Buttons button) {
+		
+		switch(button)
+		{
+			case REVERSE_CONTROLS:
+				return leftStick.getRawButton(7);
+				
+			case ALTERNATE_CONTROLS:
+				return altStick.getRawButton(8);
+					
+			case TOGGLE_MANUAL_SHOOT:
+				return altStick.getRawButton(3);
+				
+			case TOGGLE_SHOOT_PLATFORM:
+				return altStick.getRawButton(5);
+				
+			case SHOOT:
+				return altStick.getRawButton(4);
+				
+			case FEED_SLOW:
+				return altStick.getRawButton(10);
+			
+			case FEED_FAST:
+				return altStick.getRawButton(11);
+			default:
+				return false;
+		}
+		
+	}
+	
 	public void buttonControls(){
 		
-		getAllButtons();
+		if(getButtonValue(Buttons.REVERSE_CONTROLS) && !oldReverseButtonValue)
+		{
+			controlsReversed = true;
+			oldReverseButtonValue = true;
+		}
+		else if(!getButtonValue(Buttons.REVERSE_CONTROLS))
+		{
+			oldReverseButtonValue = false;
+		}
 		
-		if(IsBallShooterButtonPressed())
+		
+		if(getButtonValue(Buttons.ALTERNATE_CONTROLS) && !oldAltControlButtonValue)
+		{
+			altControlsEnabled = true;
+			oldAltControlButtonValue = true;
+		}
+		else if(!getButtonValue(Buttons.ALTERNATE_CONTROLS))
+		{
+			oldAltControlButtonValue = false;
+		}
+		
+		
+		if(getButtonValue(Buttons.TOGGLE_MANUAL_SHOOT) && !oldManualShootButtonValue)
+		{
+			manualShootEnabled = true;
+			oldManualShootButtonValue = true;
+		}
+		else if(!getButtonValue(Buttons.TOGGLE_MANUAL_SHOOT))
+		{
+			oldManualShootButtonValue = false;
+		}
+		
+		
+		if(getButtonValue(Buttons.TOGGLE_SHOOT_PLATFORM) && !oldPistonButtonValue)
+		{
+			piston.togglePlatformAngle();
+			oldPistonButtonValue = true;
+		}
+		else if(!getButtonValue(Buttons.TOGGLE_SHOOT_PLATFORM))
+		{
+			oldPistonButtonValue = false;
+		}
+		
+		
+		if(getButtonValue(Buttons.SHOOT) && manualShootEnabled)
 		{
 			shoot.turnOnShooter();
 		}
@@ -83,17 +126,23 @@ public class HumanInterface {
 			shoot.turnOffShooter();
 		}
 		
-		if(GetPlatformRaised())
+		
+		if(getButtonValue(Buttons.FEED_FAST))
 		{
-			piston.togglePlatformAngle();
+			feed.ballFeed(BallFeedStates.FAST);
 		}
-		
-		feed.ballFeed(GetBallFeedState());
-		
+		else if(getButtonValue(Buttons.FEED_SLOW))
+		{
+			feed.ballFeed(BallFeedStates.SLOW);
+		}
+		else
+		{
+			feed.ballFeed(BallFeedStates.STOPPED);
+		}
 	}//end of method
 	
 	public void joystickControls() {
-		/*if(altControlsEnabled)
+		if(altControlsEnabled)
 		{
 			
 			if(altStick.getX() > 0)
@@ -111,18 +160,27 @@ public class HumanInterface {
 				drive.humanDrive(altStick.getY(), altStick.getY());
 			}
 		}
-		else*/
+		else
 		{
-			//if(reverseControls)
+			if(controlsReversed)
 			{
-				drive.humanDrive(-1.0 * leftStick.getY(), rightStick.getY());
+				
+				drive.humanDrive(Math.pow(-1.0 * leftStick.getY(), 3), Math.pow(rightStick.getY(), 3));
 			}
-			//else
-			//{
-			//	drive.humanDrive(leftStick.getY(), -1.0 * rightStick.getY());
-			//}
+			else
+			{
+				drive.humanDrive(Math.pow(leftStick.getY(), 3), Math.pow(-1.0 * rightStick.getY(), 3));
+			}
 		}
 	}//end of method
 	
-
+	public boolean getControlsReversed() {
+		return controlsReversed;
+	}
+	public boolean getAltControlsEnabled() {
+		return altControlsEnabled;
+	}
+	public boolean getManualShootEnabled() {
+		return manualShootEnabled;
+	}
 }
