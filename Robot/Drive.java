@@ -50,11 +50,16 @@ public class Drive {
 	}
 	
 	
-	public boolean driveDistance(double driveDistance){
+	public boolean driveDistance(double driveDistance, boolean forward){
 		
-		leftMotor.set(0.25);
-		rightMotor.set(-0.25);
-		
+		if(forward){
+			leftMotor.set(0.25);
+			rightMotor.set(-0.25);
+		}
+		else if(!forward){
+			leftMotor.set(-0.25);
+			rightMotor.set(0.25);
+		}
 		leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		
@@ -135,6 +140,8 @@ public class Drive {
 			
 			if(flatSamples >= 100)
 			{
+				leftEncoder.reset();
+				rightEncoder.reset();
 				return CrossingStates.CROSSED;
 			}
 			
@@ -260,6 +267,8 @@ public class Drive {
 		{
 			leftMotor.set(0);
 			rightMotor.set(0);
+			leftEncoder.reset();
+			rightEncoder.reset();
 			
 			return true;
 		}

@@ -15,6 +15,7 @@ public class HumanInterface {
 	private boolean controlsReversed = false;
 	private boolean altControlsEnabled = false;
 	private boolean manualShootEnabled = false;
+	private boolean driving = false;
 	
 	private boolean oldPistonButtonValue = false;
 	private boolean oldReverseButtonValue = false;
@@ -125,7 +126,14 @@ public class HumanInterface {
 		{
 			shoot.turnOffShooter();
 		}
-		
+		if(getButtonValue(Buttons.SHOOT) && !manualShootEnabled || driving)
+		{
+			driving = true;
+			if(drive.driveDistance(120, false)){
+				driving = false;
+			}
+		}
+
 		
 		if(getButtonValue(Buttons.FEED_FAST))
 		{
@@ -182,5 +190,8 @@ public class HumanInterface {
 	}
 	public boolean getManualShootEnabled() {
 		return manualShootEnabled;
+	}
+	public boolean getDriving() {
+		return driving;
 	}
 }

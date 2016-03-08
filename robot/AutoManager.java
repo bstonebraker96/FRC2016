@@ -66,7 +66,7 @@ public class AutoManager {
     			case 1:
     				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
     				{
-    					if(drive.driveDistance(112.5))
+    					if(drive.driveDistance(112.5, true))
     					{
     						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
     					}
@@ -86,7 +86,7 @@ public class AutoManager {
     			case 2:
     				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
     				{
-    					if(drive.driveDistance(141.5))
+    					if(drive.driveDistance(141.5,true))
     					{
     						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
     					}
@@ -113,7 +113,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					if(drive.driveDistance(60.2))
+    					if(drive.driveDistance(60.2,true))
     					{
     						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
     					}
@@ -141,7 +141,7 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					if(drive.driveDistance(49.2))
+    					if(drive.driveDistance(49.2,true))
     					{
     						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
     					}
