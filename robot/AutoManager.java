@@ -34,7 +34,7 @@ public class AutoManager {
 	}
 	
 	private enum AutonomousProgress {
-		DEFENSE_CROSSED, DRIVE_1_COMPLETE, TURN_COMPLETE, TURN_2_COMPLETE, DRIVE_2_COMPLETE
+		DEFENSE_CROSSED, DRIVE_1_COMPLETE, TURN_COMPLETE, TURN_2_COMPLETE, DRIVE_2_COMPLETE, FINISHED
 	}
 	
 	private AutonomousProgress autoProgress;
@@ -80,7 +80,9 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					//shoot.ballShootComputer();
+    					if(shoot.ballShootComputer()){
+    						autoProgress = AutonomousProgress.FINISHED;
+    					}
     				}
     				break;
     			case 2:
@@ -100,7 +102,9 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					//shoot.ballShootComputer();
+    					if(shoot.ballShootComputer()){
+    						autoProgress = AutonomousProgress.FINISHED;
+    					}
     				}
     				break;
     			case 3:
@@ -127,7 +131,9 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
     				{
-    					//shoot.ballShootComputer();
+    					if(shoot.ballShootComputer()){
+    						autoProgress = AutonomousProgress.FINISHED;
+    					}
     				}
     				break;
     			case 4:
@@ -155,7 +161,9 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
     				{
-    					//shoot.ballShootComputer();
+    					if(shoot.ballShootComputer()){
+    						autoProgress = AutonomousProgress.FINISHED;
+    					}
     				}
     				break;
     			case 5:

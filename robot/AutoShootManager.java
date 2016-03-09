@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5968.robot;
 
+import org.usfirst.frc.team5968.robot.HumanInterface.BallFeedStates;
+
 public class AutoShootManager {
 	private final double angle_MAX = 0;
 	private final double angle_MIN = 0;
@@ -9,6 +11,10 @@ public class AutoShootManager {
 	//private Uart uart;
 	private Drive drive;
 	private BallShoot shoot;
+	private BallFeed feeder;
+	
+	private int shootState = 0;
+	private int waitTime = 0;
 	
 	public AutoShootManager(Drive drive, BallShoot shoot) {
 		this.drive = drive;
@@ -17,32 +23,39 @@ public class AutoShootManager {
 		//uart = new Uart();
 	}
 	
-	/*public void ballShootComputer() 
+	public boolean ballShootComputer() 
 	{
 		
-		if(uart.checkEm())
-		{
-			uart.aquireTarget();;
-			if (!angleChecker())
-			{
-				System.out.print("She won't make it captain! Try again!");
-			}
-			else
-			{
-				distanceChecker();
-				//ballShootHuman();
-			}
+		if(shootState == 0){
+			shoot.turnOnShooter();
+			shootState = 1;
+		}
+		
+		if(shootState == 1){
+			waitTime +=20;
 			
-				
+			if(waitTime >= 260){
+				shootState = 2;
+				waitTime = 0;
+			}
 		}
-		
-		else
-		{
-			//ballShootHuman();
+		if(shootState == 2){
+			feeder.ballFeed(BallFeedStates.FAST);
+			shootState = 3;
 		}
-		
+		if(shootState == 3){
+			waitTime += 20;
+			
+			if(waitTime >= 1000){
+				shoot.turnOffShooter();
+				feeder.ballFeed(BallFeedStates.STOPPED);
+				waitTime = 0;
+				return true;
+			}
+		}
+		return false;
 	}//end of another method
-	public boolean angleChecker()
+	/*public boolean angleChecker()
 	{
 		if ((uart.angle < angle_MAX) && (uart.angle > angle_MIN))
 		{
