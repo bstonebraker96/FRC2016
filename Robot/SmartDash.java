@@ -21,6 +21,7 @@ public class SmartDash {
 		SmartDashboard.putBoolean("Controls Reversed", humanInterface.getControlsReversed());
 		SmartDashboard.putBoolean("Alternate Controls Enabled", humanInterface.getAltControlsEnabled());
 		SmartDashboard.putBoolean("Manual Shooting Enabled", humanInterface.getManualShootEnabled());
+		SmartDashboard.putBoolean("Aligning to Shoot", humanInterface.getDriving());
 		
 	}
 

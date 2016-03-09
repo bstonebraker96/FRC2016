@@ -39,7 +39,7 @@ public class HumanInterface {
 	}
 	
 	public enum Buttons {
-		REVERSE_CONTROLS, ALTERNATE_CONTROLS, TOGGLE_MANUAL_SHOOT, TOGGLE_SHOOT_PLATFORM, SHOOT, FEED_SLOW, FEED_FAST
+		REVERSE_CONTROLS, ALTERNATE_CONTROLS, TOGGLE_MANUAL_SHOOT, TOGGLE_SHOOT_PLATFORM, SHOOT, FEED_SLOW, FEED_FAST, ALIGN_TO_SHOOT
 	}
 	
 	public boolean getButtonValue(Buttons button) {
@@ -66,6 +66,8 @@ public class HumanInterface {
 			
 			case FEED_FAST:
 				return altStick.getRawButton(11);
+			case ALIGN_TO_SHOOT:
+				return altStick.getRawButton(7);
 			default:
 				return false;
 		}
@@ -118,7 +120,7 @@ public class HumanInterface {
 		}
 		
 		
-		if(getButtonValue(Buttons.SHOOT) && manualShootEnabled)
+		if(getButtonValue(Buttons.SHOOT))
 		{
 			shoot.turnOnShooter();
 		}
@@ -126,7 +128,7 @@ public class HumanInterface {
 		{
 			shoot.turnOffShooter();
 		}
-		if(getButtonValue(Buttons.SHOOT) && !manualShootEnabled || driving)
+		if(getButtonValue(Buttons.ALIGN_TO_SHOOT) || driving)
 		{
 			driving = true;
 			if(drive.driveDistance(120, false)){
