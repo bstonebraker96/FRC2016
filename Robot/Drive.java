@@ -100,7 +100,8 @@ public class Drive {
 	}
 	
 	private CrossingStates crossingState = null;
-	private int flatSamples = 0;
+	private int flatDistance = 0;
+	private final double flatDistanceToDrive = 59.5;
 	
 	public CrossingStates driveAcrossDefense(){
 
@@ -122,7 +123,7 @@ public class Drive {
 		if(gyro.getAngle() > 0 && crossingState == null)
 		{
 			crossingState = CrossingStates.ENTERED;
-			flatSamples = 0;
+			flatDistance = 0;
 			return CrossingStates.ENTERED;
 			
 		}
@@ -130,15 +131,15 @@ public class Drive {
 		if(gyro.getAngle() < 0 && crossingState == CrossingStates.ENTERED || crossingState == CrossingStates.LEAVING)
 		{
 			crossingState = CrossingStates.LEAVING;
-			flatSamples = 0;
+			flatDistance = 0;
 			return CrossingStates.LEAVING;
 		}
 		
 		if(Math.abs(gyro.getAngle()) <= .01 && crossingState == CrossingStates.ENTERED)
 		{
-			flatSamples++;
+			flatDistance += rightEncoder.get() * PortMap.countsPerRevolution * diameter * Math.PI;
 			
-			if(flatSamples >= 100)
+			if(Math.abs(flatDistance - flatDistanceToDrive) <= .1)
 			{
 				leftEncoder.reset();
 				rightEncoder.reset();
@@ -152,8 +153,10 @@ public class Drive {
 		
 		else
 		{
-			flatSamples = 0;
+			flatDistance = 0;
 			crossingState = CrossingStates.ENTERED;
+			rightEncoder.reset();
+			leftEncoder.reset();
 			return CrossingStates.ENTERED;
 		}
 

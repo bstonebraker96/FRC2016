@@ -34,7 +34,7 @@ public class AutoManager {
 	}
 	
 	private enum AutonomousProgress {
-		DEFENSE_CROSSED, DRIVE_1_COMPLETE, TURN_COMPLETE, TURN_2_COMPLETE, DRIVE_2_COMPLETE, FINISHED
+		DEFENSE_CROSSED, DRIVE_1_COMPLETE, TURN_COMPLETE, TURN_2_COMPLETE, DRIVE_2_COMPLETE,DRIVE_3_COMPLETE, FINISHED
 	}
 	
 	private AutonomousProgress autoProgress;
@@ -55,7 +55,6 @@ public class AutoManager {
     			autoProgress = AutonomousProgress.DEFENSE_CROSSED;
     		}
     		
-    		
     	}
     	
     	if(mode == 2 && autoProgress == AutonomousProgress.DEFENSE_CROSSED)
@@ -66,7 +65,7 @@ public class AutoManager {
     			case 1:
     				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
     				{
-    					if(drive.driveDistance(112.5, true))
+    					if(drive.driveDistance(53, true))
     					{
     						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
     					}
@@ -80,7 +79,14 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					if(shoot.ballShootComputer()){
+    					if(drive.driveDistance(65.22, true)){
+    						autoProgress = AutonomousProgress.DRIVE_2_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_2_COMPLETE)
+    				{
+    					if(shoot.ballShootComputer())
+    					{
     						autoProgress = AutonomousProgress.FINISHED;
     					}
     				}
@@ -88,7 +94,7 @@ public class AutoManager {
     			case 2:
     				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
     				{
-    					if(drive.driveDistance(141.5,true))
+    					if(drive.driveDistance(82,true))
     					{
     						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
     					}
@@ -102,7 +108,14 @@ public class AutoManager {
     				}
     				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
     				{
-    					if(shoot.ballShootComputer()){
+    					if(drive.driveDistance(7.22, true)){
+    						autoProgress = AutonomousProgress.DRIVE_2_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_2_COMPLETE)
+    				{
+    					if(shoot.ballShootComputer())
+    					{
     						autoProgress = AutonomousProgress.FINISHED;
     					}
     				}
@@ -110,64 +123,135 @@ public class AutoManager {
     			case 3:
     				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
     				{
-    					if(drive.turn(38, "clockwise"))
-    					{
-    						autoProgress = AutonomousProgress.TURN_COMPLETE;
-    					}
-    				}
-    				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
-    				{
-    					if(drive.driveDistance(60.2,true))
+    					if(drive.driveDistance(59.5, true))
     					{
     						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
     					}
-    				}
-    				if(autoProgress == AutonomousProgress.DRIVE_1_COMPLETE)
-    				{
-    					if(drive.turn(38, "counterclockwise"))
+    					if(autoProgress == AutonomousProgress.DRIVE_1_COMPLETE)
     					{
-    						autoProgress = AutonomousProgress.TURN_2_COMPLETE;
+    						if(drive.turn(90, "clockwise"))
+    						{
+    							autoProgress = AutonomousProgress.TURN_COMPLETE;
+    						}
+    					}
+    					if(autoProgress == AutonomousProgress.TURN_COMPLETE)
+    					{
+    						if(drive.driveDistance(37, true))
+    						{
+    							autoProgress = AutonomousProgress.DRIVE_2_COMPLETE;
+    						}
+    					}
+    					if(autoProgress == AutonomousProgress.DRIVE_2_COMPLETE)
+    					{
+    						if(drive.turn(90, "counterclockwise"))
+    						{
+    							autoProgress = AutonomousProgress.TURN_2_COMPLETE;
+    						}
+    					}
+    					if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
+    					{
+    						if(drive.driveDistance(60, true))
+    						{
+    							autoProgress = AutonomousProgress.DRIVE_3_COMPLETE;
+    						}
+    					}
+    					if(autoProgress == AutonomousProgress.DRIVE_3_COMPLETE) 
+    					{
+    						if(shoot.ballShootComputer())
+    						{
+    							autoProgress = AutonomousProgress.FINISHED;
+    						}
     					}
     				}
-    				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
-    				{
-    					if(shoot.ballShootComputer()){
-    						autoProgress = AutonomousProgress.FINISHED;
-    					}
-    				}
+    				
     				break;
     			case 4:
     				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
     				{
-    					if(drive.turn(15, "counterclockwise"))
-    					{
-    						autoProgress = AutonomousProgress.TURN_COMPLETE;
-    					}
-    					
-    				}
-    				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
-    				{
-    					if(drive.driveDistance(49.2,true))
+    					if(drive.driveDistance(59.5, true))
     					{
     						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
     					}
     				}
     				if(autoProgress == AutonomousProgress.DRIVE_1_COMPLETE)
     				{
-    					if(drive.turn(15, "clockwise"))
+    					if(drive.turn(90, "counterclockwise"))
+    					{
+    						autoProgress = AutonomousProgress.TURN_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
+    				{
+    					if(drive.driveDistance(13, true))
+    					{
+    						autoProgress = AutonomousProgress.DRIVE_2_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_2_COMPLETE)
+    				{
+    					if(drive.turn(90, "clockwise"))
     					{
     						autoProgress = AutonomousProgress.TURN_2_COMPLETE;
     					}
     				}
     				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
     				{
-    					if(shoot.ballShootComputer()){
+    					if(drive.driveDistance(60, true))
+    					{
+    						autoProgress = AutonomousProgress.DRIVE_3_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_3_COMPLETE)
+    				{
+    					if(shoot.ballShootComputer())
+    					{
     						autoProgress = AutonomousProgress.FINISHED;
     					}
     				}
     				break;
     			case 5:
-    				
+    				if(autoProgress == AutonomousProgress.DEFENSE_CROSSED)
+    				{
+    					if(drive.driveDistance(59.5, true))
+    					{
+    						autoProgress = AutonomousProgress.DRIVE_1_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_1_COMPLETE)
+    				{
+    					if(drive.turn(90, "counterclockwise"))
+    					{
+    						autoProgress = AutonomousProgress.TURN_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_COMPLETE)
+    				{
+    					if(drive.driveDistance(61, true))
+    					{
+    						autoProgress = AutonomousProgress.DRIVE_2_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_2_COMPLETE)
+    				{
+    					if(drive.turn(90, "clockwise"))
+    					{
+    						autoProgress = AutonomousProgress.TURN_2_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.TURN_2_COMPLETE)
+    				{
+    					if(drive.driveDistance(60, true))
+    					{
+    						autoProgress = AutonomousProgress.DRIVE_3_COMPLETE;
+    					}
+    				}
+    				if(autoProgress == AutonomousProgress.DRIVE_3_COMPLETE)
+    				{
+    					if(shoot.ballShootComputer())
+    					{
+    						autoProgress = AutonomousProgress.FINISHED;
+    					}
+    				}
     				break;
     			case 0:
     				mode = 0;
