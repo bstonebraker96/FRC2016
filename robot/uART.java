@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 //TODO: Consider using query-response pattern. Methods below send query, and then another method checks for responses.
 //TODO: Need to fix life-cycle of responses that causes unnecessary long waits or not long enough waits for responses.
-//TODO: Remove this supress warnings box
+//TODO: Remove this suppress warnings box
 @SuppressWarnings("unused")
 public class Uart {
 	private SerialPort port;
@@ -43,25 +43,20 @@ public class Uart {
 		port.flush();
 		Timer.delay(.25); //TODO: Investigate if necessary
 
-		String stringRec = port.readString();
+		String angleString = port.readString();
+		String distanceString = port.readString();
+		String angleString2 = port.readString();
 		//TODO: Sanitize input
-		if (stringRec.length() != 8)
+		/*if (stringRec.length() != 8)
 		{
 			angle = 9.11;
 			distance = 420.0;
-		}
-		else
-		{
-			String distanceString = stringRec.substring(0, 4);
-			String angleString = stringRec.substring(4);
-
-			distanceString = distanceString.substring(0, 2) + "." + distanceString.substring(2);
-			angleString = angleString.substring(0, 2) + "." + angleString.substring(2);
+		}*/
 
 			angle = Double.parseDouble(angleString);
 			distance = Double.parseDouble(distanceString);
 			return;
-		}
+		
 		
 	}//end of aquireTarget method
 	

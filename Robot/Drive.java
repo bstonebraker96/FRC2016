@@ -288,20 +288,16 @@ public class Drive {
 	{
 		if(Math.abs(leftSpeed) <= .03)
 		{
-			leftMotor.set(0);
+			//leftSpeed = 0.0;
 		}
 		
 		if(Math.abs(rightSpeed) <= .03)
 		{
-			rightMotor.set(0);
+			//rightSpeed = 0.0;
 		}
 		
-		else
-		{
-			leftMotor.set(leftSpeed);
-			rightMotor.set(rightSpeed);
-		}
-		
+		leftMotor.set(leftSpeed);
+		rightMotor.set(rightSpeed);
 	}
 	
 	public int getRightEncoder() {

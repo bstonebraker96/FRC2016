@@ -12,20 +12,20 @@ public class HumanInterface {
 	private Pneumatics piston;
 	private BallShoot shoot;
 	
-	private boolean controlsReversed = false;
+	private boolean controlsReversed = true;
 	private boolean altControlsEnabled = false;
-	private boolean manualShootEnabled = false;
 	private boolean driving = false;
 	
 	private boolean oldPistonButtonValue = false;
 	private boolean oldReverseButtonValue = false;
 	private boolean oldAltControlButtonValue = false;
-	private boolean oldManualShootButtonValue = false;
+	private AutoShootManager teleShoot;
 	
-	public HumanInterface(Drive drive, BallShoot shoot){
+	public HumanInterface(Drive drive, BallShoot shoot, AutoShootManager teleShoot){
 		
 		this.drive = drive;
 		this.shoot = shoot;
+		this.teleShoot = teleShoot;
 		
 		leftStick = new Joystick(PortMap.leftJoystick);
 		rightStick = new Joystick(PortMap.rightJoystick);
@@ -56,7 +56,7 @@ public class HumanInterface {
 				return altStick.getRawButton(3);
 				
 			case TOGGLE_SHOOT_PLATFORM:
-				return altStick.getRawButton(5);
+				return altStick.getRawButton(1);
 				
 			case SHOOT:
 				return altStick.getRawButton(4);
@@ -67,7 +67,7 @@ public class HumanInterface {
 			case FEED_FAST:
 				return altStick.getRawButton(11);
 			case ALIGN_TO_SHOOT:
-				return altStick.getRawButton(7);
+				return altStick.getRawButton(9);
 			default:
 				return false;
 		}
@@ -76,38 +76,21 @@ public class HumanInterface {
 	
 	public void buttonControls(){
 		
-		if(getButtonValue(Buttons.REVERSE_CONTROLS) && !oldReverseButtonValue)
+		boolean reverseButton = getButtonValue(Buttons.REVERSE_CONTROLS);
+		if(reverseButton && !oldReverseButtonValue)
 		{
-			controlsReversed = true;
-			oldReverseButtonValue = true;
-		}
-		else if(!getButtonValue(Buttons.REVERSE_CONTROLS))
-		{
-			oldReverseButtonValue = false;
+			controlsReversed = !controlsReversed;
 		}
 		
+		oldReverseButtonValue = reverseButton;
 		
-		if(getButtonValue(Buttons.ALTERNATE_CONTROLS) && !oldAltControlButtonValue)
+		boolean altButton = getButtonValue(Buttons.ALTERNATE_CONTROLS);
+		if (altButton && !oldAltControlButtonValue)
 		{
-			altControlsEnabled = true;
-			oldAltControlButtonValue = true;
-		}
-		else if(!getButtonValue(Buttons.ALTERNATE_CONTROLS))
-		{
-			oldAltControlButtonValue = false;
+			altControlsEnabled = !altControlsEnabled;
 		}
 		
-		
-		if(getButtonValue(Buttons.TOGGLE_MANUAL_SHOOT) && !oldManualShootButtonValue)
-		{
-			manualShootEnabled = true;
-			oldManualShootButtonValue = true;
-		}
-		else if(!getButtonValue(Buttons.TOGGLE_MANUAL_SHOOT))
-		{
-			oldManualShootButtonValue = false;
-		}
-		
+		oldAltControlButtonValue = altButton;
 		
 		if(getButtonValue(Buttons.TOGGLE_SHOOT_PLATFORM) && !oldPistonButtonValue)
 		{
@@ -130,10 +113,8 @@ public class HumanInterface {
 		}
 		if(getButtonValue(Buttons.ALIGN_TO_SHOOT) || driving)
 		{
-			driving = true;
-			if(drive.driveDistance(120, false)){
-				driving = false;
-			}
+			//teleShoot.teleShootComputer();
+			
 		}
 
 		
@@ -174,12 +155,11 @@ public class HumanInterface {
 		{
 			if(controlsReversed)
 			{
-				
-				drive.humanDrive(Math.pow(-1.0 * leftStick.getY(), 3), Math.pow(rightStick.getY(), 3));
+				drive.humanDrive(Math.pow(-1.0 * leftStick.getY(), 1), Math.pow(rightStick.getY(), 1));
 			}
 			else
 			{
-				drive.humanDrive(Math.pow(leftStick.getY(), 3), Math.pow(-1.0 * rightStick.getY(), 3));
+				drive.humanDrive(Math.pow(leftStick.getY(), 1), Math.pow(-1.0 * rightStick.getY(), 1));
 			}
 		}
 	}//end of method
@@ -189,9 +169,6 @@ public class HumanInterface {
 	}
 	public boolean getAltControlsEnabled() {
 		return altControlsEnabled;
-	}
-	public boolean getManualShootEnabled() {
-		return manualShootEnabled;
 	}
 	public boolean getDriving() {
 		return driving;

@@ -11,16 +11,14 @@ public class Robot extends IterativeRobot {
 	private HumanInterface humanInterface;
 	private BallShoot shoot;
 	private SmartDash dash;
-	
     public void robotInit() {
     	
     	drive = new Drive();
     	shoot = new BallShoot();
-    	dash = new SmartDash(drive,humanInterface);
     	autoShootManager = new AutoShootManager(drive, shoot);
     	auto = new AutoManager(autoShootManager, drive);
-    	humanInterface = new HumanInterface(drive, shoot);
-    	
+    	humanInterface = new HumanInterface(drive, shoot, autoShootManager);
+    	dash = new SmartDash(drive,humanInterface);
     	
     }
     

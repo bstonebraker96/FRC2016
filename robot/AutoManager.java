@@ -287,6 +287,14 @@ public class AutoManager {
 	}
 	public int getDefenseToCross(){
 		
+		if(defenseSwitch1.get() && defenseSwitch2.get() && defenseSwitch3.get())
+		{
+			return 4;
+		}
+		if(defenseSwitch1.get() && defenseSwitch2.get() && !defenseSwitch3.get())
+		{
+			return 5;
+		}
 		if(defenseSwitch1.get())
 		{
 			return 1;
@@ -298,14 +306,6 @@ public class AutoManager {
 		if(defenseSwitch3.get())
 		{
 			return 3;
-		}
-		if(defenseSwitch1.get() && defenseSwitch2.get() && defenseSwitch3.get())
-		{
-			return 4;
-		}
-		if(!defenseSwitch1.get() && !defenseSwitch2.get() && !defenseSwitch3.get())
-		{
-			return 5;
 		}
 		return 0;
 	}

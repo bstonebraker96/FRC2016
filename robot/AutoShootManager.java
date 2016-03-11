@@ -5,8 +5,8 @@ import org.usfirst.frc.team5968.robot.HumanInterface.BallFeedStates;
 public class AutoShootManager {
 	private final double angle_MAX = 0;
 	private final double angle_MIN = 0;
-	private final double distance_MIN = 0;
-	private final double distance_MAX = 0;
+	private final double distance_MIN = 20;
+	private final double distance_MAX = 27;
 	private double adjDist;
 	//private Uart uart;
 	private Drive drive;
@@ -43,10 +43,12 @@ public class AutoShootManager {
 			feeder.ballFeed(BallFeedStates.FAST);
 			shootState = 3;
 		}
-		if(shootState == 3){
+		if(shootState == 3)
+		{
 			waitTime += 20;
 			
-			if(waitTime >= 1000){
+			if(waitTime >= 1000)
+			{
 				shoot.turnOffShooter();
 				feeder.ballFeed(BallFeedStates.STOPPED);
 				waitTime = 0;
@@ -70,17 +72,16 @@ public class AutoShootManager {
 		}
 		
 	}
-	public void distanceChecker()
-	{
-		if ((PortMap.distance > distance_MIN) && (PortMap.distance < distance_MAX))
+	public void distanceChecker() {
+		if ((uart.distance > distance_MIN) && (uart.distance < distance_MAX))
 		{
 			return; 
 		}
 		else
 		{
-			if (PortMap.distance < distance_MIN)
+			if (uart.distance < distance_MIN)
 			{
-				adjDist = Math.abs(PortMap.distance - distance_MIN);
+				adjDist = Math.abs(uart.distance - distance_MIN);
 				drive.scootUp(adjDist);
 				return;		
 			}
@@ -90,7 +91,22 @@ public class AutoShootManager {
 				return;
 			}
 		}
-	}//end of Distance Checker*/
-	
+	}//end of Distance Checker
+	public void teleShootComputer() 
+	{
+		
+		if(uart.checkEm())
+		{
+			uart.aquireTarget();;
+			if (!angleChecker())
+			{
+				System.out.print("She won't make it captain! Try again!");
+			}
+			else
+			{
+				distanceChecker();
+			}
+			
+	}		*/
 
 }
