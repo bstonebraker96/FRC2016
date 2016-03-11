@@ -11,6 +11,7 @@ public class Robot extends IterativeRobot {
 	private HumanInterface humanInterface;
 	private BallShoot shoot;
 	private SmartDash dash;
+    
     public void robotInit() {
     	
     	drive = new Drive();
@@ -18,7 +19,7 @@ public class Robot extends IterativeRobot {
     	autoShootManager = new AutoShootManager(drive, shoot);
     	auto = new AutoManager(autoShootManager, drive);
     	humanInterface = new HumanInterface(drive, shoot, autoShootManager);
-    	dash = new SmartDash(drive,humanInterface);
+    	dash = new SmartDash(drive, humanInterface);
     	
     }
     
@@ -36,22 +37,20 @@ public class Robot extends IterativeRobot {
     
     public void teleopInit(){
     	
-    	
-    	
     }
     
     public void teleopPeriodic() {
-    	
+
     	humanInterface.buttonControls();
     	humanInterface.joystickControls();
     	dash.writeToDash();
-    	
+        
     }
-    
     
     public void testPeriodic() {
-    	humanInterface.joystickControls();
-    	humanInterface.buttonControls();
-    }
     
+        humanInterface.buttonControls();
+    	humanInterface.joystickControls();
+        
+    }
 }

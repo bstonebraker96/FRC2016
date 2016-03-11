@@ -11,9 +11,6 @@ import edu.wpi.first.wpilibj.Victor;
 
 public class Drive {
 	
-	private double leftRate;
-	private double rightRate;
-	
 	private long nanotimeOld;
 	
 	private SpeedController leftMotor;
@@ -24,11 +21,7 @@ public class Drive {
 	private double leftEncoderOld;
 	private double rightEncoderOld;
 	
-	private double rotationsNeeded;
 	private static final double diameter = 7.65;
-	private double leftDistance;
-	private double rightDistance;
-	private double c;
 	
 	private Gyro gyro;
 	
@@ -48,11 +41,12 @@ public class Drive {
 		gyro = new ADXRS450_Gyro();
 		
 	}
-	
-	
+    
 	public boolean driveDistance(double driveDistance, boolean forward){
 		
 		if(forward){
+            //TODO: There is a huge source of error in this class that could cause the right motor to be reversed by mistake.
+            //TODO: Instead, a setRawMotors(left, right) should've been used that does the right motor negation for you.
 			leftMotor.set(0.25);
 			rightMotor.set(-0.25);
 		}
@@ -60,11 +54,21 @@ public class Drive {
 			leftMotor.set(-0.25);
 			rightMotor.set(0.25);
 		}
-		leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
-		rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+        
+        //TODO: There is an example of what I am talking about below in the file in the root named exampleStateMachineInteractions.cs
+        //TODO: I think you guys are doing yourselves a huge disservice with how this works.
+        //TODO: Instead, don't even care about the RPMs. Just care about the distance traveled and correct when the distances are different.
+        //TODO: The Encoder class has helper methods for getting the distance and resetting the distance it is tracking, this would be easier to keep track of. (Make sure you call Encoder.setDistancePerPulse.)
+        //TODO: There is a subtle potential bug where if the robot has been doing a lot of stuff for a while (IE: Not special Drive methods called) that nanotimeOld and other *Old fields will be very out of date, resulting in some strange values.
+        //TODO: Consider instead, having a Drive.Process method and a state machine that allows it to do all this stuff, and a pair of methods for starting certain actions and checking if the last action is completed.
+        //TODO: !!! There is a bug everywhere this is calculated. You should be dividing nanoseconds be 10e9 to convert nanoseconds to seconds.
+        //TODO: Additionally, you should store this value in a constant, rather than using Math.pow
+        //TODO: IE: Have a const NANOSECONDS_TO_MINUTES calculation.
+		double leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		double rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		
-		leftDistance = leftEncoder.get() * PortMap.countsPerRevolution * diameter * Math.PI;
-		rightDistance = rightEncoder.get() * PortMap.countsPerRevolution * diameter * Math.PI;
+		double leftDistance = leftEncoder.get() * PortMap.countsPerRevolution * diameter * Math.PI;
+		double rightDistance = rightEncoder.get() * PortMap.countsPerRevolution * diameter * Math.PI;
 		
 		nanotimeOld = System.nanoTime();
 		leftEncoderOld = leftEncoder.get();
@@ -108,8 +112,8 @@ public class Drive {
 		leftMotor.set(0.25);
 		rightMotor.set(-0.25);
 		
-		leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
-		rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		double leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		double rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		
 		leftEncoderOld = leftEncoder.get();
 		rightEncoderOld = rightEncoder.get();
@@ -165,7 +169,7 @@ public class Drive {
 	
 	public void scootUp(double dist)
 	{
-		rotationsNeeded = dist/(diameter * Math.PI);
+		double rotationsNeeded = dist/(diameter * Math.PI);
 		rotationsNeeded = (int)Math.ceil(rotationsNeeded) * 512;
 		while (true)
 		{
@@ -185,7 +189,7 @@ public class Drive {
 	
 	public void scootBack(double dist)
 	{
-		rotationsNeeded = dist/(diameter * Math.PI);
+		double rotationsNeeded = dist/(diameter * Math.PI);
 		rotationsNeeded = (int)Math.ceil(rotationsNeeded) * PortMap.countsPerRevolution;
 		while (true)
 		{
@@ -204,45 +208,45 @@ public class Drive {
 	}
 	public double fixDirection(double leftRate, double rightRate, boolean turning)
 	{
-			
-			if(turning)
-			{
-				if(leftRate < rightRate)
-				{
-					rightMotor.set(leftRate / 67702.5);
-				}
-			
-				if(rightRate < leftRate)
-				{				
-					leftMotor.set(rightRate / 67702.5);
-				}
-			}
-			
-			if(!turning)
-			{
-				if(leftRate < rightRate)
-				{
-					rightMotor.set(-1 * leftRate / 67702.5);
-				}
-			
-				if(rightRate < leftRate)
-				{				
-					leftMotor.set(rightRate / 67702.5);				
-				}
-			}
+        //TODO: !!! I am not 100% sure what these magic numbers are, but this whole method smells fishy to me.
+        if(turning)
+        {
+            if(leftRate < rightRate)
+            {
+                rightMotor.set(leftRate / 67702.5);
+            }
+        
+            if(rightRate < leftRate)
+            {				
+                leftMotor.set(rightRate / 67702.5);
+            }
+        }
+        
+        if(!turning)
+        {
+            if(leftRate < rightRate)
+            {
+                rightMotor.set(-1 * leftRate / 67702.5);
+            }
+        
+            if(rightRate < leftRate)
+            {				
+                leftMotor.set(rightRate / 67702.5);				
+            }
+        }
 		return 0;
 	}
 	
 	
 	public boolean turn(double turnAngle, String direction) {
 		
-		leftDistance = leftEncoder.get() * PortMap.countsPerRevolution * 7.65 * Math.PI;
-		rightDistance = rightEncoder.get() * PortMap.countsPerRevolution * 7.65 * Math.PI;
+		double leftDistance = leftEncoder.get() * PortMap.countsPerRevolution * 7.65 * Math.PI;
+		double rightDistance = rightEncoder.get() * PortMap.countsPerRevolution * 7.65 * Math.PI;
 			
-		leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
-		rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		double leftRate = ((leftEncoder.get() - leftEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
+		double rightRate = ((rightEncoder.get() - rightEncoderOld) * PortMap.countsPerRevolution) / ((System.nanoTime() - nanotimeOld) * 60 * Math.pow(10, 9));
 		
-		c = 22.4 * Math.PI * (turnAngle / 360);
+		double c = 22.4 * Math.PI * (turnAngle / 360);
 			
 		if(leftDistance - c >= .1 || rightDistance - c >= .1)
 		{

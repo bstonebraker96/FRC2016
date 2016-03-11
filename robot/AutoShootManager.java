@@ -11,7 +11,7 @@ public class AutoShootManager {
 	//private Uart uart;
 	private Drive drive;
 	private BallShoot shoot;
-	private BallFeed feeder;
+	private BallFeed feeder; //TODO: !!! This will always be null. Right now, the feeder is created by HumanInterface. It should be created in Robot instead and passed into both AutoShootManager and HumanInterface.
 	
 	private int shootState = 0;
 	private int waitTime = 0;
@@ -30,8 +30,7 @@ public class AutoShootManager {
 			shoot.turnOnShooter();
 			shootState = 1;
 		}
-		
-		if(shootState == 1){
+		else if(shootState == 1){
 			waitTime +=20;
 			
 			if(waitTime >= 260){
@@ -39,11 +38,11 @@ public class AutoShootManager {
 				waitTime = 0;
 			}
 		}
-		if(shootState == 2){
+		else if(shootState == 2){
 			feeder.ballFeed(BallFeedStates.FAST);
 			shootState = 3;
 		}
-		if(shootState == 3)
+		else if(shootState == 3)
 		{
 			waitTime += 20;
 			

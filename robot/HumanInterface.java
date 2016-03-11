@@ -47,7 +47,7 @@ public class HumanInterface {
 		switch(button)
 		{
 			case REVERSE_CONTROLS:
-				return leftStick.getRawButton(7);
+				return leftStick.getRawButton(7); //TODO: Consider adding a "|| rightStick.getRawButton(7)" to this so Kyle doesn't have to think about it.
 				
 			case ALTERNATE_CONTROLS:
 				return altStick.getRawButton(8);
@@ -81,7 +81,6 @@ public class HumanInterface {
 		{
 			controlsReversed = !controlsReversed;
 		}
-		
 		oldReverseButtonValue = reverseButton;
 		
 		boolean altButton = getButtonValue(Buttons.ALTERNATE_CONTROLS);
@@ -89,19 +88,14 @@ public class HumanInterface {
 		{
 			altControlsEnabled = !altControlsEnabled;
 		}
-		
 		oldAltControlButtonValue = altButton;
 		
-		if(getButtonValue(Buttons.TOGGLE_SHOOT_PLATFORM) && !oldPistonButtonValue)
+        boolean pistonButton = getButtonValue(Buttons.TOGGLE_SHOOT_PLATFORM);
+		if(pistonButton && !oldPistonButtonValue)
 		{
 			piston.togglePlatformAngle();
-			oldPistonButtonValue = true;
 		}
-		else if(!getButtonValue(Buttons.TOGGLE_SHOOT_PLATFORM))
-		{
-			oldPistonButtonValue = false;
-		}
-		
+        oldPistonButtonValue = pistonButton;
 		
 		if(getButtonValue(Buttons.SHOOT))
 		{
@@ -111,12 +105,12 @@ public class HumanInterface {
 		{
 			shoot.turnOffShooter();
 		}
+        
 		if(getButtonValue(Buttons.ALIGN_TO_SHOOT) || driving)
 		{
 			//teleShoot.teleShootComputer();
 			
 		}
-
 		
 		if(getButtonValue(Buttons.FEED_FAST))
 		{
@@ -140,13 +134,11 @@ public class HumanInterface {
 			{
 				drive.humanDrive(altStick.getY() - altStick.getX(), altStick.getY());
 			}
-			
-			if(altStick.getX() < 0)
+			else if(altStick.getX() < 0)
 			{
 				drive.humanDrive(altStick.getY(), altStick.getY() - altStick.getX());
 			}
-			
-			if(altStick.getX() == 0)
+			else
 			{
 				drive.humanDrive(altStick.getY(), altStick.getY());
 			}
@@ -159,6 +151,7 @@ public class HumanInterface {
 			}
 			else
 			{
+                //TODO: It is not really appropriate for the human interface class to be aware that the right motor is backwards. This negation should've been donw somewhere in drive.
 				drive.humanDrive(Math.pow(leftStick.getY(), 1), Math.pow(-1.0 * rightStick.getY(), 1));
 			}
 		}
