@@ -26,6 +26,9 @@ public class BallFeed {
 		{	
 			feedMotor.set(-0.4);	
 		}
+		else if(state == BallFeedStates.BACKWARDS){
+			feedMotor.set(1);
+		}
 		else
 		{
 			feedMotor.set(0);

@@ -11,7 +11,7 @@ import java.util.Scanner;
 //TODO: Remove this suppress warnings box
 @SuppressWarnings("unused")
 public class Uart {
-	private SerialPort port;
+	/*private SerialPort port;
 	public double angle;
 	public double distance;
 	
@@ -20,8 +20,8 @@ public class Uart {
         //TODO: I say this because some serial hardware is very picky about the baud rates it is capable of.
 		port = new SerialPort(5600, Port.kMXP);
 	}
-
-	public boolean checkEm()
+*/
+	/*public boolean checkEm()
 	{
 		port.writeString("TopKek");
 		port.flush();
@@ -56,12 +56,12 @@ public class Uart {
 			distance = 420.0;
 		}*/
 
-			angle = Double.parseDouble(angleString);
+			/*angle = Double.parseDouble(angleString);
 			distance = Double.parseDouble(distanceString);
 			return;
 		
 		
-	}//end of aquireTarget method
-	
+	}*/
+
 
 }
